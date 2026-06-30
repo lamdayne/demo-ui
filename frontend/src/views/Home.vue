@@ -67,14 +67,19 @@
       <div class="mb-16">
         <h2 class="text-2xl font-bold text-[#1E4B35] mb-6">Featured Categories</h2>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div v-for="(cat, idx) in categories" :key="idx" class="group cursor-pointer">
+          <router-link 
+            v-for="(cat, idx) in categories" 
+            :key="idx" 
+            :to="'/products?category=' + cat.name"
+            class="group cursor-pointer block text-center"
+          >
             <div class="bg-gray-100 rounded-2xl aspect-[4/3] mb-3 overflow-hidden relative border border-gray-100">
                <img :src="cat.image" :alt="cat.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <div class="flex items-center justify-center gap-2 font-bold text-gray-900 text-sm group-hover:text-[#1E4B35] transition">
               <component :is="cat.icon" class="w-4 h-4" :class="cat.color" /> {{ cat.name }}
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
 
@@ -195,42 +200,24 @@
             </router-link>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-             <!-- Producer 1 -->
-             <div class="bg-white rounded-2xl border border-gray-200 p-4 flex gap-4 hover:shadow-md transition">
+             <router-link 
+               v-for="producer in featuredProducers" 
+               :key="producer.id"
+               :to="'/producer/' + producer.id"
+               class="bg-white rounded-2xl border border-gray-200 p-4 flex gap-4 hover:shadow-md transition text-left cursor-pointer group"
+             >
                <div class="w-24 h-24 bg-gray-100 rounded-xl flex-shrink-0 relative overflow-hidden border border-gray-100">
-                 <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="U Minh Bee Farm" class="w-full h-full object-cover" />
+                 <img :src="producer.image" :alt="producer.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                </div>
-               <div class="flex flex-col">
-                 <h4 class="font-bold text-gray-900 mb-1">U Minh Bee Farm</h4>
-                 <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-2"><MapPin class="w-3 h-3"/> Ca Mau Province</div>
-                 <p class="text-[10px] text-gray-600 mb-2 leading-tight flex-grow">Sustainable beekeeping in the U Minh forest.</p>
-                 <div class="bg-green-50 text-green-700 text-[10px] font-medium px-2 py-1 rounded w-fit">Sample batches: 2</div>
+               <div class="flex flex-col justify-between flex-grow">
+                 <div>
+                   <h4 class="font-bold text-gray-900 group-hover:text-[#1E4B35] transition-colors mb-1">{{ producer.name }}</h4>
+                   <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-2"><MapPin class="w-3 h-3"/> {{ producer.location }}</div>
+                   <p class="text-[10px] text-gray-600 leading-tight line-clamp-2">{{ producer.description }}</p>
+                 </div>
+                 <div class="bg-green-50 text-green-700 text-[10px] font-medium px-2 py-0.5 rounded w-fit border border-green-200 mt-2">Verified Partner</div>
                </div>
-             </div>
-             <!-- Producer 2 -->
-             <div class="bg-white rounded-2xl border border-gray-200 p-4 flex gap-4 hover:shadow-md transition">
-               <div class="w-24 h-24 bg-gray-100 rounded-xl flex-shrink-0 relative overflow-hidden border border-gray-100">
-                 <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200" alt="Soc Trang Rice Co-op" class="w-full h-full object-cover" />
-               </div>
-               <div class="flex flex-col">
-                 <h4 class="font-bold text-gray-900 mb-1">Soc Trang Rice Co-op</h4>
-                 <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-2"><MapPin class="w-3 h-3"/> Soc Trang Province</div>
-                 <p class="text-[10px] text-gray-600 mb-2 leading-tight flex-grow">Producing quality rice with community values.</p>
-                 <div class="bg-green-50 text-green-700 text-[10px] font-medium px-2 py-1 rounded w-fit">Sample batches: 2</div>
-               </div>
-             </div>
-             <!-- Producer 3 -->
-             <div class="bg-white rounded-2xl border border-gray-200 p-4 flex gap-4 hover:shadow-md transition">
-               <div class="w-24 h-24 bg-gray-100 rounded-xl flex-shrink-0 relative overflow-hidden border border-gray-100">
-                 <img src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&fit=crop&q=80&w=200" alt="Ben Tre Fruit Co-op" class="w-full h-full object-cover" />
-               </div>
-               <div class="flex flex-col">
-                 <h4 class="font-bold text-gray-900 mb-1">Ben Tre Fruit Co-op</h4>
-                 <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-2"><MapPin class="w-3 h-3"/> Ben Tre Province</div>
-                 <p class="text-[10px] text-gray-600 mb-2 leading-tight flex-grow">Orchards cared for with natural practices.</p>
-                 <div class="bg-green-50 text-green-700 text-[10px] font-medium px-2 py-1 rounded w-fit">Sample batches: 2</div>
-               </div>
-             </div>
+             </router-link>
           </div>
         </div>
       </div>
@@ -327,70 +314,66 @@
 </template>
 
 <script setup>
-import { Image, Package, Users, ClipboardList, ArrowRight, Leaf, Search, QrCode, ShoppingBag, MapPin, Hexagon, Droplet, CheckCircle2, Truck, Quote } from 'lucide-vue-next'
+import { ref, onMounted } from 'vue'
+import { Image, Package, Users, ClipboardList, ArrowRight, Leaf, Search, QrCode, ShoppingBag, MapPin, Hexagon, Droplet, CheckCircle2, Truck, Quote, Wheat, Apple, Carrot } from 'lucide-vue-next'
 import ProductCard from '@/components/product/ProductCard.vue'
+import { useAppStore } from '@/stores/appStore'
+
+const appStore = useAppStore()
 
 const categories = [
-  { name: 'Honey', icon: 'Hexagon', color: 'text-yellow-500', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Rice & Grains', icon: 'Wheat', color: 'text-green-700', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Fruits', icon: 'Apple', color: 'text-green-500', image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Vegetables', icon: 'Carrot', color: 'text-orange-500', image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Tea', icon: 'Leaf', color: 'text-teal-600', image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Meat & Eggs', icon: 'ShoppingBag', color: 'text-red-500', image: 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&q=80&w=200' }
+  { name: 'Honey', icon: Hexagon, color: 'text-yellow-500', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200' },
+  { name: 'Rice', icon: Wheat, color: 'text-green-700', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200' },
+  { name: 'Fruit', icon: Apple, color: 'text-green-500', image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=200' },
+  { name: 'Vegetables', icon: Carrot, color: 'text-orange-500', image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=200' },
+  { name: 'Tea', icon: Leaf, color: 'text-teal-600', image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200' },
+  { name: 'Meat & Eggs', icon: ShoppingBag, color: 'text-red-500', image: 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&q=80&w=200' }
 ]
 
-const bestSellers = [
-  {
-    id: 1,
-    name: 'U Minh Forest Wild Honey 500 ml',
-    producer: 'U Minh Bee Farm',
-    verified: true,
-    location: 'U Minh, Ca Mau',
-    badges: ['Batch record available', 'Reviewed sample'],
-    price: 229000,
-    batch: 'LOT-UMH-2605-001',
-    isBundle: false,
-    badgeLabel: 'Sample batch record',
-    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 2,
-    name: 'ST25 Premium Rice 2 kg',
-    producer: 'Soc Trang Rice Co-op',
-    verified: true,
-    location: 'Soc Trang Province',
-    badges: ['Batch record available', 'Reviewed sample'],
-    price: 139000,
-    batch: 'LOT-ST25-2605-002',
-    isBundle: false,
-    badgeLabel: 'Sample batch record',
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 3,
-    name: 'Ben Tre Green Pomelo 1 kg',
-    producer: 'Ben Tre Fruit Co-op',
-    verified: true,
-    location: 'Ben Tre Province',
-    badges: ['Batch record available', 'Reviewed sample'],
-    price: 79000,
-    batch: 'LOT-BTG-2605-003',
-    isBundle: false,
-    badgeLabel: 'Sample batch record',
-    image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 4,
-    name: 'Sweet Mustard Greens 300 g',
-    producer: 'Da Lat Clean Greens Farm',
-    verified: true,
-    location: 'Da Lat, Lam Dong',
-    badges: ['Batch record available', 'Reviewed sample'],
-    price: 35000,
-    batch: 'LOT-SMG-2605-004',
-    isBundle: false,
-    badgeLabel: 'Sample batch record',
-    image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=200'
+const bestSellers = ref([])
+const featuredProducers = ref([])
+const loading = ref(true)
+
+onMounted(async () => {
+  try {
+    // Load products
+    const products = await appStore.fetchProducts()
+    bestSellers.value = products.slice(0, 4).map(p => ({
+      id: p.id,
+      name: p.name,
+      producer: p.producer_name || 'Green Producer',
+      verified: true,
+      location: p.producer_location || 'Vietnam',
+      badges: ['Batch record available', 'Reviewed sample'],
+      price: parseFloat(p.price),
+      batch: 'LOT-UMH-2605-001',
+      isBundle: false,
+      badgeLabel: 'Sample batch record',
+      image: p.image_url
+    }))
+
+    // Load producers
+    const producersList = await appStore.fetchProducers()
+    featuredProducers.value = producersList.slice(0, 3).map(p => ({
+      id: p.id,
+      name: p.name,
+      location: p.location || 'Vietnam',
+      description: p.description || 'Verified agricultural partner',
+      image: p.image_url || 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=200'
+    }))
+
+    const fallbackProducers = [
+      { id: 1, name: 'U Minh Bee Farm', location: 'Ca Mau Province', description: 'Sustainable beekeeping in the U Minh forest.', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200' },
+      { id: 2, name: 'Soc Trang Rice Co-op', location: 'Soc Trang Province', description: 'Producing quality rice with community values.', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200' },
+      { id: 3, name: 'Ben Tre Fruit Co-op', location: 'Ben Tre Province', description: 'Orchards cared for with natural practices.', image: 'https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&fit=crop&q=80&w=200' }
+    ]
+    if (featuredProducers.value.length === 0) {
+      featuredProducers.value = fallbackProducers
+    }
+  } catch (error) {
+    console.error('Failed to retrieve home data:', error)
+  } finally {
+    loading.value = false
   }
-]
+})
 </script>

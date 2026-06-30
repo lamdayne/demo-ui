@@ -28,193 +28,204 @@
           <p class="text-xs text-gray-500">Enter a batch or lot number</p>
         </div>
         <div class="flex flex-grow max-w-xl w-full gap-3">
-          <input type="text" value="LOT-UMH-2605-001" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#1E4B35] font-mono text-gray-900" />
-          <button class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-6 py-3 rounded-lg font-bold transition">Search</button>
+          <input type="text" v-model="searchId" @keyup.enter="handleSearch" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-[#1E4B35] font-mono text-gray-900" />
+          <button @click="handleSearch" class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-6 py-3 rounded-lg font-bold transition">Search</button>
         </div>
       </div>
 
-      <!-- Batch Overview Card -->
-      <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm mb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <!-- Product Details -->
-        <div class="lg:col-span-5 flex gap-5">
-          <div class="w-28 h-28 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
-            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Honey" class="w-full h-full object-cover" />
-          </div>
-          <div class="flex flex-col justify-center">
-            <span class="text-xs text-gray-500 font-medium">Product</span>
-            <h4 class="font-bold text-gray-900 text-lg leading-tight mb-1.5">U Minh Forest Wild Honey 500 ml</h4>
-            <div class="text-sm text-gray-600 mb-2">
-              <span class="font-semibold text-gray-900">Producer:</span> U Minh Bee Farm
-            </div>
-            <div class="flex flex-wrap gap-2 text-xs">
-              <span class="bg-gray-100 px-2 py-0.5 rounded font-mono text-gray-700">Batch LOT-UMH-2605-001</span>
-              <span class="bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded flex items-center gap-1 font-semibold">
-                <Check class="w-3 h-3"/> Reviewed Sample
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Explanation Column -->
-        <div class="lg:col-span-4 border-t lg:border-t-0 lg:border-l lg:border-r border-gray-100 pt-6 lg:pt-0 px-0 lg:px-6">
-          <h4 class="font-bold text-gray-900 text-sm mb-2 flex items-center gap-1.5">
-            What this means <CheckCircle2 class="w-4 h-4 text-green-600" />
-          </h4>
-          <p class="text-xs text-gray-600 leading-relaxed">
-            This batch has been reviewed for key records and quality checks by our team. It is not a government certification or a guarantee, but it helps you choose with more confidence.
-          </p>
-        </div>
-
-        <!-- QR Code Column -->
-        <div class="lg:col-span-3 flex flex-col items-center text-center">
-          <span class="text-xs text-gray-500 font-semibold mb-2">Scan to view this batch</span>
-          <div class="w-24 h-24 bg-gray-100 p-2 rounded-lg flex items-center justify-center border border-gray-200">
-            <QrCode class="w-full h-full text-gray-800" />
-          </div>
-          <div class="text-[10px] text-gray-400 font-mono mt-2">LOT-UMH-2605-001<br/>green-trace.vn/trace/LOT-UMH-2605-001</div>
-        </div>
+      <!-- Loading State -->
+      <div v-if="loading" class="bg-white border border-gray-200 rounded-2xl p-16 text-center shadow-sm mb-8">
+        <div class="inline-block w-8 h-8 border-4 border-[#1E4B35] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-gray-600 font-medium">Retrieving batch records and lab analyses...</p>
       </div>
 
-      <!-- Batch Journey Timeline -->
-      <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm mb-8">
-        <h3 class="font-bold text-gray-900 text-lg mb-8">Batch Journey Timeline</h3>
-        <div class="flex flex-col md:flex-row justify-between relative max-w-4xl mx-auto pb-6">
-          <!-- Connective line -->
-          <div class="hidden md:block absolute top-7 left-[8%] right-[8%] border-t-2 border-[#1E4B35] -z-10"></div>
-
-          <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
-            <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
-              <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
-              <Hexagon class="w-6 h-6"/>
-            </div>
-            <h4 class="font-bold text-gray-900 text-sm">Hive Collection</h4>
-            <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Honey collected from U Minh forest apiaries.</p>
-            <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">May 06, 2026</span>
-          </div>
-
-          <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
-            <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
-              <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
-              <Droplet class="w-6 h-6"/>
-            </div>
-            <h4 class="font-bold text-gray-900 text-sm">Extraction</h4>
-            <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Honey extracted and filtered.</p>
-            <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">May 07, 2026</span>
-          </div>
-
-          <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
-            <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
-              <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
-              <CheckCircle2 class="w-6 h-6"/>
-            </div>
-            <h4 class="font-bold text-gray-900 text-sm">Quality Check</h4>
-            <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Samples tested for quality & safety.</p>
-            <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">May 08, 2026</span>
-          </div>
-
-          <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
-            <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
-              <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
-              <Package class="w-6 h-6"/>
-            </div>
-            <h4 class="font-bold text-gray-900 text-sm">Packing</h4>
-            <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Bottled, sealed and labeled.</p>
-            <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">May 09, 2026</span>
-          </div>
-
-          <div class="flex flex-col items-center text-center relative">
-            <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
-              <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
-              <Truck class="w-6 h-6"/>
-            </div>
-            <h4 class="font-bold text-gray-900 text-sm">Ready to Ship</h4>
-            <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Cleared for delivery from producer.</p>
-            <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">May 10, 2026</span>
-          </div>
-        </div>
+      <!-- Error State -->
+      <div v-else-if="errorMsg" class="bg-red-50 border border-red-200 rounded-2xl p-8 text-center shadow-sm mb-8">
+        <Info class="w-12 h-12 text-red-500 mx-auto mb-3" />
+        <h3 class="font-bold text-red-900 text-lg mb-1">Lookup Failed</h3>
+        <p class="text-red-700 text-sm mb-4">{{ errorMsg }}</p>
+        <button @click="searchId = 'LOT-UMH-2605-001'; handleSearch();" class="text-sm font-semibold text-[#1E4B35] hover:underline">Reset to sample batch</button>
       </div>
 
-      <!-- Product Summary & Producer Summary grids -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- Product Summary -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
-            <Package class="w-5 h-5 text-[#1E4B35]" />
-            <h3 class="font-bold text-gray-900 text-base">Product Summary</h3>
+      <template v-else-if="batchData">
+        <!-- Batch Overview Card -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm mb-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <!-- Product Details -->
+          <div class="lg:col-span-5 flex gap-5">
+            <div class="w-28 h-28 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100">
+              <img :src="batchData.product_image" :alt="batchData.product_name" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex flex-col justify-center">
+              <span class="text-xs text-gray-500 font-medium">Product</span>
+              <h4 class="font-bold text-gray-900 text-lg leading-tight mb-1.5">{{ batchData.product_name }}</h4>
+              <div class="text-sm text-gray-600 mb-2">
+                <span class="font-semibold text-gray-900">Producer:</span> {{ batchData.producer_name }}
+              </div>
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span class="bg-gray-100 px-2 py-0.5 rounded font-mono text-gray-700">Batch {{ batchData.id }}</span>
+                <span class="bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 rounded flex items-center gap-1 font-semibold">
+                  <Check class="w-3 h-3"/> {{ batchData.status || 'Verified Sample' }}
+                </span>
+              </div>
+            </div>
           </div>
-          <div class="flex items-center gap-6 mb-6">
-            <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-              <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Honey" class="w-full h-full object-cover" />
-            </div>
-            <div>
-              <h4 class="font-bold text-gray-900 text-sm">U Minh Forest Wild Honey 500 ml</h4>
-              <p class="text-xs text-gray-500 mt-0.5">Category: Honey</p>
-            </div>
+
+          <!-- Explanation Column -->
+          <div class="lg:col-span-4 border-t lg:border-t-0 lg:border-l lg:border-r border-gray-100 pt-6 lg:pt-0 px-0 lg:px-6">
+            <h4 class="font-bold text-gray-900 text-sm mb-2 flex items-center gap-1.5">
+              What this means <CheckCircle2 class="w-4 h-4 text-green-600" />
+            </h4>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              This batch has been reviewed for key records and quality checks by our team. It is not a government certification or a guarantee, but it helps you choose with more confidence.
+            </p>
           </div>
-          <div class="space-y-3 text-sm text-gray-700">
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Net Volume</span>
-              <span class="font-semibold text-gray-900">500 ml</span>
+
+          <!-- QR Code Column -->
+          <div class="lg:col-span-3 flex flex-col items-center text-center">
+            <span class="text-xs text-gray-500 font-semibold mb-2">Scan to view this batch</span>
+            <div class="w-24 h-24 bg-gray-100 p-2 rounded-lg flex items-center justify-center border border-gray-200">
+              <QrCode class="w-full h-full text-gray-800" />
             </div>
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Batch / Lot No.</span>
-              <span class="font-mono font-semibold text-gray-900">LOT-UMH-2605-001</span>
+            <div class="text-[10px] text-gray-400 font-mono mt-2">{{ batchData.id }}<br/>green-trace.vn/trace/{{ batchData.id }}</div>
+          </div>
+        </div>
+
+        <!-- Batch Journey Timeline -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 md:p-8 shadow-sm mb-8">
+          <h3 class="font-bold text-gray-900 text-lg mb-8">Batch Journey Timeline</h3>
+          <div class="flex flex-col md:flex-row justify-between relative max-w-4xl mx-auto pb-6">
+            <!-- Connective line -->
+            <div class="hidden md:block absolute top-7 left-[8%] right-[8%] border-t-2 border-[#1E4B35] -z-10"></div>
+
+            <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
+              <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
+                <Hexagon class="w-6 h-6"/>
+              </div>
+              <h4 class="font-bold text-gray-900 text-sm">Harvest / Collection</h4>
+              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Collected at location: {{ batchData.location || 'Local apiary' }}</p>
+              <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">{{ new Date(batchData.harvest_date).toLocaleDateString() }}</span>
             </div>
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Batch Date</span>
-              <span class="font-semibold text-gray-900">May 07, 2026</span>
+
+            <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
+              <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
+                <Droplet class="w-6 h-6"/>
+              </div>
+              <h4 class="font-bold text-gray-900 text-sm">Testing Parameters</h4>
+              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Water content: {{ batchData.water_content || 'N/A' }}%</p>
+              <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">Passed Analysis</span>
             </div>
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Best Before</span>
-              <span class="font-semibold text-gray-900">May 07, 2028</span>
+
+            <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
+              <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
+                <CheckCircle2 class="w-6 h-6"/>
+              </div>
+              <h4 class="font-bold text-gray-900 text-sm">Quality Check</h4>
+              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">HMF Content: {{ batchData.hmf_content || 'N/A' }} mg/kg</p>
+              <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">Tested Pure</span>
             </div>
-            <div class="flex justify-between py-1.5">
-              <span class="text-gray-500">Storage</span>
-              <span class="font-semibold text-gray-900">Store in a cool, dry place.</span>
+
+            <div class="flex flex-col items-center text-center mb-6 md:mb-0 relative">
+              <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
+                <Package class="w-6 h-6"/>
+              </div>
+              <h4 class="font-bold text-gray-900 text-sm">Pure Test</h4>
+              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Adulteration test: {{ batchData.adulteration_test || 'Negative' }}</p>
+              <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">Verified</span>
+            </div>
+
+            <div class="flex flex-col items-center text-center relative">
+              <div class="w-14 h-14 rounded-full bg-[#1E4B35] text-white flex items-center justify-center mb-3 shadow relative">
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center"><Check class="w-2.5 h-2.5 text-white"/></span>
+                <Truck class="w-6 h-6"/>
+              </div>
+              <h4 class="font-bold text-gray-900 text-sm">Ready to Ship</h4>
+              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">Cleared for distribution by producer.</p>
+              <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">Available</span>
             </div>
           </div>
         </div>
 
-        <!-- Producer Summary -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
-          <div class="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
-            <User class="w-5 h-5 text-[#1E4B35]" />
-            <h3 class="font-bold text-gray-900 text-base">Producer Summary</h3>
+        <!-- Product Summary & Producer Summary grids -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <!-- Product Summary -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
+              <Package class="w-5 h-5 text-[#1E4B35]" />
+              <h3 class="font-bold text-gray-900 text-base">Product Summary</h3>
+            </div>
+            <div class="flex items-center gap-6 mb-6">
+              <div class="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
+                <img :src="batchData.product_image" :alt="batchData.product_name" class="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-900 text-sm">{{ batchData.product_name }}</h4>
+                <p class="text-xs text-gray-500 mt-0.5">Price: {{ parseFloat(batchData.product_price).toLocaleString() }} VND</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-sm text-gray-700">
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Species Source</span>
+                <span class="font-semibold text-gray-900">{{ batchData.species_source || 'Wild honeybee' }}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Batch / Lot No.</span>
+                <span class="font-mono font-semibold text-gray-900">{{ batchData.id }}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Harvest Date</span>
+                <span class="font-semibold text-gray-900">{{ new Date(batchData.harvest_date).toLocaleDateString() }}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Diastase Activity</span>
+                <span class="font-semibold text-gray-900">{{ batchData.diastase_activity || 'N/A' }} DN</span>
+              </div>
+              <div class="flex justify-between py-1.5">
+                <span class="text-gray-500">Location Origin</span>
+                <span class="font-semibold text-gray-900">{{ batchData.location }}</span>
+              </div>
+            </div>
           </div>
-          <div class="flex items-center gap-6 mb-6">
-            <div class="w-20 h-20 rounded-full overflow-hidden border border-white shadow">
-              <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=150" alt="Beekeepers" class="w-full h-full object-cover" />
+
+          <!-- Producer Summary -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <div class="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
+              <User class="w-5 h-5 text-[#1E4B35]" />
+              <h3 class="font-bold text-gray-900 text-base">Producer Summary</h3>
             </div>
-            <div>
-              <h4 class="font-bold text-gray-900 text-sm">U Minh Bee Farm</h4>
-              <p class="text-xs text-gray-500 mt-0.5">Location: Ca Mau Province, Vietnam</p>
+            <div class="flex items-center gap-6 mb-6">
+              <div class="w-20 h-20 rounded-full overflow-hidden border border-white shadow">
+                <img :src="batchData.producer_image || 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=150'" :alt="batchData.producer_name" class="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h4 class="font-bold text-gray-900 text-sm">{{ batchData.producer_name }}</h4>
+                <p class="text-xs text-gray-500 mt-0.5">Location: {{ batchData.producer_location }}</p>
+              </div>
             </div>
-          </div>
-          <div class="space-y-3 text-sm text-gray-700">
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Farm Type</span>
-              <span class="font-semibold text-gray-900">Forest-based beekeeping</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Established</span>
-              <span class="font-semibold text-gray-900">2018</span>
-            </div>
-            <div class="flex justify-between py-1.5 border-b border-gray-50">
-              <span class="text-gray-500">Certification</span>
-              <span class="font-semibold text-gray-900">—</span>
-            </div>
-            <div class="flex justify-between py-1.5">
-              <span class="text-gray-500">Reviewed On</span>
-              <span class="font-semibold text-gray-900">May 10, 2026</span>
-            </div>
-            <div class="pt-3 border-t border-gray-100 flex justify-end">
-              <router-link to="/producer/1" class="text-[#1E4B35] text-sm font-semibold hover:underline flex items-center gap-1">
-                View producer profile <ArrowRight class="w-4 h-4"/>
-              </router-link>
+            <div class="space-y-3 text-sm text-gray-700">
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Origin Province</span>
+                <span class="font-semibold text-gray-900">{{ batchData.producer_location }}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Producer Code</span>
+                <span class="font-semibold text-gray-900">PRD-{{ batchData.producer_name.replace(/\s+/g, '-').toUpperCase() }}</span>
+              </div>
+              <div class="flex justify-between py-1.5 border-b border-gray-50">
+                <span class="text-gray-500">Traceability Verification</span>
+                <span class="font-semibold text-green-700">Active</span>
+              </div>
+              <div class="flex justify-between py-1.5">
+                <span class="text-gray-500">Status</span>
+                <span class="font-semibold text-green-700">Verified Producer</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </template>
 
       <!-- Supporting Records -->
       <div class="mb-8">
@@ -354,5 +365,49 @@
 </template>
 
 <script setup>
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { ChevronRight, Info, Check, QrCode, Hexagon, Droplet, CheckCircle2, Package, Truck, User, ArrowRight, FileText, FlaskConical, ExternalLink, ShieldCheck, Leaf, ArrowLeft, HelpCircle, Share2, Quote } from 'lucide-vue-next'
+import { useAppStore } from '@/stores/appStore'
+
+const route = useRoute()
+const router = useRouter()
+const appStore = useAppStore()
+
+const searchId = ref(route.query.batch || 'LOT-UMH-2605-001')
+const batchData = ref(null)
+const loading = ref(false)
+const errorMsg = ref('')
+
+async function loadBatch(id) {
+  if (!id) return
+  loading.value = true
+  errorMsg.value = ''
+  try {
+    const data = await appStore.fetchBatch(id)
+    batchData.value = data
+  } catch (err) {
+    batchData.value = null
+    errorMsg.value = err.message || 'Batch not found. Please verify the Batch ID.'
+  } finally {
+    loading.value = false
+  }
+}
+
+function handleSearch() {
+  if (!searchId.value.trim()) return
+  router.replace({ query: { batch: searchId.value.trim() } })
+  loadBatch(searchId.value.trim())
+}
+
+onMounted(() => {
+  loadBatch(searchId.value)
+})
+
+watch(() => route.query.batch, (newBatch) => {
+  if (newBatch) {
+    searchId.value = newBatch
+    loadBatch(newBatch)
+  }
+})
 </script>

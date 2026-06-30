@@ -55,6 +55,9 @@
               <router-link to="/producer-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
                 <Store class="w-4 h-4 text-gray-400" /> Producer Dashboard
               </router-link>
+              <button @click="handleLogout" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-700 transition">
+                <LogOut class="w-4 h-4 text-red-500" /> Log Out
+              </button>
             </nav>
           </div>
 
@@ -107,7 +110,7 @@
               <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-[#1E4B35]"><ClipboardList class="w-5 h-5"/></div>
                 <div>
-                  <div class="text-base font-extrabold text-gray-900">12</div>
+                  <div class="text-base font-extrabold text-gray-900">{{ appStore.orders.length }}</div>
                   <router-link to="/orders" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center">Recent Orders &rarr;</router-link>
                 </div>
               </div>
@@ -199,18 +202,21 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                    <tr v-if="appStore.orders.length === 0">
+                      <td colspan="6" class="text-center py-8 text-gray-400 font-medium">No recent orders found.</td>
+                    </tr>
+                    <tr v-for="order in appStore.orders.slice(0, 3)" :key="order.id" class="border-b border-gray-50 hover:bg-gray-50 transition">
                       <td class="py-4 px-2 font-bold text-[#1E4B35] flex items-center gap-2">
-                        <div class="w-8 h-8 rounded bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0">
-                          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=100" class="w-full h-full object-cover" />
+                        <div class="w-8 h-8 rounded bg-gray-50 border border-gray-100 overflow-hidden flex-shrink-0 flex items-center justify-center">
+                          <Package class="w-4 h-4 text-gray-400" />
                         </div>
-                        GT-2026-0519-001
+                        GT-{{ order.id }}
                       </td>
-                      <td class="py-4 px-2 text-gray-600">May 19, 2026</td>
-                      <td class="py-4 px-2 text-gray-600">3 items</td>
-                      <td class="py-4 px-2 font-bold text-gray-900">464,700 VND</td>
+                      <td class="py-4 px-2 text-gray-600">{{ new Date(order.created_at).toLocaleDateString() }}</td>
+                      <td class="py-4 px-2 text-gray-600">{{ order.items?.length || 0 }} items</td>
+                      <td class="py-4 px-2 font-bold text-gray-900">{{ parseFloat(order.total_price).toLocaleString() }} VND</td>
                       <td class="py-4 px-2">
-                        <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-semibold text-[10px] border border-green-200">Delivered</span>
+                        <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-semibold text-[10px] border border-green-200">{{ order.status }}</span>
                       </td>
                       <td class="py-4 px-2 text-right">
                         <router-link to="/orders" class="px-3 py-1 border border-gray-300 rounded text-[10px] font-bold text-gray-700 hover:bg-gray-100 transition inline-block">View Order</router-link>
@@ -586,66 +592,85 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { ChevronRight, LayoutDashboard, User, MapPin, CreditCard, Heart, ShieldCheck, Package, Bell, Lock, HelpCircle, Camera, Mail, Phone, Calendar, ClipboardList, ShoppingCart, Key, Sprout, RefreshCw, Headphones, Store } from 'lucide-vue-next'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAppStore } from '@/stores/appStore'
+import { ChevronRight, LayoutDashboard, User, MapPin, CreditCard, Heart, ShieldCheck, Package, Bell, Lock, HelpCircle, Camera, Mail, Phone, Calendar, ClipboardList, ShoppingCart, Key, Sprout, RefreshCw, Headphones, Store, LogOut } from 'lucide-vue-next'
+
+const router = useRouter()
+const appStore = useAppStore()
 
 const activeTab = ref('overview')
 
-const profileData = ref({
-  name: 'Nguyen Van An',
-  email: 'an.nguyen@example.demo',
-  phone: '+84 912 345 678',
-  dob: '15/08/1988',
-  city: 'Ho Chi Minh City',
-  country: 'Vietnam',
-  photo: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150'
+function handleLogout() {
+  appStore.logout()
+  router.push('/login')
+}
+
+// Check if user is logged in
+onMounted(async () => {
+  if (!appStore.token) {
+    router.push('/login')
+    return
+  }
+  // Load data
+  try {
+    await appStore.fetchProfile()
+    await loadAddresses()
+    await appStore.fetchWishlist()
+    await appStore.fetchOrders()
+  } catch (err) {
+    console.error('Error loading account data:', err)
+  }
 })
 
-const addressesList = ref([
-  { recipient: 'Nguyen Van An', street: '123 Le Loi Street, District 1', city: 'Ho Chi Minh City', country: 'Vietnam', phone: '+84 912 345 678', isDefault: true, label: 'Home' },
-  { recipient: 'Nguyen Van An', street: '456 Nguyen Hue Street, District 1', city: 'Ho Chi Minh City', country: 'Vietnam', phone: '+84 912 345 678', isDefault: false, label: 'Work' }
-])
+// Profile bindings
+const profileData = computed(() => {
+  return {
+    name: appStore.user?.name || 'Nguyen Van An',
+    email: appStore.user?.email || 'an.nguyen@example.demo',
+    phone: appStore.user?.phone || '+84 912 345 678',
+    dob: appStore.user?.dob || '15/08/1988',
+    city: appStore.user?.city || 'Ho Chi Minh City',
+    country: appStore.user?.country || 'Vietnam',
+    photo: appStore.user?.image_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150'
+  }
+})
+
+// Addresses management
+const addressesList = ref([])
+async function loadAddresses() {
+  try {
+    const list = await appStore.fetchAddresses()
+    addressesList.value = list.map(addr => ({
+      id: addr.id,
+      recipient: addr.recipient,
+      street: addr.street,
+      city: addr.city,
+      country: addr.country,
+      phone: addr.phone,
+      isDefault: addr.is_default,
+      label: addr.label || 'Home'
+    }))
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 const defaultAddress = computed(() => addressesList.value.find(addr => addr.isDefault))
 
-const wishlist = ref([
-  {
-    id: 1,
-    name: 'U Minh Forest Wild Honey 500 ml',
-    producer: 'U Minh Bee Farm',
-    price: 229000,
-    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 2,
-    name: 'ST25 Premium Rice 2 kg',
-    producer: 'Ben Tre Green Co-op',
-    price: 139000,
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 3,
-    name: 'Ben Tre Green Pomelo 1 kg',
-    producer: 'Ben Tre Fruit Co-op',
-    price: 79000,
-    image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 4,
-    name: 'Lotus Green Tea 100 g',
-    producer: 'Tan Long Tea Co-op',
-    price: 89000,
-    image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: 5,
-    name: 'Free-range Eggs (10 pcs)',
-    producer: 'Ben Tre Organic Farm',
-    price: 45000,
-    image: 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&q=80&w=200'
-  }
-])
+// Wishlist
+const wishlist = computed(() => {
+  return appStore.wishlist.map(item => ({
+    id: item.id,
+    name: item.name,
+    producer: item.producer_name || 'Verified Farm',
+    price: parseFloat(item.price),
+    image: item.image_url
+  }))
+})
 
+// Traceability history (mocked or loaded if desired)
 const traceHistory = ref([
   {
     id: 'LOT-UMH-2605-001',
@@ -660,29 +685,40 @@ const traceHistory = ref([
     producer: 'Ben Tre Green Co-op',
     date: 'May 19, 2026',
     image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 'LOT-LTGT-2605-003',
-    product: 'Lotus Green Tea 100 g',
-    producer: 'Tan Long Tea Co-op',
-    date: 'May 18, 2026',
-    image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=100'
   }
 ])
 
-const notificationsList = ref([
-  { id: 1, title: 'Order Dispatched', message: 'Batch LOT-UMH-2605-001 has been dispatched.', time: '2 hours ago', isRead: false },
-  { id: 2, title: 'Purity Report Attached', message: 'Lab report for LOT-ST25-2605-002 is verified and ready.', time: '1 day ago', isRead: true }
-])
+// Notifications
+const notificationsList = computed(() => {
+  return appStore.notifications.map(notif => ({
+    id: notif.id,
+    title: notif.title,
+    message: notif.message,
+    time: new Date(notif.created_at).toLocaleDateString(),
+    isRead: notif.is_read
+  }))
+})
 
 // Modals / forms
 const isAddressModalOpen = ref(false)
 const newAddressForm = ref({ recipient: '', street: '', city: '', country: '', phone: '', isDefault: false })
 const changePasswordForm = ref({ current: '', newPass: '', confirm: '' })
 
-function saveProfile() {
-  alert('Profile updated successfully!')
-  activeTab.value = 'overview'
+async function saveProfile() {
+  try {
+    await appStore.updateProfile({
+      name: profileData.value.name,
+      phone: profileData.value.phone,
+      dob: profileData.value.dob,
+      city: profileData.value.city,
+      country: profileData.value.country,
+      image_url: profileData.value.photo
+    })
+    alert('Profile updated successfully!')
+    activeTab.value = 'overview'
+  } catch (err) {
+    alert(err.message || 'Failed to update profile')
+  }
 }
 
 function openAddAddressModal() {
@@ -690,56 +726,85 @@ function openAddAddressModal() {
   isAddressModalOpen.value = true
 }
 
-function saveNewAddress() {
-  if (newAddressForm.value.isDefault) {
-    addressesList.value.forEach(addr => addr.isDefault = false)
+async function saveNewAddress() {
+  try {
+    await appStore.addAddress({
+      recipient: newAddressForm.value.recipient,
+      street: newAddressForm.value.street,
+      city: newAddressForm.value.city,
+      country: newAddressForm.value.country,
+      phone: newAddressForm.value.phone,
+      is_default: newAddressForm.value.isDefault,
+      label: 'Home'
+    })
+    isAddressModalOpen.value = false
+    await loadAddresses()
+    alert('Address added successfully!')
+  } catch (err) {
+    alert(err.message || 'Failed to add address')
   }
-  addressesList.value.push({
-    recipient: newAddressForm.value.recipient,
-    street: newAddressForm.value.street,
-    city: newAddressForm.value.city,
-    country: newAddressForm.value.country,
-    phone: newAddressForm.value.phone,
-    isDefault: newAddressForm.value.isDefault || addressesList.value.length === 0,
-    label: 'Secondary'
-  })
-  isAddressModalOpen.value = false
-  alert('Address added successfully!')
 }
 
-function deleteAddress(idx) {
+async function deleteAddress(idx) {
   if (confirm('Are you sure you want to delete this address?')) {
-    const wasDefault = addressesList.value[idx].isDefault
-    addressesList.value.splice(idx, 1)
-    if (wasDefault && addressesList.value.length > 0) {
-      addressesList.value[0].isDefault = true
+    try {
+      const address = addressesList.value[idx]
+      await appStore.deleteAddress(address.id)
+      await loadAddresses()
+      alert('Address deleted successfully!')
+    } catch (err) {
+      alert(err.message || 'Failed to delete address')
     }
   }
 }
 
-function setDefaultAddress(idx) {
-  addressesList.value.forEach((addr, i) => {
-    addr.isDefault = (i === idx)
-  })
+async function setDefaultAddress(idx) {
+  try {
+    const address = addressesList.value[idx]
+    await appStore.updateAddress(address.id, {
+      is_default: true
+    })
+    await loadAddresses()
+    alert('Default address updated!')
+  } catch (err) {
+    alert(err.message || 'Failed to set default address')
+  }
 }
 
-function removeFromWishlist(id) {
-  wishlist.value = wishlist.value.filter(item => item.id !== id)
+async function removeFromWishlist(id) {
+  try {
+    await appStore.toggleWishlist(id)
+    alert('Removed from wishlist.')
+  } catch (err) {
+    alert(err.message || 'Failed to remove from wishlist')
+  }
 }
 
-function saveSecurity() {
+async function saveSecurity() {
   if (changePasswordForm.value.newPass !== changePasswordForm.value.confirm) {
     alert('Passwords do not match!')
     return
   }
-  alert('Password changed successfully!')
-  changePasswordForm.value = { current: '', newPass: '', confirm: '' }
+  try {
+    await appStore.changePassword(changePasswordForm.value.current, changePasswordForm.value.newPass)
+    alert('Password changed successfully!')
+    changePasswordForm.value = { current: '', newPass: '', confirm: '' }
+  } catch (err) {
+    alert(err.message || 'Failed to change password')
+  }
 }
 
-function triggerPhotoUpload() {
+async function triggerPhotoUpload() {
   const newUrl = prompt('Enter image URL to change profile picture:', profileData.value.photo)
   if (newUrl) {
-    profileData.value.photo = newUrl
+    try {
+      await appStore.updateProfile({
+        image_url: newUrl
+      })
+      alert('Photo updated!')
+    } catch (err) {
+      alert('Failed to update photo')
+    }
   }
 }
 

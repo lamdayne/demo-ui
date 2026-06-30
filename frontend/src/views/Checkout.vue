@@ -65,15 +65,15 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Full Name</label>
-                <input type="text" value="Nguyen Van An" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="name" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Email Address</label>
-                <input type="text" value="an.nguyen@example.demo" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="email" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Phone Number</label>
-                <input type="text" value="+84 912 345 678" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="phone" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
             </div>
           </div>
@@ -90,25 +90,25 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Street Address</label>
-                <input type="text" value="123 Green Street, District 1" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="address" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Apartment, suite, etc. (optional)</label>
-                <input type="text" value="Apartment 5B" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" placeholder="Apartment 5B" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                <div>
                 <label class="block text-sm text-gray-600 mb-1.5">City</label>
-                <input type="text" value="Ho Chi Minh City" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="city" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Province / State</label>
-                <input type="text" value="Ho Chi Minh City" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="province" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">Postal Code</label>
-                <input type="text" value="700000" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input type="text" v-model="postalCode" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
             </div>
              <div>
@@ -214,8 +214,8 @@
               <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">6</span>
               Order Notes <span class="text-gray-400 font-normal text-base">(optional)</span>
             </h2>
-            <textarea placeholder="Add any notes about your order (e.g., leave at front door, special instructions)..." rows="3" class="w-full border border-gray-300 rounded-lg p-4 text-gray-900 focus:outline-[#1E4B35] resize-none"></textarea>
-            <div class="text-right text-xs text-gray-400 mt-1">0 / 300</div>
+            <textarea v-model="notes" maxlength="300" placeholder="Add any notes about your order (e.g., leave at front door, special instructions)..." rows="3" class="w-full border border-gray-300 rounded-lg p-4 text-gray-900 focus:outline-[#1E4B35] resize-none"></textarea>
+            <div class="text-right text-xs text-gray-400 mt-1">{{ notes.length }} / 300</div>
           </div>
 
           <!-- 7. Policy -->
@@ -262,63 +262,23 @@
               <button class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit Cart</button>
             </div>
             
-            <p class="text-sm font-bold text-gray-900 mb-4">3 items</p>
+            <p class="text-sm font-bold text-gray-900 mb-4">{{ subtotalItems }} items</p>
             
             <!-- Items -->
-            <div class="space-y-4 mb-6 border-b border-gray-100 pb-6">
-               <div class="flex gap-3">
+            <div class="space-y-4 mb-6 border-b border-gray-100 pb-6 max-h-[300px] overflow-y-auto pr-1">
+               <div v-for="item in appStore.cart" :key="item.id" class="flex gap-3">
                  <div class="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Wild Honey" class="w-full h-full object-cover" />
+                   <img :src="item.image_url" :alt="item.name" class="w-full h-full object-cover" />
                  </div>
                  <div class="flex-grow">
                    <div class="flex justify-between">
-                     <h4 class="font-bold text-gray-900 text-sm leading-tight max-w-[140px]">U Minh Forest Wild Honey 500 ml</h4>
-                     <span class="font-bold text-gray-900 text-sm">229,000 VND</span>
+                     <h4 class="font-bold text-gray-900 text-sm leading-tight max-w-[140px]">{{ item.name }}</h4>
+                     <span class="font-bold text-gray-900 text-sm">{{ (parseFloat(item.price) * item.quantity).toLocaleString() }} VND</span>
                    </div>
-                   <p class="text-xs text-gray-500 mt-1">U Minh Bee Farm</p>
-                   <p class="text-[10px] text-gray-400">Batch LOT-UMH-2605-001</p>
-                   <p class="text-xs text-gray-600 mt-1">Qty: 1</p>
+                   <p class="text-xs text-gray-500 mt-1">{{ item.producer_name || 'Verified Farm' }}</p>
+                   <p class="text-[10px] text-gray-400">Qty: {{ item.quantity }}</p>
                    <div class="flex gap-1 mt-2">
                      <span class="text-[9px] bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded flex items-center gap-1"><ShieldCheck class="w-2.5 h-2.5"/> Batch record available</span>
-                     <span class="text-[9px] bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded flex items-center gap-1"><CheckCircle2 class="w-2.5 h-2.5"/> Reviewed sample</span>
-                   </div>
-                 </div>
-               </div>
-
-               <div class="flex gap-3">
-                 <div class="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200" alt="ST25 Rice" class="w-full h-full object-cover" />
-                 </div>
-                 <div class="flex-grow">
-                   <div class="flex justify-between">
-                     <h4 class="font-bold text-gray-900 text-sm leading-tight max-w-[140px]">ST25 Premium Rice 2 kg</h4>
-                     <span class="font-bold text-gray-900 text-sm">139,000 VND</span>
-                   </div>
-                   <p class="text-xs text-gray-500 mt-1">Soc Trang Rice Co-op</p>
-                   <p class="text-[10px] text-gray-400">Batch LOT-ST25-2605-002</p>
-                   <p class="text-xs text-gray-600 mt-1">Qty: 1</p>
-                   <div class="flex gap-1 mt-2">
-                     <span class="text-[9px] bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded flex items-center gap-1"><ShieldCheck class="w-2.5 h-2.5"/> Batch record available</span>
-                     <span class="text-[9px] bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded flex items-center gap-1"><CheckCircle2 class="w-2.5 h-2.5"/> Reviewed sample</span>
-                   </div>
-                 </div>
-               </div>
-
-               <div class="flex gap-3">
-                 <div class="w-16 h-16 bg-gray-100 rounded-lg flex-shrink-0 relative overflow-hidden">
-                   <img src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200" alt="Lotus Tea" class="w-full h-full object-cover" />
-                 </div>
-                 <div class="flex-grow">
-                   <div class="flex justify-between">
-                     <h4 class="font-bold text-gray-900 text-sm leading-tight max-w-[140px]">Lotus Tea 200 g</h4>
-                     <span class="font-bold text-gray-900 text-sm">115,000 VND</span>
-                   </div>
-                   <p class="text-xs text-gray-500 mt-1">Lotus Lake Tea Co-op</p>
-                   <p class="text-[10px] text-gray-400">Batch LOT-LT-2605-005</p>
-                   <p class="text-xs text-gray-600 mt-1">Qty: 1</p>
-                   <div class="flex gap-1 mt-2">
-                     <span class="text-[9px] bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded flex items-center gap-1"><ShieldCheck class="w-2.5 h-2.5"/> Batch record available</span>
-                     <span class="text-[9px] bg-green-50 text-green-700 border border-green-200 px-1.5 py-0.5 rounded flex items-center gap-1"><CheckCircle2 class="w-2.5 h-2.5"/> Reviewed sample</span>
                    </div>
                  </div>
                </div>
@@ -327,23 +287,23 @@
             <!-- Totals -->
             <div class="space-y-3 mb-6 border-b border-gray-100 pb-6">
               <div class="flex justify-between text-gray-600 text-sm">
-                <span>Subtotal (3 items)</span>
-                <span class="font-medium text-gray-900">483,000 VND</span>
+                <span>Subtotal ({{ subtotalItems }} items)</span>
+                <span class="font-medium text-gray-900">{{ subtotalPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-green-600 text-sm">
                 <span>Discount (GREENTRACE10)</span>
-                <span class="font-medium">-48,300 VND</span>
+                <span class="font-medium">-{{ discountPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-gray-600 text-sm">
                 <span>Standard Shipping</span>
-                <span class="font-medium text-gray-900">30,000 VND</span>
+                <span class="font-medium text-gray-900">{{ shippingFee === 0 ? 'FREE' : shippingFee.toLocaleString() + ' VND' }}</span>
               </div>
             </div>
             
             <div class="mb-6">
               <div class="flex justify-between items-end mb-1">
                 <span class="font-bold text-gray-900 text-xl">Total</span>
-                <span class="text-2xl font-bold text-[#1E4B35]">464,700 VND</span>
+                <span class="text-2xl font-bold text-[#1E4B35]">{{ totalPrice.toLocaleString() }} VND</span>
               </div>
               <p class="text-xs text-gray-500">Taxes included</p>
             </div>
@@ -435,12 +395,86 @@
 </template>
 
 <script setup>
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronRight, Check, Edit2, Truck, CreditCard, Banknote, ShieldCheck, Lock, Info, Image, CheckCircle2, FileText, Leaf, RotateCcw, MessageCircle, Mail, Phone } from 'lucide-vue-next'
+import { useAppStore } from '@/stores/appStore'
 
 const router = useRouter()
+const appStore = useAppStore()
 
-const placeOrder = () => {
-  router.push('/confirmation')
+// Billing / Shipping Form inputs
+const name = ref(appStore.user?.full_name || 'Nguyen Van An')
+const email = ref(appStore.user?.email || 'an.nguyen@example.demo')
+const phone = ref(appStore.user?.phone || '+84 912 345 678')
+
+const address = ref('')
+const city = ref('')
+const province = ref('')
+const postalCode = ref('')
+const notes = ref('')
+
+onMounted(async () => {
+  try {
+    const list = await appStore.fetchAddresses()
+    if (list.length > 0) {
+      const addr = list[0]
+      address.value = addr.street
+      city.value = addr.city
+      province.value = addr.province
+      postalCode.value = addr.postal_code
+    } else {
+      address.value = '123 Green Street, District 1'
+      city.value = 'Ho Chi Minh City'
+      province.value = 'Ho Chi Minh City'
+      postalCode.value = '700000'
+    }
+  } catch (e) {
+    address.value = '123 Green Street, District 1'
+    city.value = 'Ho Chi Minh City'
+    province.value = 'Ho Chi Minh City'
+    postalCode.value = '700000'
+  }
+})
+
+// Computeds
+const subtotalItems = computed(() => {
+  return appStore.cart.reduce((sum, item) => sum + item.quantity, 0)
+})
+
+const subtotalPrice = computed(() => {
+  return appStore.cart.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0)
+})
+
+const discountPrice = computed(() => {
+  return Math.round(subtotalPrice.value * 0.10)
+})
+
+const shippingFee = computed(() => {
+  if (subtotalPrice.value >= 500000 || subtotalPrice.value === 0) return 0
+  return 30000
+})
+
+const totalPrice = computed(() => {
+  return Math.max(0, subtotalPrice.value - discountPrice.value + shippingFee.value)
+})
+
+const placeOrder = async () => {
+  if (appStore.cart.length === 0) {
+    alert('Your cart is empty!')
+    return
+  }
+  
+  try {
+    const orderData = {
+      address: `${address.value}, ${city.value}, ${province.value}, ${postalCode.value}`,
+      payment_method: 'MoMo',
+      notes: notes.value
+    }
+    await appStore.placeOrder(orderData)
+    router.push('/confirmation')
+  } catch (error) {
+    alert('Failed to place order: ' + error.message)
+  }
 }
 </script>

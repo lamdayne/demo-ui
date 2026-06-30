@@ -334,117 +334,83 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAppStore } from '@/stores/appStore'
 import { ChevronRight, Search, Calendar, ChevronLeft, ChevronDown, Check, MapPin, CreditCard, Truck, Headphones, MessageSquare, Mail, Info, Scan, ShieldCheck, Download, Package } from 'lucide-vue-next'
 
-const activeStatusFilter = ref('all')
-const activeDetailsOrderId = ref('GT-2026-0519-001')
+const router = useRouter()
+const appStore = useAppStore()
 
-const orders = [
-  {
-    id: 'GT-2026-0519-001',
-    dateStr: 'May 19, 2026',
-    timeStr: '10:24 AM',
-    itemCount: 3,
-    total: 464700,
-    status: 'Delivered',
-    statusDot: 'bg-green-500',
-    statusColor: 'text-green-600',
-    images: [
-      'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=80',
-      'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=80',
-      'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=80'
-    ],
-    itemsList: [
-      {
-        name: 'U Minh Forest Wild Honey 500 ml',
-        producer: 'U Minh Bee Farm',
-        batch: 'LOT-UMH-2605-001',
-        spec: 'Harvest: May 05, 2026',
-        image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=80',
-        price: 229000,
-        qty: 1
-      },
-      {
-        name: 'ST25 Premium Rice 2 kg',
-        producer: 'Soc Trang Rice Co-op',
-        batch: 'LOT-ST25-2605-002',
-        spec: 'Milled: May 05, 2026',
-        image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=80',
-        price: 139000,
-        qty: 1
-      },
-      {
-        name: 'Lotus Tea 200 g',
-        producer: 'Lotus Lake Tea Co-op',
-        batch: 'LOT-LTT-2605-005',
-        spec: 'Packed: May 05, 2026',
-        image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&q=80&w=80',
-        price: 115000,
-        qty: 1
-      }
-    ]
-  },
-  {
-    id: 'GT-2026-0512-002',
-    dateStr: 'May 12, 2026',
-    timeStr: '02:15 PM',
-    itemCount: 1,
-    total: 79000,
-    status: 'In Review',
-    statusDot: 'bg-orange-500',
-    statusColor: 'text-orange-600',
-    images: [
-      'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=80'
-    ],
-    itemsList: [
-      {
-        name: 'ST25 Premium Rice 2 kg',
-        producer: 'Soc Trang Rice Co-op',
-        batch: 'LOT-ST25-2605-002',
-        spec: 'Milled: May 05, 2026',
-        image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=80',
-        price: 79000,
-        qty: 1
-      }
-    ]
-  },
-  {
-    id: 'GT-2026-0505-003',
-    dateStr: 'May 05, 2026',
-    timeStr: '09:10 AM',
-    itemCount: 1,
-    total: 165000,
-    status: 'Cancelled',
-    statusDot: 'bg-red-500',
-    statusColor: 'text-red-600',
-    images: [
-      'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=80'
-    ],
-    itemsList: [
-      {
-        name: 'Forest Honey Comb, 300 g',
-        producer: 'U Minh Bee Farm',
-        batch: 'LOT-UMH-2605-003',
-        spec: 'Harvested: Apr 28, 2026',
-        image: 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=80',
-        price: 165000,
-        qty: 1
-      }
-    ]
+const activeStatusFilter = ref('all')
+const activeDetailsOrderId = ref(null)
+
+onMounted(async () => {
+  if (!appStore.token) {
+    alert('Please login to view your orders.')
+    router.push('/')
+    return
   }
-]
+  try {
+    await appStore.fetchOrders()
+    if (appStore.orders.length > 0) {
+      activeDetailsOrderId.value = `GT-${appStore.orders[0].id}`
+    }
+  } catch (err) {
+    console.error('Error fetching orders:', err)
+  }
+})
+
+const orders = computed(() => {
+  return appStore.orders.map(order => {
+    // Determine status dot
+    let statusDot = 'bg-orange-500'
+    let statusColor = 'text-orange-600'
+    if (order.status === 'Delivered') {
+      statusDot = 'bg-green-500'
+      statusColor = 'text-green-600'
+    } else if (order.status === 'Cancelled') {
+      statusDot = 'bg-red-500'
+      statusColor = 'text-red-600'
+    }
+
+    // Format list items
+    const itemsList = (order.items || []).map(item => ({
+      name: item.product_name || 'Traceable Farm Product',
+      producer: item.producer_name || 'Verified Partner Farm',
+      batch: item.batch_id || 'N/A',
+      spec: `Verified Batch Item`,
+      image: item.product_image || 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=80',
+      price: parseFloat(item.price),
+      qty: item.quantity
+    }))
+
+    return {
+      id: `GT-${order.id}`,
+      rawId: order.id,
+      dateStr: new Date(order.created_at).toLocaleDateString(),
+      timeStr: new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      itemCount: itemsList.length,
+      total: parseFloat(order.total_price),
+      status: order.status,
+      statusDot,
+      statusColor,
+      images: itemsList.map(item => item.image),
+      itemsList
+    }
+  })
+})
 
 const filteredOrders = computed(() => {
-  if (activeStatusFilter.value === 'all') return orders
-  if (activeStatusFilter.value === 'review') return orders.filter(o => o.status === 'In Review')
-  if (activeStatusFilter.value === 'delivered') return orders.filter(o => o.status === 'Delivered')
-  if (activeStatusFilter.value === 'cancelled') return orders.filter(o => o.status === 'Cancelled')
-  return orders
+  if (activeStatusFilter.value === 'all') return orders.value
+  if (activeStatusFilter.value === 'review') return orders.value.filter(o => o.status === 'Pending' || o.status === 'In Review')
+  if (activeStatusFilter.value === 'delivered') return orders.value.filter(o => o.status === 'Delivered')
+  if (activeStatusFilter.value === 'cancelled') return orders.value.filter(o => o.status === 'Cancelled')
+  return orders.value
 })
 
 const activeOrder = computed(() => {
-  return orders.find(o => o.id === activeDetailsOrderId.value)
+  return orders.value.find(o => o.id === activeDetailsOrderId.value)
 })
 
 const toggleOrderDetails = (orderId) => {

@@ -15,6 +15,8 @@ import Support from '../views/Support.vue'
 import OrderConfirmation from '../views/OrderConfirmation.vue'
 import MyOrders from '../views/MyOrders.vue'
 import Certificates from '../views/Certificates.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -32,7 +34,9 @@ const routes = [
   { path: '/orders', name: 'MyOrders', component: MyOrders },
   { path: '/certificates', name: 'Certificates', component: Certificates },
   { path: '/account', name: 'Account', component: MyAccount },
-  { path: '/producer-dashboard', name: 'ProducerDashboard', component: ProducerDashboard }
+  { path: '/producer-dashboard', name: 'ProducerDashboard', component: ProducerDashboard },
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/register', name: 'Register', component: Register }
 ]
 
 const router = createRouter({

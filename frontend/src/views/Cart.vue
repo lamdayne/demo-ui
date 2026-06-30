@@ -33,107 +33,48 @@
               <div class="col-span-2 text-right">Subtotal</div>
             </div>
 
-            <div class="divide-y divide-gray-100">
-              <!-- Item 1 -->
-              <div class="p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+            <div class="divide-y divide-gray-100" v-if="appStore.cart.length > 0">
+              <!-- Dynamic Cart Item -->
+              <div v-for="item in appStore.cart" :key="item.id" class="p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                 <div class="col-span-1 md:col-span-3 flex gap-4">
                   <div class="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 relative">
-                    <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="U Minh Honey" class="w-full h-full object-cover" />
+                    <img :src="item.image_url" :alt="item.name" class="w-full h-full object-cover" />
                   </div>
                   <div class="flex flex-col justify-center">
-                    <h3 class="font-bold text-gray-900 text-base leading-tight">U Minh Forest Wild Honey 500 ml</h3>
+                    <h3 class="font-bold text-gray-900 text-base leading-tight">{{ item.name }}</h3>
                   </div>
                 </div>
                 <div class="col-span-1 md:col-span-3">
                   <div class="flex items-center gap-1.5 text-sm text-gray-600 mb-1">
-                    <User class="w-4 h-4 text-green-600" /> U Minh Bee Farm
+                    <User class="w-4 h-4 text-green-600" /> {{ item.producer_name || 'Verified Producer' }}
                   </div>
-                  <p class="text-xs text-gray-500">Batch: LOT-UMH-2605-001</p>
+                  <p class="text-xs text-gray-500">Location: {{ item.producer_location || 'Vietnam' }}</p>
                 </div>
                 <div class="col-span-1 md:col-span-2 flex flex-col items-center">
                   <div class="flex items-center border border-gray-200 rounded-lg h-10 w-28 bg-white mb-2">
-                    <button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">–</button>
-                    <input type="text" value="1" class="w-full text-center border-none text-base font-medium focus:ring-0 p-0 text-gray-900" readonly />
-                    <button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">+</button>
+                    <button @click="appStore.updateCartQuantity(item.id, item.quantity - 1)" class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">–</button>
+                    <input type="text" :value="item.quantity" class="w-full text-center border-none text-base font-medium focus:ring-0 p-0 text-gray-900" readonly />
+                    <button @click="appStore.updateCartQuantity(item.id, item.quantity + 1)" class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">+</button>
                   </div>
-                  <button class="text-xs text-gray-500 hover:text-[#1E4B35] underline">Save for later</button>
+                  <button @click="appStore.toggleWishlist(item.id)" class="text-xs text-gray-500 hover:text-[#1E4B35] underline">Save for later</button>
                 </div>
-                <div class="col-span-1 md:col-span-2 text-center text-sm text-gray-600">229,000 VND</div>
+                <div class="col-span-1 md:col-span-2 text-center text-sm text-gray-600">{{ parseFloat(item.price).toLocaleString() }} VND</div>
                 <div class="col-span-1 md:col-span-2 flex flex-col items-end">
-                  <div class="font-bold text-gray-900 text-base mb-2">229,000 VND</div>
-                  <button class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1"><Trash2 class="w-3.5 h-3.5" /> Remove</button>
-                </div>
-              </div>
-
-              <!-- Item 2 -->
-              <div class="p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                <div class="col-span-1 md:col-span-3 flex gap-4">
-                  <div class="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 relative">
-                    <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200" alt="ST25 Rice" class="w-full h-full object-cover" />
-                  </div>
-                  <div class="flex flex-col justify-center">
-                    <h3 class="font-bold text-gray-900 text-base leading-tight">ST25 Premium Rice 2 kg</h3>
-                  </div>
-                </div>
-                <div class="col-span-1 md:col-span-3">
-                  <div class="flex items-center gap-1.5 text-sm text-gray-600 mb-1">
-                    <User class="w-4 h-4 text-green-600" /> Song Lách Rice Co-op
-                  </div>
-                  <p class="text-xs text-gray-500">Batch: LOT-ST25-2605-002</p>
-                </div>
-                <div class="col-span-1 md:col-span-2 flex flex-col items-center">
-                  <div class="flex items-center border border-gray-200 rounded-lg h-10 w-28 bg-white mb-2">
-                    <button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">–</button>
-                    <input type="text" value="1" class="w-full text-center border-none text-base font-medium focus:ring-0 p-0 text-gray-900" readonly />
-                    <button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">+</button>
-                  </div>
-                  <button class="text-xs text-gray-500 hover:text-[#1E4B35] underline">Save for later</button>
-                </div>
-                <div class="col-span-1 md:col-span-2 text-center text-sm text-gray-600">139,000 VND</div>
-                <div class="col-span-1 md:col-span-2 flex flex-col items-end">
-                  <div class="font-bold text-gray-900 text-base mb-2">139,000 VND</div>
-                  <button class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1"><Trash2 class="w-3.5 h-3.5" /> Remove</button>
-                </div>
-              </div>
-
-              <!-- Item 3 -->
-              <div class="p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-                <div class="col-span-1 md:col-span-3 flex gap-4">
-                  <div class="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 relative">
-                    <img src="https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200" alt="Lotus Tea" class="w-full h-full object-cover" />
-                  </div>
-                  <div class="flex flex-col justify-center">
-                    <h3 class="font-bold text-gray-900 text-base leading-tight">Lotus Tea 200 g</h3>
-                  </div>
-                </div>
-                <div class="col-span-1 md:col-span-3">
-                  <div class="flex items-center gap-1.5 text-sm text-gray-600 mb-1">
-                    <User class="w-4 h-4 text-green-600" /> Ben Tre Green Co-op
-                  </div>
-                  <p class="text-xs text-gray-500">Batch: LOT-BTG-2605-003</p>
-                </div>
-                <div class="col-span-1 md:col-span-2 flex flex-col items-center">
-                  <div class="flex items-center border border-gray-200 rounded-lg h-10 w-28 bg-white mb-2">
-                    <button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">–</button>
-                    <input type="text" value="1" class="w-full text-center border-none text-base font-medium focus:ring-0 p-0 text-gray-900" readonly />
-                    <button class="w-8 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">+</button>
-                  </div>
-                  <button class="text-xs text-gray-500 hover:text-[#1E4B35] underline">Save for later</button>
-                </div>
-                <div class="col-span-1 md:col-span-2 text-center text-sm text-gray-600">115,000 VND</div>
-                <div class="col-span-1 md:col-span-2 flex flex-col items-end">
-                  <div class="font-bold text-gray-900 text-base mb-2">115,000 VND</div>
-                  <button class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1"><Trash2 class="w-3.5 h-3.5" /> Remove</button>
+                  <div class="font-bold text-gray-900 text-base mb-2">{{ (parseFloat(item.price) * item.quantity).toLocaleString() }} VND</div>
+                  <button @click="appStore.removeFromCart(item.id)" class="text-xs text-gray-400 hover:text-red-500 flex items-center gap-1"><Trash2 class="w-3.5 h-3.5" /> Remove</button>
                 </div>
               </div>
             </div>
+            <div v-else class="py-16 text-center text-gray-400 text-sm font-semibold">
+              Your shopping cart is empty.
+            </div>
 
             <!-- Cart Footer Actions -->
-            <div class="p-5 border-t border-gray-100 flex justify-between items-center bg-[#FAFAFA]">
+            <div class="p-5 border-t border-gray-100 flex justify-between items-center bg-[#FAFAFA]" v-if="appStore.cart.length > 0">
               <button class="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-[#1E4B35]">
                 <Heart class="w-4 h-4" /> Save Cart
               </button>
-              <button class="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-red-500">
+              <button @click="appStore.clearCart" class="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-red-500">
                 <Trash2 class="w-4 h-4" /> Clear Cart
               </button>
             </div>
@@ -147,23 +88,23 @@
             
             <div class="space-y-4 mb-6 border-b border-gray-100 pb-6">
               <div class="flex justify-between text-gray-600 text-sm">
-                <span>Subtotal (3 items)</span>
-                <span class="font-medium text-gray-900">483,000 VND</span>
+                <span>Subtotal ({{ subtotalItems }} items)</span>
+                <span class="font-medium text-gray-900">{{ subtotalPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-green-600 text-sm">
                 <span>Discount <br/><span class="text-xs opacity-75">(GREENTRACE10)</span></span>
-                <span class="font-medium">-48,300 VND</span>
+                <span class="font-medium">-{{ discountPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-gray-600 text-sm items-center">
                 <span class="flex items-center gap-1">Standard Shipping <Info class="w-3.5 h-3.5" /></span>
-                <span class="font-medium text-gray-900">30,000 VND</span>
+                <span class="font-medium text-gray-900">{{ shippingFee === 0 ? 'FREE' : shippingFee.toLocaleString() + ' VND' }}</span>
               </div>
             </div>
             
             <div class="mb-6">
               <div class="flex justify-between items-end mb-1">
                 <span class="font-bold text-gray-900 text-lg">Total</span>
-                <span class="text-2xl font-bold text-[#1E4B35]">464,700 VND</span>
+                <span class="text-2xl font-bold text-[#1E4B35]">{{ totalPrice.toLocaleString() }} VND</span>
               </div>
               <p class="text-xs text-gray-500 max-w-[200px]">Taxes included. Final total calculated at checkout.</p>
             </div>
@@ -202,7 +143,7 @@
             <Tag class="w-6 h-6 text-green-600" />
             <div>
               <h4 class="text-green-800 font-bold text-sm">Promo code applied!</h4>
-              <p class="text-green-700 text-xs">You saved 48,300 VND with GREENTRACE10.</p>
+              <p class="text-green-700 text-xs">You saved {{ discountPrice.toLocaleString() }} VND with GREENTRACE10.</p>
             </div>
           </div>
           <CheckCircle2 class="w-5 h-5 text-green-600" />
@@ -312,14 +253,37 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Image as ImageIcon, User, Trash2, Heart, Lock, CheckCircle2, Leaf as LeafIcon, Info, Truck, Tag, ArrowLeft, ArrowRight, Check, ShieldCheck, FileText, Sprout, MapPin, ShoppingCart, RotateCcw, Headphones as HeadphonesIcon } from 'lucide-vue-next'
 import { Leaf } from 'lucide-vue-next'
+import { useAppStore } from '@/stores/appStore'
+
+const appStore = useAppStore()
 
 const recommendations = [
   { name: 'Honeycomb 300 g', producer: 'U Minh Bee Farm', price: '95,000 VND', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200' },
   { name: 'Ben Tre Green Pomelo 1 kg', producer: 'Ben Tre Fruit Co-op', price: '79,000 VND', image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Jasmine Tea 100 g', producer: 'Tra Vinh Tea Garden', price: '89,000 VND', image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Free-range Eggs (10 pcs)', producer: 'Ben Tre Organic Farm', price: '45,000 VND', image: 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&q=80&w=200' },
-  { name: 'Morning Glory 300 g', producer: 'Ben Tre Vegetables Co-op', price: '28,000 VND', image: 'https://images.unsplash.com/photo-1524179091875-bf99a9a6af57?auto=format&fit=crop&q=80&w=200' }
+  { name: 'Jasmine Tea 100 g', producer: 'Tra Vinh Tea Garden', price: '89,000 VND', image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200' }
 ]
+
+const subtotalItems = computed(() => {
+  return appStore.cart.reduce((sum, item) => sum + item.quantity, 0)
+})
+
+const subtotalPrice = computed(() => {
+  return appStore.cart.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0)
+})
+
+const discountPrice = computed(() => {
+  return Math.round(subtotalPrice.value * 0.10)
+})
+
+const shippingFee = computed(() => {
+  if (subtotalPrice.value >= 500000 || subtotalPrice.value === 0) return 0
+  return 30000
+})
+
+const totalPrice = computed(() => {
+  return Math.max(0, subtotalPrice.value - discountPrice.value + shippingFee.value)
+})
 </script>

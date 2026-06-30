@@ -243,10 +243,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useAppStore } from '@/stores/appStore'
 import { Image, Search, Star, CheckCircle2, MapPin, Package, FileText, Leaf, LayoutGrid, List, ShieldCheck, Users, Mail, Phone, Clock, ChevronDown } from 'lucide-vue-next'
 
+const appStore = useAppStore()
 const activeFaq = ref(null)
+const producers = ref([])
 
 function toggleFaq(index) {
   if (activeFaq.value === index) {
@@ -256,7 +259,7 @@ function toggleFaq(index) {
   }
 }
 
-const producers = [
+const staticProducers = [
   {
     id: 1,
     name: 'U Minh Bee Farm',
@@ -318,4 +321,28 @@ const producers = [
     image: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=400'
   }
 ]
+
+onMounted(async () => {
+  try {
+    const list = await appStore.fetchProducers()
+    if (list && list.length > 0) {
+      producers.value = list.map(p => ({
+        id: p.id,
+        name: p.name,
+        location: p.location,
+        desc: p.description,
+        products: 'Honey, Grains, Tea',
+        batches: 5,
+        featured: p.id % 2 === 1,
+        verified: true,
+        image: p.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400'
+      }))
+    } else {
+      producers.value = staticProducers
+    }
+  } catch (err) {
+    console.error('Error fetching producers:', err)
+    producers.value = staticProducers
+  }
+})
 </script>

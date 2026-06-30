@@ -4,9 +4,22 @@
       <!-- Search Bar -->
       <div class="relative w-full max-w-4xl mx-auto mb-8">
         <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-        <input type="text" value="ST25" class="w-full pl-12 pr-12 py-3.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4B35] focus:border-transparent text-lg text-gray-900" />
-        <X class="absolute right-32 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600" />
-        <button class="absolute right-2 top-2 bottom-2 bg-[#1E4B35] text-white px-6 rounded-md font-medium hover:bg-[#1E4B35]/90 transition">
+        <input 
+          type="text" 
+          v-model="searchInput" 
+          @keyup.enter="loadProducts" 
+          class="w-full pl-12 pr-12 py-3.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4B35] focus:border-transparent text-lg text-gray-900" 
+          placeholder="Search traceable products..."
+        />
+        <X 
+          v-if="searchInput" 
+          @click="clearSearch" 
+          class="absolute right-32 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600" 
+        />
+        <button 
+          @click="loadProducts" 
+          class="absolute right-2 top-2 bottom-2 bg-[#1E4B35] text-white px-6 rounded-md font-medium hover:bg-[#1E4B35]/90 transition"
+        >
           Search
         </button>
       </div>
@@ -15,21 +28,23 @@
       <div class="flex items-end justify-between mb-6">
         <div>
           <h1 class="text-3xl font-bold text-[#1E4B35] mb-2">Search Results</h1>
-          <p class="text-gray-900 text-lg">Showing results for <strong>"ST25"</strong></p>
+          <p class="text-gray-900 text-lg">Showing results for <strong>"{{ searchInput || activeCategory || 'All Products' }}"</strong></p>
         </div>
-        <p class="text-sm font-semibold text-gray-900">21 results found</p>
+        <p class="text-sm font-semibold text-gray-900">{{ products.length }} results found</p>
       </div>
 
       <!-- Categories Tabs -->
       <div class="flex flex-wrap items-center justify-between border-b border-gray-200 pb-4 mb-8">
-        <div class="flex gap-2">
-          <button class="bg-[#1E4B35] text-white px-4 py-2 rounded-full text-sm font-medium">All Products</button>
-          <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50">Rice & Grains</button>
-          <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50">Bundles</button>
-          <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50">Producers</button>
-          <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50">Fruits</button>
-          <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50">Honey</button>
-          <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50">Tea</button>
+        <div class="flex flex-wrap gap-2">
+          <button 
+            v-for="cat in ['All Products', 'Rice', 'Fruits', 'Honey', 'Tea', 'Bundles']" 
+            :key="cat"
+            @click="selectCategory(cat)"
+            class="px-4 py-2 rounded-full text-sm font-medium transition-colors"
+            :class="activeCategory === cat ? 'bg-[#1E4B35] text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'"
+          >
+            {{ cat }}
+          </button>
         </div>
         <div class="flex items-center gap-4 mt-4 lg:mt-0">
           <div class="flex items-center gap-2">
@@ -219,8 +234,19 @@
 
         <!-- Product Grid -->
         <main class="w-full flex-grow">
-          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+          <!-- Loading State -->
+          <div v-if="loading" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
+            <div v-for="n in 6" :key="n" class="bg-gray-50 rounded-xl h-96 animate-pulse border border-gray-200"></div>
+          </div>
+          <!-- Products Grid -->
+          <div v-else-if="products.length > 0" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
             <ProductCard v-for="product in products" :key="product.id" :product="product" />
+          </div>
+          <!-- Empty State -->
+          <div v-else class="text-center py-16 border border-dashed rounded-2xl border-gray-250 bg-gray-50 mb-12">
+            <Leaf class="w-12 h-12 text-gray-400 mx-auto mb-3" />
+            <h3 class="text-lg font-bold text-gray-900 mb-1">No products found</h3>
+            <p class="text-sm text-gray-500">Try adjusting your filters or search keywords.</p>
           </div>
 
           <!-- Pagination -->
@@ -319,20 +345,65 @@
 </template>
 
 <script setup>
+import { ref, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { Search, X, ChevronUp, ChevronLeft, ChevronRight, LayoutGrid, List, Leaf, CheckCircle2, FlaskConical, Lock, MessageCircle, ArrowRight, Image as ImageIcon } from 'lucide-vue-next'
 import ProductCard from '@/components/product/ProductCard.vue'
+import { useAppStore } from '@/stores/appStore'
+
+const route = useRoute()
+const appStore = useAppStore()
 
 const recommendedTags = ['ST25 rice', 'ST25 5kg', 'Organic rice', 'Ben Tre Green', 'Premium rice', 'Brown rice', 'Rice bundles', 'Rice gift set']
 
-const products = [
-  { id: 1, name: 'ST25 Premium Rice 2 kg', producer: 'Ben Tre Green', verified: true, location: 'Ben Tre, Vietnam', badges: ['Organic', 'Lab Test', 'VietGAP'], price: 139000, batch: 'LOT-ST25-2605-002', topMatch: true, isBundle: false, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400' },
-  { id: 2, name: 'ST25 Premium Rice 5 kg', producer: 'Ben Tre Green', verified: true, location: 'Ben Tre, Vietnam', badges: ['Organic', 'Lab Test', 'VietGAP'], price: 319000, batch: 'LOT-ST25-2605-001', topMatch: false, isBundle: false, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400' },
-  { id: 3, name: 'Healthy Starter Bundle', producer: 'Ben Tre Green', verified: true, location: 'Ben Tre, Vietnam', badges: ['Organic', 'Lab Test'], price: 499000, saveDesc: 'Save 10% vs buying separately', topMatch: false, isBundle: true, image: 'https://images.unsplash.com/photo-1607349913338-fca6f7fc42d0?auto=format&fit=crop&q=80&w=400' },
-  { id: 4, name: 'U Minh Forest Wild Honey 500 ml', producer: 'U Minh Rice Farm', verified: false, location: 'U Minh, Ca Mau', badges: ['Raw', 'Lab Test'], price: 229000, batch: 'LOT-HNY-2605-001', topMatch: false, isBundle: false, image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400' },
-  { id: 5, name: 'Ben Tre Green Pomelo 1 kg', producer: 'Ben Tre Fruit Co-op', verified: true, location: 'Ben Tre, Vietnam', badges: ['VietGAP', 'Lab Test'], price: 79000, batch: 'LOT-PML-2605-003', topMatch: false, isBundle: false, image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=400' },
-  { id: 6, name: 'Farm Fresh Bundle', producer: 'Multiple Producers', verified: true, location: 'Ben Tre, Vietnam', badges: ['Organic', 'VietGAP'], price: 699000, saveDesc: 'Save 12% vs buying separately', topMatch: false, isBundle: true, image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400' },
-  { id: 7, name: 'ST25 Brown Rice 2 kg', producer: 'Ben Tre Green', verified: true, location: 'Ben Tre, Vietnam', badges: ['Organic', 'Lab Test', 'VietGAP'], price: 149000, batch: 'LOT-ST25-BRN-2605-004', topMatch: false, isBundle: false, image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=400' },
-  { id: 8, name: 'Lotus Green Tea 100 g', producer: 'Soc Trang Tea Co-op', verified: true, location: 'Ben Trang, Vietnam', badges: ['Organic', 'Lab Test'], price: 89000, batch: 'LOT-TEA-2605-002', topMatch: false, isBundle: false, image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=400' },
-  { id: 9, name: 'Wild Honey Gift Set 3 x 250 ml', producer: 'U Minh Rice Farm', verified: false, location: 'U Minh, Ca Mau', badges: ['Raw', 'Lab Test'], price: 299000, batch: 'LOT-HNY-SET-2605-001', topMatch: false, isBundle: false, image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400' }
-]
+const products = ref([])
+const loading = ref(true)
+
+const searchInput = ref(route.query.search || '')
+const activeCategory = ref(route.query.category || 'All Products')
+
+const loadProducts = async () => {
+  loading.value = true
+  try {
+    const list = await appStore.fetchProducts(activeCategory.value, searchInput.value)
+    products.value = list.map(p => ({
+      id: p.id,
+      name: p.name,
+      producer: p.producer_name || 'Green Producer',
+      verified: true,
+      location: p.producer_location || 'Vietnam',
+      badges: ['Batch record available', 'Reviewed sample'],
+      price: parseFloat(p.price),
+      batch: 'LOT-UMH-2605-001',
+      isBundle: false,
+      image: p.image_url
+    }))
+  } catch (error) {
+    console.error('Failed to load products:', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+const selectCategory = (cat) => {
+  activeCategory.value = cat
+  loadProducts()
+}
+
+const clearSearch = () => {
+  searchInput.value = ''
+  loadProducts()
+}
+
+onMounted(loadProducts)
+
+watch(() => route.query.category, (newVal) => {
+  activeCategory.value = newVal || 'All Products'
+  loadProducts()
+})
+
+watch(() => route.query.search, (newVal) => {
+  searchInput.value = newVal || ''
+  loadProducts()
+})
 </script>

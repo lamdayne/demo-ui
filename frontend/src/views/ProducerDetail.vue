@@ -7,7 +7,7 @@
         <ChevronRight class="w-3.5 h-3.5" />
         <router-link to="/producers" class="hover:text-[#1E4B35]">Producers</router-link>
         <ChevronRight class="w-3.5 h-3.5" />
-        <span class="text-[#1E4B35] font-semibold">U Minh Bee Farm</span>
+        <span class="text-[#1E4B35] font-semibold">{{ producer?.name || 'U Minh Bee Farm' }}</span>
       </div>
     </div>
 
@@ -17,13 +17,13 @@
         <!-- Left Hero Content -->
         <div class="w-full lg:w-[55%] p-8 lg:p-12 flex flex-col justify-between">
           <div>
-            <h1 class="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">U Minh Bee Farm</h1>
+            <h1 class="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">{{ producer?.name || 'U Minh Bee Farm' }}</h1>
             <div class="flex items-center gap-1.5 text-green-300 text-sm font-semibold mb-6">
               <MapPin class="w-4 h-4 fill-current" />
-              <span>Ca Mau, Viet Nam</span>
+              <span>{{ producer?.location || 'Ca Mau, Viet Nam' }}</span>
             </div>
             <p class="text-green-50 text-base leading-relaxed mb-8 max-w-xl">
-              Harvesting wild honey from the melaleuca forests of U Minh with respect for nature and bee colonies. Our family has kept bees here for over 20 years, following traditional methods and caring for the forest they rely on.
+              {{ producer?.description || 'Harvesting wild honey from the melaleuca forests of U Minh with respect for nature and bee colonies.' }}
             </p>
             <div class="flex flex-wrap gap-4 mb-8">
               <router-link to="/products" class="bg-white text-[#1E4B35] px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-green-50 transition shadow-md">
@@ -70,7 +70,7 @@
         </div>
         <!-- Right Hero Image -->
         <div class="w-full lg:w-[45%] h-64 lg:h-auto min-h-[350px] relative overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800" alt="U Minh Beekeeper" class="w-full h-full object-cover object-center" />
+          <img :src="producer?.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800'" :alt="producer?.name || 'Beekeeper'" class="w-full h-full object-cover object-center" />
           <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#1E4B35] via-transparent to-transparent opacity-60 lg:opacity-100"></div>
         </div>
       </div>
@@ -82,11 +82,11 @@
         <!-- Card 1 -->
         <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex items-start gap-4 hover:shadow-md transition">
           <div class="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0">
-            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Honey jar" class="w-full h-full object-cover" />
+            <img :src="producer?.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200'" alt="Producer image" class="w-full h-full object-cover" />
           </div>
           <div>
             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Sample Products</span>
-            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">1</div>
+            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">{{ productsList.length }}</div>
             <p class="text-xs text-gray-500 mb-3 leading-relaxed">Carefully selected products from this producer.</p>
             <router-link to="/products" class="text-xs font-bold text-green-700 hover:text-green-800 flex items-center gap-1">
               View Products <ArrowRight class="w-3.5 h-3.5" />
@@ -130,14 +130,8 @@
         <!-- Story Text (Left) -->
         <div class="lg:col-span-5 space-y-5">
           <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">Producer Story</h2>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            Deep in the U Minh forest of Ca Mau, where the canals weave through melaleuca trees and seasonally flooded wetlands, bees find abundant nectar from wild flowers. U Minh Bee Farm was founded by Mr. Nguyen Van An, who learned beekeeping from his father and continues to pass it down to the next generation.
-          </p>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            The farm migrates hives naturally with the blooming seasons, avoids chemicals, and leaves enough honey for the bees. This helps protect colonies, supports biodiversity, and keeps the forest healthy for the long term.
-          </p>
-          <p class="text-gray-600 text-sm leading-relaxed">
-            By working with Green Trace, U Minh Bee Farm shares transparency in every jar of honey—so you can enjoy it with confidence.
+          <p class="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
+            {{ producer?.history || 'Deep in the U Minh forest of Ca Mau, where the canals weave through melaleuca trees and seasonally flooded wetlands, bees find abundant nectar from wild flowers. U Minh Bee Farm was founded by Mr. Nguyen Van An, who learned beekeeping from his father and continues to pass it down to the next generation.\n\nThe farm migrates hives naturally with the blooming seasons, avoids chemicals, and leaves enough honey for the bees. This helps protect colonies, supports biodiversity, and keeps the forest healthy for the long term.\n\nBy working with Green Trace, U Minh Bee Farm shares transparency in every jar of honey—so you can enjoy it with confidence.' }}
           </p>
           <button class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-gray-50 shadow-sm transition">
             <MapPin class="w-4 h-4 text-green-600" />
@@ -231,29 +225,55 @@
         </router-link>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <!-- Single Product Card -->
-        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
-          <div class="relative aspect-[4/3] bg-gray-50 overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400" alt="Wild Honey" class="w-full h-full object-cover" />
-            <div class="absolute top-3 right-3 z-10 bg-green-50 text-green-700 border border-green-200 text-[10px] font-semibold px-2 py-1 rounded flex items-center gap-1 shadow-sm">
-              <CheckCircle2 class="w-3 h-3 text-green-500" /> Sampled
+        <template v-if="productsList.length > 0">
+          <div v-for="prod in productsList" :key="prod.id" class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+            <div class="relative aspect-[4/3] bg-gray-50 overflow-hidden">
+              <img :src="prod.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400'" :alt="prod.name" class="w-full h-full object-cover" />
+              <div class="absolute top-3 right-3 z-10 bg-green-50 text-green-700 border border-green-200 text-[10px] font-semibold px-2 py-1 rounded flex items-center gap-1 shadow-sm">
+                <CheckCircle2 class="w-3 h-3 text-green-500" /> Sampled
+              </div>
+            </div>
+            <div class="p-5 flex flex-col flex-grow">
+              <h3 class="font-bold text-gray-900 text-base leading-tight mb-2">
+                {{ prod.name }}
+              </h3>
+              <p class="text-xs text-gray-500 mb-4 flex-grow line-clamp-3">
+                {{ prod.description }}
+              </p>
+              <div class="flex justify-between items-center mt-auto">
+                <span class="text-base font-extrabold text-gray-900">{{ parseFloat(prod.price).toLocaleString() }} VND</span>
+                <router-link :to="`/product/${prod.id}`" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50 transition">
+                  View Product
+                </router-link>
+              </div>
             </div>
           </div>
-          <div class="p-5 flex flex-col flex-grow">
-            <h3 class="font-bold text-gray-900 text-base leading-tight mb-2">
-              U Minh Forest Wild Honey 500 ml
-            </h3>
-            <p class="text-xs text-gray-500 mb-4 flex-grow">
-              Raw, unfiltered honey harvested from wild flowers in the U Minh forest.
-            </p>
-            <div class="flex justify-between items-center mt-auto">
-              <span class="text-base font-extrabold text-gray-900">229,000 VND</span>
-              <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50 transition">
-                View Product
-              </button>
+        </template>
+        <template v-else>
+          <!-- Single Product Card -->
+          <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col">
+            <div class="relative aspect-[4/3] bg-gray-50 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400" alt="Wild Honey" class="w-full h-full object-cover" />
+              <div class="absolute top-3 right-3 z-10 bg-green-50 text-green-700 border border-green-200 text-[10px] font-semibold px-2 py-1 rounded flex items-center gap-1 shadow-sm">
+                <CheckCircle2 class="w-3 h-3 text-green-500" /> Sampled
+              </div>
+            </div>
+            <div class="p-5 flex flex-col flex-grow">
+              <h3 class="font-bold text-gray-900 text-base leading-tight mb-2">
+                U Minh Forest Wild Honey 500 ml
+              </h3>
+              <p class="text-xs text-gray-500 mb-4 flex-grow">
+                Raw, unfiltered honey harvested from wild flowers in the U Minh forest.
+              </p>
+              <div class="flex justify-between items-center mt-auto">
+                <span class="text-base font-extrabold text-gray-900">229,000 VND</span>
+                <router-link to="/product/1" class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-50 transition">
+                  View Product
+                </router-link>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
     </div>
 
@@ -494,7 +514,29 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useAppStore } from '@/stores/appStore'
 import { ChevronRight, MapPin, ShoppingCart, FileText, Home, Sun, Trees, Users, ArrowRight, ClipboardList, Calendar, Leaf, CheckCircle2, CheckSquare, FlaskConical, Sprout } from 'lucide-vue-next'
+
+const route = useRoute()
+const appStore = useAppStore()
+
+const producer = ref(null)
+const productsList = ref([])
+
+onMounted(async () => {
+  try {
+    const id = route.params.id
+    const data = await appStore.fetchProducer(id)
+    if (data) {
+      producer.value = data
+      productsList.value = data.products || []
+    }
+  } catch (err) {
+    console.error('Error fetching producer details:', err)
+  }
+})
 </script>
 
 <style scoped>

@@ -44,13 +44,13 @@
 
           <!-- Product Details Column -->
           <div class="w-full lg:w-1/2 flex flex-col justify-between">
-            <div>
-              <span class="bg-[#FEF3C7] text-[#D97706] text-xs font-bold px-2.5 py-1 rounded inline-block mb-3">Honey</span>
-              <h1 class="text-3xl font-extrabold text-gray-900 mb-2 leading-tight">U Minh Forest Wild Honey, 500 ml</h1>
+            <div v-if="product">
+              <span class="bg-[#FEF3C7] text-[#D97706] text-xs font-bold px-2.5 py-1 rounded inline-block mb-3">{{ product.category || 'General' }}</span>
+              <h1 class="text-3xl font-extrabold text-gray-900 mb-2 leading-tight">{{ product.name }}</h1>
               
               <div class="flex items-center gap-1.5 text-sm mb-4">
                 <span class="text-gray-500">by</span>
-                <router-link to="/producer/1" class="text-[#1E4B35] font-bold underline hover:text-[#163a29]">U Minh Bee Farm</router-link>
+                <router-link :to="'/producer/' + (product.producer_id || 1)" class="text-[#1E4B35] font-bold underline hover:text-[#163a29]">{{ product.producer_name || 'Verified Farm' }}</router-link>
               </div>
 
               <!-- Rating, Verification -->
@@ -58,8 +58,8 @@
                 <div class="flex text-yellow-400">
                   <Star v-for="i in 5" :key="i" class="w-4 h-4 fill-current" />
                 </div>
-                <span class="font-bold text-gray-700">4.8</span>
-                <span class="text-gray-400">(128 reviews)</span>
+                <span class="font-bold text-gray-700">{{ product.rating || '5.0' }}</span>
+                <span class="text-gray-400">({{ product.reviews_count || '0' }} reviews)</span>
                 <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-bold border border-green-200 flex items-center gap-1">
                   <Check class="w-3 h-3"/> Verified Producer
                 </span>
@@ -67,37 +67,40 @@
 
               <!-- Price -->
               <div class="mb-5">
-                <div class="text-3xl font-extrabold text-[#1E4B35]">229,000 VND</div>
+                <div class="text-3xl font-extrabold text-[#1E4B35]">{{ parseFloat(product.price).toLocaleString() }} VND</div>
                 <div class="text-[10px] text-gray-400 mt-0.5">(Tax included)</div>
               </div>
 
               <p class="text-xs text-gray-600 leading-relaxed mb-6">
-                Harvested from the melaleuca forest of U Minh. Raw, unfiltered and gently packed to preserve natural pollen and aroma. Rich, floral and pleasantly mild.
+                {{ product.description || 'Verified organic agricultural produce sourced directly from eco-friendly local cooperatives.' }}
               </p>
 
               <!-- Specs Table list -->
               <div class="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 mb-6 text-xs text-gray-600">
                 <div class="flex items-center gap-2">
                   <User class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Producer:</span> <span class="font-semibold text-gray-900">U Minh Bee Farm</span></span>
+                  <span><span class="text-gray-400">Producer:</span> <span class="font-semibold text-gray-900">{{ product.producer_name || 'Verified Cooperative' }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <MapPin class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Location:</span> <span class="font-semibold text-gray-900">Ca Mau, Vietnam</span></span>
+                  <span><span class="text-gray-400">Location:</span> <span class="font-semibold text-gray-900">{{ product.producer_location || 'Vietnam' }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <Package class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Category:</span> <span class="font-semibold text-gray-900">Honey</span></span>
+                  <span><span class="text-gray-400">Category:</span> <span class="font-semibold text-gray-900">{{ product.category }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <Sparkles class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Size:</span> <span class="font-semibold text-gray-900">500 ml</span></span>
+                  <span><span class="text-gray-400">Packaging:</span> <span class="font-semibold text-gray-900">{{ product.specifications?.packaging || 'Standard Pack' }}</span></span>
                 </div>
               </div>
             </div>
+            <div v-else class="py-12 text-center text-gray-400 text-xs font-semibold">
+              Loading product details...
+            </div>
 
             <!-- Actions Row -->
-            <div>
+            <div v-if="product">
               <div class="flex items-center gap-4 mb-4">
                 <div class="flex items-center border border-gray-200 rounded-lg h-12 w-32 flex-shrink-0">
                   <button @click="qty > 1 ? qty-- : null" class="w-10 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 font-bold transition">-</button>
@@ -105,8 +108,8 @@
                   <button @click="qty++" class="w-10 h-full flex items-center justify-center text-gray-500 hover:bg-gray-50 font-bold transition">+</button>
                 </div>
 
-                <button class="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center text-gray-500 hover:border-[#1E4B35] hover:text-[#1E4B35] transition">
-                  <Heart class="w-5 h-5" />
+                <button @click="toggleWishlist" class="w-12 h-12 border border-gray-300 rounded-lg flex items-center justify-center transition" :class="isWishlisted ? 'border-red-500 text-red-500 hover:bg-red-50' : 'text-gray-500 hover:border-[#1E4B35] hover:text-[#1E4B35]'">
+                  <Heart class="w-5 h-5" :class="{ 'fill-current': isWishlisted }" />
                 </button>
 
                 <button @click="addToCart" class="flex-grow h-12 border border-[#1E4B35] text-[#1E4B35] font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-green-50 transition">
@@ -545,42 +548,58 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { ChevronRight, ChevronLeft, Star, Check, User, MapPin, Package, Sparkles, Heart, ShoppingCart, Scan, ShieldCheck, PackageCheck, CreditCard, Trees, Droplet, Globe, FileText, FlaskConical, Award, ArrowRight } from 'lucide-vue-next'
+import { useAppStore } from '@/stores/appStore'
+
+const route = useRoute()
+const appStore = useAppStore()
 
 const qty = ref(1)
 const activeImageIndex = ref(0)
 const activeDetailTab = ref('overview')
 const isCartModalOpen = ref(false)
 const isReportModalOpen = ref(false)
+const product = ref(null)
+const loading = ref(true)
 
-const productImages = [
-  'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800'
-]
+const productImages = computed(() => {
+  if (product.value?.image_url) {
+    return [
+      product.value.image_url,
+      'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800'
+    ]
+  }
+  return [
+    'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=800',
+    'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800'
+  ]
+})
 
-const activeImage = computed(() => productImages[activeImageIndex.value])
+const activeImage = computed(() => productImages.value[activeImageIndex.value] || '')
 
 const prevImg = () => {
   if (activeImageIndex.value > 0) {
     activeImageIndex.value--
   } else {
-    activeImageIndex.value = productImages.length - 1
+    activeImageIndex.value = productImages.value.length - 1
   }
 }
 
 const nextImg = () => {
-  if (activeImageIndex.value < productImages.length - 1) {
+  if (activeImageIndex.value < productImages.value.length - 1) {
     activeImageIndex.value++
   } else {
     activeImageIndex.value = 0
   }
 }
 
-const recommendations = [
+const recommendations = ref([
   {
     name: 'Tram Honey, 500 ml',
     rating: 4.7,
@@ -601,17 +620,37 @@ const recommendations = [
     reviews: 42,
     price: 179000,
     image: 'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    name: 'Longan Honey, 500 ml',
-    rating: 4.7,
-    reviews: 64,
-    price: 209000,
-    image: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=300'
   }
-]
+])
 
 const addToCart = () => {
-  isCartModalOpen.value = true
+  if (product.value) {
+    appStore.addToCart(product.value, qty.value)
+    isCartModalOpen.value = true
+  }
 }
+
+const isWishlisted = computed(() => {
+  if (!product.value) return false
+  return appStore.wishlist.some(w => parseInt(w.id) === parseInt(product.value.id))
+})
+
+const toggleWishlist = () => {
+  if (product.value) {
+    appStore.toggleWishlist(product.value.id)
+  }
+}
+
+onMounted(async () => {
+  loading.value = true
+  try {
+    const id = route.params.id
+    const data = await appStore.fetchProduct(id)
+    product.value = data
+  } catch (error) {
+    console.error('Failed to load product details:', error)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
