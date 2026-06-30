@@ -1,0 +1,43 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '../views/Home.vue'
+import ProductList from '../views/ProductList.vue'
+import ProductDetail from '../views/ProductDetail.vue'
+import Cart from '../views/Cart.vue'
+import Checkout from '../views/Checkout.vue'
+import Partner from '../views/Partner.vue'
+import Producers from '../views/Producers.vue'
+import ProducerDetail from '../views/ProducerDetail.vue'
+import About from '../views/About.vue'
+import Traceability from '../views/Traceability.vue'
+import MyAccount from '../views/MyAccount.vue'
+import ProducerDashboard from '../views/ProducerDashboard.vue'
+import Support from '../views/Support.vue'
+import OrderConfirmation from '../views/OrderConfirmation.vue'
+import MyOrders from '../views/MyOrders.vue'
+import Certificates from '../views/Certificates.vue'
+
+const routes = [
+  { path: '/', name: 'Home', component: Home },
+  { path: '/products', name: 'Products', component: ProductList },
+  { path: '/product/:id', name: 'ProductDetail', component: ProductDetail },
+  { path: '/cart', name: 'Cart', component: Cart },
+  { path: '/checkout', name: 'Checkout', component: Checkout },
+  { path: '/partner', name: 'Partner', component: Partner },
+  { path: '/producers', name: 'Producers', component: Producers },
+  { path: '/producer/:id', name: 'ProducerDetail', component: ProducerDetail },
+  { path: '/about', name: 'About', component: About },
+  { path: '/traceability', name: 'Traceability', component: Traceability },
+  { path: '/support', name: 'Support', component: Support },
+  { path: '/confirmation', name: 'OrderConfirmation', component: OrderConfirmation },
+  { path: '/orders', name: 'MyOrders', component: MyOrders },
+  { path: '/certificates', name: 'Certificates', component: Certificates },
+  { path: '/account', name: 'Account', component: MyAccount },
+  { path: '/producer-dashboard', name: 'ProducerDashboard', component: ProducerDashboard }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+export default router
