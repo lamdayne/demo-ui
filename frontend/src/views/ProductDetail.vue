@@ -565,20 +565,23 @@ const product = ref(null)
 const loading = ref(true)
 
 const productImages = computed(() => {
+  const images = []
   if (product.value?.image_url) {
-    return [
-      product.value.image_url,
-      'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800'
-    ]
+    images.push(product.value.image_url)
   }
-  return [
-    'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800',
+  if (product.value?.specifications?.detail_images && Array.isArray(product.value.specifications.detail_images)) {
+    images.push(...product.value.specifications.detail_images)
+  }
+  const fallbacks = [
     'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=800',
     'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800'
   ]
+  let fallbackIndex = 0
+  while (images.length < 4 && fallbackIndex < fallbacks.length) {
+    images.push(fallbacks[fallbackIndex++])
+  }
+  return images
 })
 
 const activeImage = computed(() => productImages.value[activeImageIndex.value] || '')

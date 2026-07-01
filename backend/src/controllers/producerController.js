@@ -147,3 +147,30 @@ export const getDashboardStats = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error retrieving dashboard statistics' });
   }
 };
+
+export const updateProducerProfile = async (req, res) => {
+  const { name, location, description, history, image_url } = req.body;
+
+  try {
+    const result = await pool.query(
+      `UPDATE producers 
+       SET name = $1, location = $2, description = $3, history = $4, image_url = $5
+       WHERE user_id = $6
+       RETURNING *`,
+      [name, location, description, history, image_url, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Producer profile not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Producer profile updated successfully',
+      producer: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Update producer profile error:', error);
+    res.status(500).json({ success: false, message: 'Server error updating producer profile' });
+  }
+};

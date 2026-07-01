@@ -344,6 +344,31 @@ export const initDb = async () => {
       console.log('Database tables created and seeded successfully!');
     }
 
+    // Ensure coupons table exists
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS coupons (
+        id SERIAL PRIMARY KEY,
+        code VARCHAR(50) UNIQUE NOT NULL,
+        discount_type VARCHAR(20) DEFAULT 'percentage',
+        discount_value DECIMAL(10, 2) NOT NULL,
+        min_order_value DECIMAL(10, 2) DEFAULT 0.0,
+        active BOOLEAN DEFAULT TRUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Seed default coupons
+    const couponsCount = await client.query('SELECT COUNT(*) FROM coupons');
+    if (parseInt(couponsCount.rows[0].count) === 0) {
+      await client.query(`
+        INSERT INTO coupons (code, discount_type, discount_value, min_order_value)
+        VALUES 
+          ('GREENTRACE10', 'percentage', 10.00, 100000.00),
+          ('SAVE50K', 'fixed', 50000.00, 200000.00)
+      `);
+      console.log('Seeded default coupons successfully!');
+    }
+
     // Ensure default admin account exists
     const adminCheck = await client.query("SELECT COUNT(*) FROM users WHERE role = 'admin'");
     if (parseInt(adminCheck.rows[0].count) === 0) {

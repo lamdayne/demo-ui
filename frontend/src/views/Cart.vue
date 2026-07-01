@@ -121,15 +121,29 @@
             <!-- Promo Code -->
             <div class="mb-4">
               <label class="block text-sm text-gray-600 mb-2">Have a promo code?</label>
-              <div class="flex items-center border border-green-500 rounded-lg overflow-hidden h-12 bg-white">
-                <input type="text" value="GREENTRACE10" class="w-full px-4 border-none focus:ring-0 text-gray-900 font-medium" />
-                <div class="px-3">
-                  <Check class="w-5 h-5 text-green-500" />
-                </div>
+              
+              <div v-if="appliedCoupon" class="flex items-center border border-green-500 rounded-lg overflow-hidden h-12 bg-white px-4 justify-between">
+                <span class="text-gray-900 font-bold uppercase text-sm">{{ appliedCoupon.code }}</span>
+                <Check class="w-5 h-5 text-green-500" />
               </div>
-              <div class="flex justify-between mt-2 px-1">
-                <span class="text-xs text-green-600 font-medium">Applied</span>
-                <span class="text-xs text-gray-500 hover:text-red-500 cursor-pointer underline">Remove</span>
+              <div v-if="appliedCoupon" class="flex justify-between mt-2 px-1">
+                <span class="text-xs text-green-600 font-semibold">Applied</span>
+                <span @click="removeCoupon" class="text-xs text-red-500 hover:text-red-700 cursor-pointer underline">Remove</span>
+              </div>
+              
+              <div v-else class="flex border border-gray-300 rounded-lg overflow-hidden h-12 bg-white">
+                <input 
+                  type="text" 
+                  v-model="couponCodeInput" 
+                  placeholder="Enter promo code" 
+                  class="w-full px-4 border-none focus:ring-0 text-gray-900 text-xs uppercase" 
+                />
+                <button 
+                  @click="applyCoupon"
+                  class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-4 font-bold text-xs transition"
+                >
+                  Apply
+                </button>
               </div>
             </div>
           </div>
@@ -138,12 +152,12 @@
 
       <!-- Bottom Action Buttons -->
       <div class="flex flex-col sm:flex-row gap-4 mt-6 mb-4">
-        <div class="flex-1 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
+        <div v-if="appliedCoupon" class="flex-1 bg-green-50 border border-green-200 rounded-xl p-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <Tag class="w-6 h-6 text-green-600" />
             <div>
               <h4 class="text-green-800 font-bold text-sm">Promo code applied!</h4>
-              <p class="text-green-700 text-xs">You saved {{ discountPrice.toLocaleString() }} VND with GREENTRACE10.</p>
+              <p class="text-green-700 text-xs">You saved {{ discountPrice.toLocaleString() }} VND with {{ appliedCoupon.code }}.</p>
             </div>
           </div>
           <CheckCircle2 class="w-5 h-5 text-green-600" />
@@ -253,7 +267,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { Image as ImageIcon, User, Trash2, Heart, Lock, CheckCircle2, Leaf as LeafIcon, Info, Truck, Tag, ArrowLeft, ArrowRight, Check, ShieldCheck, FileText, Sprout, MapPin, ShoppingCart, RotateCcw, Headphones as HeadphonesIcon } from 'lucide-vue-next'
 import { Leaf } from 'lucide-vue-next'
 import { useAppStore } from '@/stores/appStore'
@@ -266,6 +280,26 @@ const recommendations = [
   { name: 'Jasmine Tea 100 g', producer: 'Tra Vinh Tea Garden', price: '89,000 VND', image: 'https://images.unsplash.com/photo-1597481499750-3e6b22637e12?auto=format&fit=crop&q=80&w=200' }
 ]
 
+const couponCodeInput = ref('')
+const appliedCoupon = ref(null)
+
+const applyCoupon = async () => {
+  if (!couponCodeInput.value.trim()) return
+  try {
+    const coupon = await appStore.validateCouponCode(couponCodeInput.value.trim(), subtotalPrice.value)
+    appliedCoupon.value = coupon
+    appStore.triggerToast(`Coupon "${coupon.code}" applied successfully!`)
+  } catch (error) {
+    appStore.triggerToast(error.message || 'Invalid discount coupon code')
+  }
+}
+
+const removeCoupon = () => {
+  appliedCoupon.value = null
+  couponCodeInput.value = ''
+  appStore.triggerToast('Discount coupon code removed.')
+}
+
 const subtotalItems = computed(() => {
   return appStore.cart.reduce((sum, item) => sum + item.quantity, 0)
 })
@@ -275,7 +309,12 @@ const subtotalPrice = computed(() => {
 })
 
 const discountPrice = computed(() => {
-  return Math.round(subtotalPrice.value * 0.10)
+  if (!appliedCoupon.value) return 0
+  if (appliedCoupon.value.discount_type === 'percentage') {
+    return Math.round(subtotalPrice.value * (parseFloat(appliedCoupon.value.discount_value) / 100))
+  } else {
+    return Math.round(parseFloat(appliedCoupon.value.discount_value))
+  }
 })
 
 const shippingFee = computed(() => {

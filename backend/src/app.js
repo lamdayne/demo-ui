@@ -9,6 +9,7 @@ import uploadRoutes from './routes/uploadRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import supportRoutes from './routes/supportRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/support', supportRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Handler
 app.use((req, res, next) => {

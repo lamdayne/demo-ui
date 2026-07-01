@@ -198,14 +198,36 @@
               <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">5</span>
               Promo Code
             </h2>
-            <div class="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-4">
+            
+            <div v-if="appliedCoupon" class="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg p-4">
                <div class="flex items-center gap-3">
-                 <span class="bg-white border border-green-200 text-green-800 font-bold px-3 py-1 rounded flex items-center gap-1">GREENTRACE10 <Check class="w-3 h-3"/></span>
+                 <span class="bg-white border border-green-200 text-green-800 font-bold px-3 py-1 rounded flex items-center gap-1">
+                   {{ appliedCoupon.code }} 
+                   <Check class="w-3 h-3"/>
+                 </span>
                  <span class="text-green-800 font-medium text-sm">Applied</span>
                </div>
-               <button class="border border-gray-300 bg-white px-4 py-1.5 rounded text-sm font-medium hover:bg-gray-50">Remove</button>
+               <button @click="removeCoupon" class="border border-gray-300 bg-white px-4 py-1.5 rounded text-sm font-medium hover:bg-gray-50 transition">Remove</button>
             </div>
-            <p class="text-sm text-gray-600 mt-3">You saved 48,300 VND with GREENTRACE10.</p>
+            
+            <div v-else class="flex gap-2">
+              <input 
+                type="text" 
+                v-model="couponCodeInput" 
+                placeholder="Enter promo code (e.g. GREENTRACE10)"
+                class="flex-grow border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35] uppercase text-xs"
+              />
+              <button 
+                @click="applyCoupon"
+                class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-6 py-2.5 rounded-lg text-xs font-bold transition"
+              >
+                Apply
+              </button>
+            </div>
+            
+            <p v-if="appliedCoupon" class="text-sm text-gray-600 mt-3">
+              You saved {{ discountPrice.toLocaleString() }} VND with {{ appliedCoupon.code }}.
+            </p>
           </div>
 
           <!-- 6. Order Notes -->
@@ -291,7 +313,7 @@
                 <span class="font-medium text-gray-900">{{ subtotalPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-green-600 text-sm">
-                <span>Discount (GREENTRACE10)</span>
+                <span>Discount <span v-if="appliedCoupon">({{ appliedCoupon.code }})</span></span>
                 <span class="font-medium">-{{ discountPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-gray-600 text-sm">
@@ -446,8 +468,33 @@ const subtotalPrice = computed(() => {
   return appStore.cart.reduce((sum, item) => sum + parseFloat(item.price) * item.quantity, 0)
 })
 
+const couponCodeInput = ref('')
+const appliedCoupon = ref(null)
+
+const applyCoupon = async () => {
+  if (!couponCodeInput.value.trim()) return
+  try {
+    const coupon = await appStore.validateCouponCode(couponCodeInput.value.trim(), subtotalPrice.value)
+    appliedCoupon.value = coupon
+    appStore.triggerToast(`Coupon "${coupon.code}" applied successfully!`)
+  } catch (error) {
+    appStore.triggerToast(error.message || 'Invalid discount coupon code')
+  }
+}
+
+const removeCoupon = () => {
+  appliedCoupon.value = null
+  couponCodeInput.value = ''
+  appStore.triggerToast('Discount coupon code removed.')
+}
+
 const discountPrice = computed(() => {
-  return Math.round(subtotalPrice.value * 0.10)
+  if (!appliedCoupon.value) return 0
+  if (appliedCoupon.value.discount_type === 'percentage') {
+    return Math.round(subtotalPrice.value * (parseFloat(appliedCoupon.value.discount_value) / 100))
+  } else {
+    return Math.round(parseFloat(appliedCoupon.value.discount_value))
+  }
 })
 
 const shippingFee = computed(() => {
@@ -469,7 +516,8 @@ const placeOrder = async () => {
     const orderData = {
       address: `${address.value}, ${city.value}, ${province.value}, ${postalCode.value}`,
       payment_method: 'MoMo',
-      notes: notes.value
+      notes: notes.value,
+      total_price: totalPrice.value
     }
     await appStore.placeOrder(orderData)
     router.push('/confirmation')

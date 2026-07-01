@@ -52,8 +52,11 @@
               <router-link to="/support" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
                 <HelpCircle class="w-4 h-4 text-gray-400" /> Support
               </router-link>
-              <router-link to="/producer-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
+              <router-link v-if="appStore.user?.role === 'producer' || appStore.user?.role === 'admin'" to="/producer-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
                 <Store class="w-4 h-4 text-gray-400" /> Producer Dashboard
+              </router-link>
+              <router-link v-if="appStore.user?.role === 'admin'" to="/admin" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-[#1E4B35] hover:bg-green-50 transition">
+                <ShieldCheck class="w-4 h-4 text-[#1E4B35]" /> Admin Control Panel
               </router-link>
               <button @click="handleLogout" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-700 transition">
                 <LogOut class="w-4 h-4 text-red-500" /> Log Out

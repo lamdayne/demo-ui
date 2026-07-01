@@ -83,10 +83,10 @@
           <!-- QR Code Column -->
           <div class="lg:col-span-3 flex flex-col items-center text-center">
             <span class="text-xs text-gray-500 font-semibold mb-2">Scan to view this batch</span>
-            <div class="w-24 h-24 bg-gray-100 p-2 rounded-lg flex items-center justify-center border border-gray-200">
-              <QrCode class="w-full h-full text-gray-800" />
+            <div class="w-24 h-24 bg-white p-1 rounded-lg flex items-center justify-center border border-gray-200 shadow-inner">
+              <img :src="'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(windowLocationOrigin + '/traceability?batch=' + batchData.id)" class="w-full h-full object-contain" />
             </div>
-            <div class="text-[10px] text-gray-400 font-mono mt-2">{{ batchData.id }}<br/>green-trace.vn/trace/{{ batchData.id }}</div>
+            <div class="text-[10px] text-gray-400 font-mono mt-2 break-all max-w-[180px]">{{ batchData.id }}<br/>{{ windowLocationOrigin }}/traceability?batch={{ batchData.id }}</div>
           </div>
         </div>
 
@@ -373,6 +373,7 @@ import { useAppStore } from '@/stores/appStore'
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
+const windowLocationOrigin = ref(window.location.origin)
 
 const searchId = ref(route.query.batch || 'LOT-UMH-2605-001')
 const batchData = ref(null)

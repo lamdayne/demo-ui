@@ -17,6 +17,7 @@ import MyOrders from '../views/MyOrders.vue'
 import Certificates from '../views/Certificates.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -36,7 +37,8 @@ const routes = [
   { path: '/account', name: 'Account', component: MyAccount },
   { path: '/producer-dashboard', name: 'ProducerDashboard', component: ProducerDashboard },
   { path: '/login', name: 'Login', component: Login },
-  { path: '/register', name: 'Register', component: Register }
+  { path: '/register', name: 'Register', component: Register },
+  { path: '/admin', name: 'AdminDashboard', component: AdminDashboard }
 ]
 
 const router = createRouter({

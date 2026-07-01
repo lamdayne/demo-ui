@@ -1,7 +1,7 @@
 import pool from '../config/db.js';
 
 export const getProducts = async (req, res) => {
-  const { category, search } = req.query;
+  const { category, search, producer_id } = req.query;
 
   try {
     let queryText = `
@@ -20,6 +20,11 @@ export const getProducts = async (req, res) => {
     if (search) {
       queryParams.push(`%${search}%`);
       conditions.push(`(p.name ILIKE $${queryParams.length} OR p.description ILIKE $${queryParams.length})`);
+    }
+
+    if (producer_id) {
+      queryParams.push(producer_id);
+      conditions.push(`p.producer_id = $${queryParams.length}`);
     }
 
     if (conditions.length > 0) {
@@ -133,3 +138,46 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error deleting product' });
   }
 };
+
+export const updateProduct = async (req, res) => {
+  const { id } = req.params;
+  const { name, description, price, category, image_url, specifications } = req.body;
+
+  try {
+    // If producer, check ownership
+    if (req.user.role === 'producer') {
+      const productCheck = await pool.query(
+        `SELECT p.id FROM products p 
+         JOIN producers pr ON p.producer_id = pr.id 
+         WHERE p.id = $1 AND pr.user_id = $2`,
+        [id, req.user.id]
+      );
+      if (productCheck.rows.length === 0) {
+        return res.status(403).json({ success: false, message: 'Not authorized to update this product' });
+      }
+    }
+
+    const result = await pool.query(
+      `UPDATE products 
+       SET name = $1, description = $2, price = $3, category = $4, image_url = $5, specifications = $6
+       WHERE id = $7
+       RETURNING *`,
+      [name, description, price, category, image_url, JSON.stringify(specifications || {}), id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Product updated successfully',
+      product: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Update product error:', error);
+    res.status(500).json({ success: false, message: 'Server error updating product' });
+  }
+};
+
+

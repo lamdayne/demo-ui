@@ -1,8 +1,20 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { translations } from '../utils/translations';
 
 export const useAppStore = defineStore('app', () => {
   const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
+  
+  const lang = ref(localStorage.getItem('gt_lang') || 'vi');
+
+  function toggleLanguage() {
+    lang.value = lang.value === 'en' ? 'vi' : 'en';
+    localStorage.setItem('gt_lang', lang.value);
+  }
+
+  function t(key) {
+    return translations[lang.value]?.[key] || key;
+  }
 
   const token = ref(localStorage.getItem('gt_token') || '');
   const user = ref(JSON.parse(localStorage.getItem('gt_user')) || null);
@@ -10,6 +22,18 @@ export const useAppStore = defineStore('app', () => {
   const wishlist = ref([]);
   const notifications = ref([]);
   const orders = ref([]);
+
+  // Toast Notification state
+  const toastMessage = ref('');
+  const showToast = ref(false);
+
+  function triggerToast(message) {
+    toastMessage.value = message;
+    showToast.value = true;
+    setTimeout(() => {
+      showToast.value = false;
+    }, 3500);
+  }
 
   // Sync token session
   watch(token, (newVal) => {
@@ -122,7 +146,7 @@ export const useAppStore = defineStore('app', () => {
   }
 
   // Products catalog endpoints
-  async function fetchProducts(category = '', search = '') {
+  async function fetchProducts(category = '', search = '', producerId = '') {
     let url = '/products';
     const params = [];
     if (category && category !== 'All Products' && category !== 'All') {
@@ -130,6 +154,9 @@ export const useAppStore = defineStore('app', () => {
     }
     if (search) {
       params.push(`search=${encodeURIComponent(search)}`);
+    }
+    if (producerId) {
+      params.push(`producer_id=${encodeURIComponent(producerId)}`);
     }
     if (params.length > 0) {
       url += '?' + params.join('&');
@@ -141,6 +168,40 @@ export const useAppStore = defineStore('app', () => {
   async function fetchProduct(id) {
     const data = await apiCall(`/products/${id}`, 'GET', null, false);
     return data.product;
+  }
+
+  async function createProduct(productData) {
+    return await apiCall('/products', 'POST', productData);
+  }
+
+  async function updateProduct(id, productData) {
+    return await apiCall(`/products/${id}`, 'PUT', productData);
+  }
+
+  async function deleteProduct(id) {
+    return await apiCall(`/products/${id}`, 'DELETE');
+  }
+
+  // Batches CRUD
+  async function fetchBatches(producerId = '') {
+    let url = '/traceability';
+    if (producerId) {
+      url += `?producer_id=${encodeURIComponent(producerId)}`;
+    }
+    const data = await apiCall(url, 'GET', null, false);
+    return data.batches;
+  }
+
+  async function updateBatch(id, batchData) {
+    return await apiCall(`/traceability/${encodeURIComponent(id)}`, 'PUT', batchData);
+  }
+
+  async function deleteBatch(id) {
+    return await apiCall(`/traceability/${encodeURIComponent(id)}`, 'DELETE');
+  }
+
+  async function updateProducerProfile(profileData) {
+    return await apiCall('/producers/profile', 'PUT', profileData);
   }
 
   // Farm Producers endpoints
@@ -209,6 +270,7 @@ export const useAppStore = defineStore('app', () => {
     } else {
       cart.value.push({ ...product, quantity });
     }
+    triggerToast(`Added "${product.name}" to cart successfully!`);
   }
 
   function removeFromCart(productId) {
@@ -247,7 +309,9 @@ export const useAppStore = defineStore('app', () => {
       price: item.price
     }));
 
-    const total_price = cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const total_price = (orderPayload && orderPayload.total_price !== undefined) 
+      ? orderPayload.total_price 
+      : cart.value.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
     const orderData = {
       total_price,
@@ -290,6 +354,61 @@ export const useAppStore = defineStore('app', () => {
     return await apiCall('/support', 'POST', ticketData, false);
   }
 
+  // Admin Operations
+  async function fetchAdminStats() {
+    const data = await apiCall('/admin/stats', 'GET');
+    return data.stats;
+  }
+
+  async function fetchAdminUsers() {
+    const data = await apiCall('/admin/users', 'GET');
+    return data.users;
+  }
+
+  async function updateAdminUserRole(id, role) {
+    return await apiCall(`/admin/users/${id}/role`, 'PUT', { role });
+  }
+
+  async function deleteAdminUser(id) {
+    return await apiCall(`/admin/users/${id}`, 'DELETE');
+  }
+
+  async function fetchAdminProducers() {
+    const data = await apiCall('/admin/producers', 'GET');
+    return data.producers;
+  }
+
+  async function updateAdminProducerVerification(id, verified) {
+    return await apiCall(`/admin/producers/${id}/verify`, 'PUT', { verified });
+  }
+
+  async function fetchAdminOrders() {
+    const data = await apiCall('/admin/orders', 'GET');
+    return data.orders;
+  }
+
+  async function updateAdminOrderStatus(id, status) {
+    return await apiCall(`/admin/orders/${id}/status`, 'PUT', { status });
+  }
+
+  async function fetchAdminCoupons() {
+    const data = await apiCall('/admin/coupons', 'GET');
+    return data.coupons;
+  }
+
+  async function createAdminCoupon(couponData) {
+    return await apiCall('/admin/coupons', 'POST', couponData);
+  }
+
+  async function deleteAdminCoupon(id) {
+    return await apiCall(`/admin/coupons/${id}`, 'DELETE');
+  }
+
+  async function validateCouponCode(code, orderValue) {
+    const data = await apiCall(`/admin/coupons/validate/${encodeURIComponent(code)}?order_value=${orderValue}`, 'GET');
+    return data.coupon;
+  }
+
   // Image Upload helper
   async function uploadImage(file) {
     const formData = new FormData();
@@ -307,6 +426,9 @@ export const useAppStore = defineStore('app', () => {
 
   return {
     API_BASE,
+    lang,
+    toggleLanguage,
+    t,
     token,
     user,
     cart,
@@ -325,6 +447,13 @@ export const useAppStore = defineStore('app', () => {
     deleteAddress,
     fetchProducts,
     fetchProduct,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    fetchBatches,
+    updateBatch,
+    deleteBatch,
+    updateProducerProfile,
     fetchProducers,
     fetchProducer,
     onboardProducer,
@@ -343,6 +472,21 @@ export const useAppStore = defineStore('app', () => {
     fetchNotifications,
     markNotificationRead,
     submitSupport,
-    uploadImage
+    uploadImage,
+    toastMessage,
+    showToast,
+    triggerToast,
+    fetchAdminStats,
+    fetchAdminUsers,
+    updateAdminUserRole,
+    deleteAdminUser,
+    fetchAdminProducers,
+    updateAdminProducerVerification,
+    fetchAdminOrders,
+    updateAdminOrderStatus,
+    fetchAdminCoupons,
+    createAdminCoupon,
+    deleteAdminCoupon,
+    validateCouponCode
   };
 });
