@@ -23,10 +23,23 @@ export const createOrder = async (req, res) => {
 
     // 2. Insert items into order_items table
     for (const item of items) {
+      let batchId = item.batch_id || null;
+      if (!batchId) {
+        const batchRes = await client.query(
+          `SELECT id FROM batches WHERE product_id = $1 LIMIT 1`,
+          [item.product_id]
+        );
+        if (batchRes.rows.length > 0) {
+          batchId = batchRes.rows[0].id;
+        } else {
+          batchId = 'N/A';
+        }
+      }
+
       await client.query(
         `INSERT INTO order_items (order_id, product_id, batch_id, quantity, price)
          VALUES ($1, $2, $3, $4, $5)`,
-        [order.id, item.product_id, item.batch_id || null, item.quantity, item.price]
+        [order.id, item.product_id, batchId, item.quantity, item.price]
       );
     }
 

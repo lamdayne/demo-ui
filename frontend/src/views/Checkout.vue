@@ -58,21 +58,21 @@
             <div class="flex justify-between items-center mb-6">
               <h2 class="text-xl font-bold text-gray-900 flex items-center gap-3">
                 <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">1</span>
-                Contact Information
+                {{ appStore.t('contactInfoLabel') }}
               </h2>
               <button class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Full Name</label>
+                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('fullName') }}</label>
                 <input type="text" v-model="name" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Email Address</label>
+                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('emailAddress') }}</label>
                 <input type="text" v-model="email" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Phone Number</label>
+                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('phoneNumber') }}</label>
                 <input type="text" v-model="phone" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
             </div>
@@ -83,13 +83,13 @@
             <div class="flex justify-between items-center mb-6">
               <h2 class="text-xl font-bold text-gray-900 flex items-center gap-3">
                 <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">2</span>
-                Shipping Address
+                {{ appStore.t('shippingAddress') }}
               </h2>
               <button class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Street Address</label>
+                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('streetAddress') }}</label>
                 <input type="text" v-model="address" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
@@ -99,11 +99,11 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                <div>
-                <label class="block text-sm text-gray-600 mb-1.5">City</label>
+                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('provinceCity') }}</label>
                 <input type="text" v-model="city" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Province / State</label>
+                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('district') }}</label>
                 <input type="text" v-model="province" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
               </div>
               <div>
@@ -156,32 +156,32 @@
           <div class="border border-gray-200 rounded-xl p-6 bg-white">
             <h2 class="text-xl font-bold text-gray-900 flex items-center gap-3 mb-6">
               <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">4</span>
-              Payment Method
+              {{ appStore.t('paymentMethod') }}
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-               <label class="border-2 border-[#1E4B35] bg-[#F8FAF9] rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative">
-                 <input type="radio" checked name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
+               <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'MoMo' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
+                 <input type="radio" value="MoMo" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
                  <div class="w-12 h-12 bg-[#A50064] rounded-lg text-white font-bold flex items-center justify-center mb-2">mo<br/>mo</div>
-                 <div class="font-bold text-gray-900 text-sm">MoMo</div>
+                 <div class="font-bold text-gray-900 text-sm">{{ appStore.t('momoLabel') }}</div>
                  <div class="text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded mt-1">Simulated payment</div>
                </label>
 
-               <label class="border border-gray-200 rounded-xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-gray-300 relative">
-                 <input type="radio" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
+               <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'VNPay' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
+                 <input type="radio" value="VNPay" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
                  <div class="w-12 h-12 bg-blue-100 rounded-lg text-blue-600 flex items-center justify-center mb-2"><CreditCard class="w-6 h-6"/></div>
                  <div class="font-bold text-gray-900 text-sm">VNPay</div>
                  <div class="text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded mt-1">Simulated payment</div>
                </label>
                
-               <label class="border border-gray-200 rounded-xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-gray-300 relative">
-                 <input type="radio" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
+               <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'COD' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
+                 <input type="radio" value="COD" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
                  <div class="w-12 h-12 bg-gray-100 rounded-lg text-gray-600 flex items-center justify-center mb-2"><Banknote class="w-6 h-6"/></div>
-                 <div class="font-bold text-gray-900 text-sm leading-tight">Cash on Delivery</div>
+                 <div class="font-bold text-gray-900 text-sm leading-tight">{{ appStore.t('codLabel') }}</div>
                  <div class="text-[10px] text-gray-500 mt-1">Pay when you receive</div>
                </label>
                
-               <label class="border border-gray-200 rounded-xl p-4 flex flex-col items-center text-center cursor-pointer hover:border-gray-300 relative">
-                 <input type="radio" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
+               <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'Card' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
+                 <input type="radio" value="Card" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
                  <div class="w-12 h-12 bg-gray-100 rounded-lg text-gray-600 flex items-center justify-center mb-2"><CreditCard class="w-6 h-6"/></div>
                  <div class="font-bold text-gray-900 text-sm leading-tight">Card Payment</div>
                  <div class="text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded mt-1">Simulated payment</div>
@@ -234,9 +234,9 @@
           <div class="border border-gray-200 rounded-xl p-6 bg-white">
             <h2 class="text-xl font-bold text-gray-900 flex items-center gap-3 mb-6">
               <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">6</span>
-              Order Notes <span class="text-gray-400 font-normal text-base">(optional)</span>
+              {{ appStore.t('additionalNotes') }} <span class="text-gray-400 font-normal text-base">(optional)</span>
             </h2>
-            <textarea v-model="notes" maxlength="300" placeholder="Add any notes about your order (e.g., leave at front door, special instructions)..." rows="3" class="w-full border border-gray-300 rounded-lg p-4 text-gray-900 focus:outline-[#1E4B35] resize-none"></textarea>
+            <textarea v-model="notes" maxlength="300" :placeholder="appStore.t('notesPlaceholder')" rows="3" class="w-full border border-gray-300 rounded-lg p-4 text-gray-900 focus:outline-[#1E4B35] resize-none"></textarea>
             <div class="text-right text-xs text-gray-400 mt-1">{{ notes.length }} / 300</div>
           </div>
 
@@ -267,7 +267,7 @@
           </div>
 
           <button @click="placeOrder" class="w-full py-4 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 transition shadow-lg shadow-[#1E4B35]/20 mt-4">
-            Place Sample Order <Lock class="w-5 h-5" />
+            {{ appStore.t('placeOrder') }} <Lock class="w-5 h-5" />
           </button>
           
           <p class="text-center text-xs text-gray-500 flex items-center justify-center gap-1.5 mb-8">
@@ -280,7 +280,7 @@
         <div class="w-full lg:w-[35%]">
           <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8 sticky top-24">
             <div class="flex justify-between items-center border-b border-gray-100 pb-4 mb-4">
-              <h3 class="text-xl font-bold text-[#1E4B35]">Order Summary</h3>
+              <h3 class="text-xl font-bold text-[#1E4B35]">{{ appStore.t('summary') }}</h3>
               <button class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit Cart</button>
             </div>
             
@@ -309,25 +309,25 @@
             <!-- Totals -->
             <div class="space-y-3 mb-6 border-b border-gray-100 pb-6">
               <div class="flex justify-between text-gray-600 text-sm">
-                <span>Subtotal ({{ subtotalItems }} items)</span>
+                <span>{{ appStore.t('subtotal') }} ({{ subtotalItems }} {{ appStore.t('itemsLabel') }})</span>
                 <span class="font-medium text-gray-900">{{ subtotalPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-green-600 text-sm">
-                <span>Discount <span v-if="appliedCoupon">({{ appliedCoupon.code }})</span></span>
+                <span>{{ appStore.t('discount') }} <span v-if="appliedCoupon">({{ appliedCoupon.code }})</span></span>
                 <span class="font-medium">-{{ discountPrice.toLocaleString() }} VND</span>
               </div>
               <div class="flex justify-between text-gray-600 text-sm">
-                <span>Standard Shipping</span>
-                <span class="font-medium text-gray-900">{{ shippingFee === 0 ? 'FREE' : shippingFee.toLocaleString() + ' VND' }}</span>
+                <span>{{ appStore.t('shipping') }}</span>
+                <span class="font-medium text-gray-900">{{ shippingFee === 0 ? appStore.t('free') : shippingFee.toLocaleString() + ' VND' }}</span>
               </div>
             </div>
             
             <div class="mb-6">
               <div class="flex justify-between items-end mb-1">
-                <span class="font-bold text-gray-900 text-xl">Total</span>
+                <span class="font-bold text-gray-900 text-xl">{{ appStore.t('total') }}</span>
                 <span class="text-2xl font-bold text-[#1E4B35]">{{ totalPrice.toLocaleString() }} VND</span>
               </div>
-              <p class="text-xs text-gray-500">Taxes included</p>
+              <p class="text-xs text-gray-500">{{ appStore.t('taxesIncluded') }}</p>
             </div>
             
             <!-- Shipping Banner -->
@@ -435,6 +435,7 @@ const city = ref('')
 const province = ref('')
 const postalCode = ref('')
 const notes = ref('')
+const paymentMethod = ref('MoMo')
 
 onMounted(async () => {
   try {
@@ -476,16 +477,16 @@ const applyCoupon = async () => {
   try {
     const coupon = await appStore.validateCouponCode(couponCodeInput.value.trim(), subtotalPrice.value)
     appliedCoupon.value = coupon
-    appStore.triggerToast(`Coupon "${coupon.code}" applied successfully!`)
+    appStore.triggerToast((appStore.t('couponAppliedSuccess') || 'Coupon applied successfully!').replace('{code}', coupon.code))
   } catch (error) {
-    appStore.triggerToast(error.message || 'Invalid discount coupon code')
+    appStore.triggerToast(error.message || appStore.t('invalidCoupon') || 'Invalid discount coupon code')
   }
 }
 
 const removeCoupon = () => {
   appliedCoupon.value = null
   couponCodeInput.value = ''
-  appStore.triggerToast('Discount coupon code removed.')
+  appStore.triggerToast(appStore.t('couponRemoved') || 'Discount coupon code removed.')
 }
 
 const discountPrice = computed(() => {
@@ -515,12 +516,16 @@ const placeOrder = async () => {
   try {
     const orderData = {
       address: `${address.value}, ${city.value}, ${province.value}, ${postalCode.value}`,
-      payment_method: 'MoMo',
+      payment_method: paymentMethod.value,
       notes: notes.value,
       total_price: totalPrice.value
     }
-    await appStore.placeOrder(orderData)
-    router.push('/confirmation')
+    const placedOrder = await appStore.placeOrder(orderData)
+    if (placedOrder && placedOrder.id) {
+      router.push({ path: '/confirmation', query: { id: placedOrder.id } })
+    } else {
+      router.push('/confirmation')
+    }
   } catch (error) {
     alert('Failed to place order: ' + error.message)
   }

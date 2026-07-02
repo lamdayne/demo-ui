@@ -39,10 +39,7 @@
     <div class="container mx-auto px-4 h-20 flex items-center justify-between max-w-6xl">
       <!-- Logo -->
       <router-link to="/" class="flex items-center gap-2">
-        <div class="text-[#1E4B35]">
-          <Leaf class="w-8 h-8 fill-current" />
-        </div>
-        <span class="text-2xl font-bold text-[#1E4B35] tracking-tight">Green Trace</span>
+        <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1782962604/94b91564-4854-4699-b10c-8c875f14c868.png" alt="Green Trace Logo" class="h-20 w-auto object-contain" />
       </router-link>
 
       <!-- Desktop Menu -->

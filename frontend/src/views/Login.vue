@@ -1,15 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
-      <router-link to="/" class="inline-flex items-center gap-2 mb-4 text-[#1E4B35]">
-        <Leaf class="w-10 h-10 fill-current" />
-        <span class="text-3xl font-extrabold tracking-tight">Green Trace</span>
+      <router-link to="/" class="inline-flex items-center gap-2 mb-4">
+        <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1782962604/94b91564-4854-4699-b10c-8c875f14c868.png" alt="Green Trace Logo" class="h-20 w-auto object-contain" />
       </router-link>
-      <h2 class="text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+      <h2 class="text-center text-3xl font-extrabold text-gray-900">{{ appStore.t('signInTitle') }}</h2>
       <p class="mt-2 text-center text-sm text-gray-600">
         Or
         <router-link to="/register" class="font-bold text-[#1E4B35] hover:text-[#163a29] underline">
-          register a new account
+          {{ appStore.t('registerNewAccount') }}
         </router-link>
       </p>
     </div>
@@ -30,7 +29,7 @@
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-semibold text-gray-700">Email address</label>
+            <label for="email" class="block text-sm font-semibold text-gray-700">{{ appStore.t('emailAddress') }}</label>
             <div class="mt-1.5 relative rounded-md shadow-sm">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail class="h-5 w-5 text-gray-400" />
@@ -42,13 +41,13 @@
                 required
                 autocomplete="email"
                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4B35] focus:border-[#1E4B35] text-sm"
-                placeholder="you@example.com"
+                :placeholder="appStore.t('emailPlaceholder')"
               />
             </div>
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-semibold text-gray-700">Password</label>
+            <label for="password" class="block text-sm font-semibold text-gray-700">{{ appStore.t('passwordLabel') }}</label>
             <div class="mt-1.5 relative rounded-md shadow-sm">
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock class="h-5 w-5 text-gray-400" />
@@ -60,7 +59,7 @@
                 required
                 autocomplete="current-password"
                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4B35] focus:border-[#1E4B35] text-sm"
-                placeholder="••••••••"
+                :placeholder="appStore.t('passwordPlaceholder')"
               />
             </div>
           </div>
@@ -74,13 +73,13 @@
                 class="h-4 w-4 text-[#1E4B35] focus:ring-[#1E4B35] border-gray-300 rounded"
               />
               <label for="remember-me" class="ml-2 block text-xs text-gray-900 font-semibold">
-                Remember me
+                {{ appStore.t('rememberMe') }}
               </label>
             </div>
 
             <div class="text-xs">
               <a href="#" class="font-bold text-[#1E4B35] hover:text-[#163a29] underline">
-                Forgot your password?
+                {{ appStore.t('forgotPassword') }}
               </a>
             </div>
           </div>
@@ -92,9 +91,9 @@
               class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-bold text-white bg-[#1E4B35] hover:bg-[#163a29] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E4B35] transition duration-150 disabled:opacity-50"
             >
               <span v-if="loading" class="flex items-center gap-2">
-                <Loader2 class="animate-spin w-4 h-4" /> Signing in...
+                <Loader2 class="animate-spin w-4 h-4" /> {{ appStore.t('signingIn') }}
               </span>
-              <span v-else>Sign In</span>
+              <span v-else>{{ appStore.t('signInBtn') }}</span>
             </button>
           </div>
         </form>
@@ -105,7 +104,7 @@
               <div class="w-full border-t border-gray-250"></div>
             </div>
             <div class="relative flex justify-center text-xs">
-              <span class="px-2 bg-white text-gray-500 font-medium">Demo Credentials</span>
+              <span class="px-2 bg-white text-gray-500 font-medium">{{ appStore.t('demoCredentials') }}</span>
             </div>
           </div>
 

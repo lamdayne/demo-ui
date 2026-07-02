@@ -393,7 +393,9 @@
                           class="bg-gray-50 border border-gray-200 rounded px-2.5 py-1 text-xs font-bold text-gray-700 focus:outline-none focus:border-[#1E4B35]"
                         >
                           <option value="Pending">Pending</option>
-                          <option value="Shipping">Shipping</option>
+                          <option value="In Review">In Review</option>
+                          <option value="Preparing">Preparing</option>
+                          <option value="Shipped">Shipped</option>
                           <option value="Delivered">Delivered</option>
                           <option value="Cancelled">Cancelled</option>
                         </select>

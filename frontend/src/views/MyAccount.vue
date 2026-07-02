@@ -4,17 +4,17 @@
     <div class="border-b border-gray-200 bg-white">
       <div class="container mx-auto px-4 max-w-6xl py-3">
         <div class="text-xs text-gray-500 flex items-center gap-2">
-          <router-link to="/" class="hover:text-[#1E4B35]">Home</router-link>
+          <router-link to="/" class="hover:text-[#1E4B35]">{{ t.home }}</router-link>
           <ChevronRight class="w-3 h-3" />
-          <span class="text-[#1E4B35] font-semibold">My Account</span>
+          <span class="text-[#1E4B35] font-semibold">{{ t.myAccount }}</span>
         </div>
       </div>
     </div>
 
     <div class="container mx-auto px-4 max-w-6xl pt-8">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-1">My Account</h1>
-        <p class="text-sm text-gray-500">Manage your profile, orders, addresses, and preferences.</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-1">{{ t.myAccount }}</h1>
+        <p class="text-sm text-gray-500">{{ t.subTitle }}</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -23,57 +23,55 @@
           <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm">
             <nav class="space-y-1">
               <button @click="activeTab = 'overview'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'overview' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <LayoutDashboard class="w-4 h-4" /> Overview
+                <LayoutDashboard class="w-4 h-4" /> {{ sidebarTabs.overview }}
               </button>
               <button @click="activeTab = 'profile'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'profile' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <User class="w-4 h-4" /> Profile Details
+                <User class="w-4 h-4" /> {{ sidebarTabs.profile }}
               </button>
               <button @click="activeTab = 'addresses'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'addresses' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <MapPin class="w-4 h-4" /> Addresses
+                <MapPin class="w-4 h-4" /> {{ sidebarTabs.addresses }}
               </button>
               <button @click="activeTab = 'payments'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'payments' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <CreditCard class="w-4 h-4" /> Payment Methods
+                <CreditCard class="w-4 h-4" /> {{ sidebarTabs.payments }}
               </button>
               <button @click="activeTab = 'wishlist'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'wishlist' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <Heart class="w-4 h-4" /> Wishlist
+                <Heart class="w-4 h-4" /> {{ sidebarTabs.wishlist }}
               </button>
               <button @click="activeTab = 'traceability'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'traceability' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <ShieldCheck class="w-4 h-4" /> Traceability History
+                <ShieldCheck class="w-4 h-4" /> {{ sidebarTabs.traceability }}
               </button>
               <router-link to="/orders" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
-                <Package class="w-4 h-4 text-gray-400" /> My Orders
+                <Package class="w-4 h-4 text-gray-400" /> {{ sidebarTabs.orders }}
               </router-link>
               <button @click="activeTab = 'notifications'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'notifications' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <Bell class="w-4 h-4" /> Notifications
+                <Bell class="w-4 h-4" /> {{ sidebarTabs.notifications }}
               </button>
               <button @click="activeTab = 'security'" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold transition" :class="activeTab === 'security' ? 'bg-green-50 text-[#1E4B35]' : 'text-gray-700 hover:bg-gray-50'">
-                <Lock class="w-4 h-4" /> Security
+                <Lock class="w-4 h-4" /> {{ sidebarTabs.security }}
               </button>
               <router-link to="/support" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
-                <HelpCircle class="w-4 h-4 text-gray-400" /> Support
+                <HelpCircle class="w-4 h-4 text-gray-400" /> {{ sidebarTabs.support }}
               </router-link>
               <router-link v-if="appStore.user?.role === 'producer' || appStore.user?.role === 'admin'" to="/producer-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
-                <Store class="w-4 h-4 text-gray-400" /> Producer Dashboard
+                <Store class="w-4 h-4 text-gray-400" /> {{ sidebarTabs.producerDashboard }}
               </router-link>
               <router-link v-if="appStore.user?.role === 'admin'" to="/admin" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-[#1E4B35] hover:bg-green-50 transition">
-                <ShieldCheck class="w-4 h-4 text-[#1E4B35]" /> Admin Control Panel
+                <ShieldCheck class="w-4 h-4 text-[#1E4B35]" /> {{ sidebarTabs.admin }}
               </router-link>
               <button @click="handleLogout" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 hover:text-red-700 transition">
-                <LogOut class="w-4 h-4 text-red-500" /> Log Out
+                <LogOut class="w-4 h-4 text-red-500" /> {{ sidebarTabs.logout }}
               </button>
             </nav>
           </div>
 
           <!-- Need Help card -->
           <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm space-y-4">
-            <h4 class="font-bold text-gray-900 text-sm">Need help?</h4>
-            <p class="text-xs text-gray-500 leading-relaxed">Our support team is here to help you with anything you need.</p>
+            <h4 class="font-bold text-gray-900 text-sm">{{ t.needHelp }}</h4>
+            <p class="text-xs text-gray-500 leading-relaxed">{{ t.needHelpDesc }}</p>
             <router-link to="/support" class="w-full py-2 bg-[#1E4B35] text-white rounded-lg text-xs font-bold text-center hover:bg-[#163a29] transition block">
-              Contact Support
+              {{ t.contactSupport }}
             </router-link>
-            <router-link to="/support" class="w-full py-2 border border-gray-300 text-gray-700 rounded-lg text-xs font-bold text-center hover:bg-gray-50 transition block">
-              Visit Help Center &rarr;
-            </router-link>
+            <router-link to="/support" class="w-full py-2 border border-gray-300 text-gray-700 rounded-lg text-xs font-bold text-center hover:bg-gray-50 transition block" v-html="t.visitHelpCenter"></router-link>
           </div>
         </div>
 
@@ -83,7 +81,7 @@
           <div v-if="activeTab === 'overview' || activeTab === 'profile'" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="flex flex-col md:flex-row items-center gap-5">
               <div class="relative w-24 h-24 rounded-full overflow-hidden border border-gray-200">
-                <img :src="profileData.photo" alt="Nguyen Van An" class="w-full h-full object-cover" />
+                <img :src="profileData.photo" alt="Profile avatar" class="w-full h-full object-cover" />
                 <button @click="triggerPhotoUpload" class="absolute bottom-0 inset-x-0 bg-black/50 text-white py-1 text-[9px] font-bold text-center hover:bg-black/75 transition">
                   <Camera class="w-3 h-3 mx-auto" />
                 </button>
@@ -91,18 +89,18 @@
               <div class="text-center md:text-left space-y-1.5">
                 <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
                   <h3 class="text-xl font-bold text-gray-900">{{ profileData.name }}</h3>
-                  <span class="bg-green-50 text-green-700 text-[10px] px-2 py-0.5 rounded font-semibold border border-green-200">Demo Account</span>
+                  <span class="bg-green-50 text-green-700 text-[10px] px-2 py-0.5 rounded font-semibold border border-green-200">{{ t.demoAccount }}</span>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
                   <div class="flex items-center gap-1.5 justify-center md:justify-start"><Mail class="w-3.5 h-3.5" /> {{ profileData.email }}</div>
                   <div class="flex items-center gap-1.5 justify-center md:justify-start"><Phone class="w-3.5 h-3.5" /> {{ profileData.phone }}</div>
                   <div class="flex items-center gap-1.5 justify-center md:justify-start"><MapPin class="w-3.5 h-3.5" /> {{ profileData.city }}, {{ profileData.country }}</div>
-                  <div class="flex items-center gap-1.5 justify-center md:justify-start"><Calendar class="w-3.5 h-3.5" /> Member since May 10, 2026</div>
+                  <div class="flex items-center gap-1.5 justify-center md:justify-start"><Calendar class="w-3.5 h-3.5" /> {{ t.memberSince }}</div>
                 </div>
               </div>
             </div>
             <button @click="activeTab = 'profile'" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
-              Edit Profile
+              {{ t.editProfileBtn }}
             </button>
           </div>
 
@@ -114,7 +112,7 @@
                 <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-[#1E4B35]"><ClipboardList class="w-5 h-5"/></div>
                 <div>
                   <div class="text-base font-extrabold text-gray-900">{{ appStore.orders.length }}</div>
-                  <router-link to="/orders" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center">Recent Orders &rarr;</router-link>
+                  <router-link to="/orders" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center" v-html="t.recentOrdersLink"></router-link>
                 </div>
               </div>
 
@@ -122,7 +120,7 @@
                 <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-[#1E4B35]"><MapPin class="w-5 h-5"/></div>
                 <div>
                   <div class="text-base font-extrabold text-gray-900">{{ addressesList.length }}</div>
-                  <button @click="activeTab = 'addresses'" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center">Manage addresses &rarr;</button>
+                  <button @click="activeTab = 'addresses'" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center" v-html="t.manageAddressesLink"></button>
                 </div>
               </div>
 
@@ -130,7 +128,7 @@
                 <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-[#1E4B35]"><Heart class="w-5 h-5"/></div>
                 <div>
                   <div class="text-base font-extrabold text-gray-900">{{ wishlist.length }}</div>
-                  <button @click="activeTab = 'wishlist'" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center">View wishlist &rarr;</button>
+                  <button @click="activeTab = 'wishlist'" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center" v-html="t.viewWishlistLink"></button>
                 </div>
               </div>
 
@@ -138,7 +136,7 @@
                 <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-[#1E4B35]"><ShieldCheck class="w-5 h-5"/></div>
                 <div>
                   <div class="text-base font-extrabold text-gray-900">{{ traceHistory.length }}</div>
-                  <button @click="activeTab = 'traceability'" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center">View history &rarr;</button>
+                  <button @click="activeTab = 'traceability'" class="text-[10px] text-gray-500 hover:text-[#1E4B35] font-semibold flex items-center" v-html="t.viewHistoryLink"></button>
                 </div>
               </div>
             </div>
@@ -148,20 +146,20 @@
               <!-- Profile details overview -->
               <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                 <div class="flex justify-between items-center mb-4">
-                  <h3 class="font-bold text-gray-900 text-sm">Profile Details</h3>
-                  <button @click="activeTab = 'profile'" class="text-xs font-bold text-[#1E4B35] hover:underline">Edit</button>
+                  <h3 class="font-bold text-gray-900 text-sm">{{ t.profileDetails }}</h3>
+                  <button @click="activeTab = 'profile'" class="text-xs font-bold text-[#1E4B35] hover:underline">{{ t.edit }}</button>
                 </div>
                 <div class="space-y-2 text-xs">
                   <div class="flex justify-between border-b border-gray-50 pb-1.5">
-                    <span class="text-gray-400">Full Name</span>
+                    <span class="text-gray-400">{{ t.fullName }}</span>
                     <span class="font-semibold text-gray-700">{{ profileData.name }}</span>
                   </div>
                   <div class="flex justify-between border-b border-gray-50 pb-1.5">
-                    <span class="text-gray-400">Email Address</span>
+                    <span class="text-gray-400">{{ t.emailAddress }}</span>
                     <span class="font-semibold text-gray-700">{{ profileData.email }}</span>
                   </div>
                   <div class="flex justify-between border-b border-gray-50 pb-1.5">
-                    <span class="text-gray-400">Phone Number</span>
+                    <span class="text-gray-400">{{ t.phoneNumber }}</span>
                     <span class="font-semibold text-gray-700">{{ profileData.phone }}</span>
                   </div>
                 </div>
@@ -171,15 +169,15 @@
               <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
                 <div>
                   <div class="flex justify-between items-center mb-3">
-                    <h3 class="font-bold text-gray-900 text-sm">Default Address</h3>
-                    <button @click="activeTab = 'addresses'" class="text-xs font-bold text-[#1E4B35] hover:underline">Manage</button>
+                    <h3 class="font-bold text-gray-900 text-sm">{{ t.defaultAddress }}</h3>
+                    <button @click="activeTab = 'addresses'" class="text-xs font-bold text-[#1E4B35] hover:underline">{{ t.manage }}</button>
                   </div>
                   <div v-if="defaultAddress" class="space-y-1.5 text-xs text-gray-600">
                     <h4 class="font-bold text-gray-900">{{ defaultAddress.recipient }}</h4>
                     <p class="leading-relaxed">
                       {{ defaultAddress.street }}<br/>
                       {{ defaultAddress.city }}, {{ defaultAddress.country }}<br/>
-                      Phone: {{ defaultAddress.phone }}
+                      {{ t.phoneLabel }}: {{ defaultAddress.phone }}
                     </p>
                   </div>
                 </div>
@@ -189,24 +187,24 @@
             <!-- Recent Orders section -->
             <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
               <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-gray-900 text-sm">Recent Orders</h3>
-                <router-link to="/orders" class="text-xs font-bold text-gray-500 hover:text-[#1E4B35] flex items-center">View all orders &rarr;</router-link>
+                <h3 class="font-bold text-gray-900 text-sm">{{ t.recentOrders }}</h3>
+                <router-link to="/orders" class="text-xs font-bold text-gray-500 hover:text-[#1E4B35] flex items-center" v-html="t.viewAllOrders"></router-link>
               </div>
               <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs border-collapse">
                   <thead>
                     <tr class="border-b border-gray-100 text-gray-400 font-bold uppercase text-[9px]">
-                      <th class="py-3 px-2">Order ID</th>
-                      <th class="py-3 px-2">Date</th>
-                      <th class="py-3 px-2">Items</th>
-                      <th class="py-3 px-2">Total</th>
-                      <th class="py-3 px-2">Status</th>
-                      <th class="py-3 px-2 text-right">Actions</th>
+                      <th class="py-3 px-2">{{ t.orderIdCol }}</th>
+                      <th class="py-3 px-2">{{ t.dateCol }}</th>
+                      <th class="py-3 px-2">{{ t.itemsCol }}</th>
+                      <th class="py-3 px-2">{{ t.totalCol }}</th>
+                      <th class="py-3 px-2">{{ t.statusCol }}</th>
+                      <th class="py-3 px-2 text-right">{{ t.actionsCol }}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-if="appStore.orders.length === 0">
-                      <td colspan="6" class="text-center py-8 text-gray-400 font-medium">No recent orders found.</td>
+                      <td colspan="6" class="text-center py-8 text-gray-400 font-medium">{{ t.noRecentOrders }}</td>
                     </tr>
                     <tr v-for="order in appStore.orders.slice(0, 3)" :key="order.id" class="border-b border-gray-50 hover:bg-gray-50 transition">
                       <td class="py-4 px-2 font-bold text-[#1E4B35] flex items-center gap-2">
@@ -216,13 +214,15 @@
                         GT-{{ order.id }}
                       </td>
                       <td class="py-4 px-2 text-gray-600">{{ new Date(order.created_at).toLocaleDateString() }}</td>
-                      <td class="py-4 px-2 text-gray-600">{{ order.items?.length || 0 }} items</td>
+                      <td class="py-4 px-2 text-gray-600">{{ t.itemsCount.replace('{count}', (order.items?.length || 0).toString()) }}</td>
                       <td class="py-4 px-2 font-bold text-gray-900">{{ parseFloat(order.total_price).toLocaleString() }} VND</td>
                       <td class="py-4 px-2">
-                        <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-semibold text-[10px] border border-green-200">{{ order.status }}</span>
+                        <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-semibold text-[10px] border border-green-200">
+                          {{ order.status === 'Completed' && appStore.lang === 'vi' ? 'Đã hoàn thành' : order.status }}
+                        </span>
                       </td>
                       <td class="py-4 px-2 text-right">
-                        <router-link to="/orders" class="px-3 py-1 border border-gray-300 rounded text-[10px] font-bold text-gray-700 hover:bg-gray-100 transition inline-block">View Order</router-link>
+                        <router-link to="/orders" class="px-3 py-1 border border-gray-300 rounded text-[10px] font-bold text-gray-700 hover:bg-gray-100 transition inline-block">{{ t.viewOrder }}</router-link>
                       </td>
                     </tr>
                   </tbody>
@@ -234,41 +234,41 @@
           <!-- TAB CONTENT: PROFILE DETAILS -->
           <div v-if="activeTab === 'profile'" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
             <div class="border-b border-gray-100 pb-3">
-              <h3 class="font-bold text-gray-900 text-sm">Edit Profile Information</h3>
-              <p class="text-xs text-gray-500">Update your details to keep your account current.</p>
+              <h3 class="font-bold text-gray-900 text-sm">{{ t.editProfileInfo }}</h3>
+              <p class="text-xs text-gray-500">{{ t.updateDetailsDesc }}</p>
             </div>
             
             <form @submit.prevent="saveProfile" class="space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Full Name</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.fullName }}</label>
                   <input type="text" v-model="profileData.name" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" required />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Email Address</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.emailAddress }}</label>
                   <input type="email" v-model="profileData.email" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" required />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Phone Number</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.phoneNumber }}</label>
                   <input type="text" v-model="profileData.phone" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" required />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Date of Birth</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.dateOfBirth }}</label>
                   <input type="text" v-model="profileData.dob" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">City</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.city }}</label>
                   <input type="text" v-model="profileData.city" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Country</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.country }}</label>
                   <input type="text" v-model="profileData.country" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" />
                 </div>
               </div>
 
               <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
-                <button type="button" @click="activeTab = 'overview'" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50">Cancel</button>
-                <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg text-xs font-bold transition">Save Changes</button>
+                <button type="button" @click="activeTab = 'overview'" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50">{{ t.cancel }}</button>
+                <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg text-xs font-bold transition">{{ t.saveChanges }}</button>
               </div>
             </form>
           </div>
@@ -277,11 +277,11 @@
           <div v-if="activeTab === 'addresses'" class="space-y-6">
             <div class="flex justify-between items-center bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
               <div>
-                <h3 class="font-bold text-gray-900 text-sm">Delivery Addresses</h3>
-                <p class="text-xs text-gray-500 mt-0.5">Manage addresses where your traceable products are shipped.</p>
+                <h3 class="font-bold text-gray-900 text-sm">{{ t.deliveryAddresses }}</h3>
+                <p class="text-xs text-gray-500 mt-0.5">{{ t.deliveryAddressesDesc }}</p>
               </div>
               <button @click="openAddAddressModal" class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                + Add Address
+                {{ t.addAddressBtn }}
               </button>
             </div>
 
@@ -289,19 +289,19 @@
               <div v-for="(addr, idx) in addressesList" :key="idx" class="bg-white border rounded-2xl p-5 shadow-sm flex flex-col justify-between" :class="addr.isDefault ? 'border-[#1E4B35] ring-1 ring-[#1E4B35]/25' : 'border-gray-200'">
                 <div class="space-y-3">
                   <div class="flex justify-between items-center">
-                    <span v-if="addr.isDefault" class="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded border border-green-200">Default Shipping</span>
+                    <span v-if="addr.isDefault" class="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded border border-green-200">{{ t.defaultShipping }}</span>
                     <span v-else class="text-[9px] text-gray-400 font-bold uppercase">{{ addr.label }}</span>
-                    <button @click="deleteAddress(idx)" class="text-gray-400 hover:text-red-500 text-xs font-bold">Remove</button>
+                    <button @click="deleteAddress(idx)" class="text-gray-400 hover:text-red-500 text-xs font-bold">{{ t.remove }}</button>
                   </div>
                   <h4 class="font-bold text-gray-900 text-sm">{{ addr.recipient }}</h4>
                   <p class="text-xs text-gray-600 leading-relaxed">
                     {{ addr.street }}<br/>
                     {{ addr.city }}, {{ addr.country }}<br/>
-                    Phone: {{ addr.phone }}
+                    {{ t.phoneLabel }}: {{ addr.phone }}
                   </p>
                 </div>
                 <div v-if="!addr.isDefault" class="pt-4 mt-4 border-t border-gray-100">
-                  <button @click="setDefaultAddress(idx)" class="text-[10px] font-bold text-[#1E4B35] hover:underline">Set as Default Address</button>
+                  <button @click="setDefaultAddress(idx)" class="text-[10px] font-bold text-[#1E4B35] hover:underline">{{ t.setAsDefault }}</button>
                 </div>
               </div>
             </div>
@@ -311,11 +311,11 @@
           <div v-if="activeTab === 'payments'" class="space-y-6">
             <div class="flex justify-between items-center bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
               <div>
-                <h3 class="font-bold text-gray-900 text-sm">Saved Payment Methods</h3>
-                <p class="text-xs text-gray-500 mt-0.5">Manage your wallets and cards connected to Green Trace.</p>
+                <h3 class="font-bold text-gray-900 text-sm">{{ t.savedPaymentMethods }}</h3>
+                <p class="text-xs text-gray-500 mt-0.5">{{ t.paymentDesc }}</p>
               </div>
               <button @click="simulatedAction('add_payment')" class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-4 py-2 rounded-lg text-xs font-bold transition">
-                + Add Payment Method
+                {{ t.addPaymentBtn }}
               </button>
             </div>
 
@@ -324,19 +324,19 @@
               <div class="bg-white border border-[#1E4B35] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
                 <div class="space-y-3">
                   <div class="flex justify-between items-center">
-                    <span class="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded border border-green-200">Default Method</span>
-                    <span class="text-[9px] text-green-600 font-bold uppercase bg-green-100 px-2 py-0.5 rounded">Linked</span>
+                    <span class="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded border border-green-200">{{ t.defaultMethod }}</span>
+                    <span class="text-[9px] text-green-600 font-bold uppercase bg-green-100 px-2 py-0.5 rounded">{{ t.linked }}</span>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-xs">VNP</div>
                     <div>
-                      <h4 class="font-bold text-gray-900 text-sm">VNPay Wallet</h4>
-                      <p class="text-xs text-gray-500">Connected via +84 *** *** 678</p>
+                      <h4 class="font-bold text-gray-900 text-sm">{{ t.vnpayWallet }}</h4>
+                      <p class="text-xs text-gray-500">{{ t.connectedVia.replace('{phone}', '+84 *** *** 678') }}</p>
                     </div>
                   </div>
                 </div>
                 <div class="pt-4 mt-4 border-t border-gray-100 flex justify-end">
-                  <button @click="simulatedAction('unlink')" class="text-[10px] font-bold text-red-500 hover:underline">Disconnect Wallet</button>
+                  <button @click="simulatedAction('unlink')" class="text-[10px] font-bold text-red-500 hover:underline">{{ t.disconnectWallet }}</button>
                 </div>
               </div>
 
@@ -344,19 +344,19 @@
               <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
                 <div class="space-y-3">
                   <div class="flex justify-between items-center">
-                    <span class="text-[9px] text-gray-400 font-bold uppercase">Credit Card</span>
+                    <span class="text-[9px] text-gray-400 font-bold uppercase">{{ t.creditCard }}</span>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-gray-50 text-gray-700 rounded-lg flex items-center justify-center border border-gray-100"><CreditCard class="w-5 h-5"/></div>
                     <div>
-                      <h4 class="font-bold text-gray-900 text-sm">Visa Card ending in 4321</h4>
-                      <p class="text-xs text-gray-500">Expires 12 / 2029</p>
+                      <h4 class="font-bold text-gray-900 text-sm">{{ t.visaEnding.replace('{digits}', '4321') }}</h4>
+                      <p class="text-xs text-gray-500">{{ t.expires.replace('{date}', '12 / 2029') }}</p>
                     </div>
                   </div>
                 </div>
                 <div class="pt-4 mt-4 border-t border-gray-100 flex justify-between items-center">
-                  <button @click="simulatedAction('make_default')" class="text-[10px] font-bold text-[#1E4B35] hover:underline">Set as Default</button>
-                  <button @click="simulatedAction('remove_card')" class="text-[10px] font-bold text-red-500 hover:underline">Delete</button>
+                  <button @click="simulatedAction('make_default')" class="text-[10px] font-bold text-[#1E4B35] hover:underline">{{ t.setAsDefault }}</button>
+                  <button @click="simulatedAction('remove_card')" class="text-[10px] font-bold text-red-500 hover:underline">{{ t.delete }}</button>
                 </div>
               </div>
             </div>
@@ -365,8 +365,8 @@
           <!-- TAB CONTENT: WISHLIST -->
           <div v-if="activeTab === 'wishlist'" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
             <div>
-              <h3 class="font-bold text-gray-900 text-sm">My Wishlist</h3>
-              <p class="text-xs text-gray-500 mt-0.5">Your saved traceable items list.</p>
+              <h3 class="font-bold text-gray-900 text-sm">{{ t.myWishlist }}</h3>
+              <p class="text-xs text-gray-500 mt-0.5">{{ t.wishlistDesc }}</p>
             </div>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -385,7 +385,7 @@
                   <div class="mt-auto">
                     <div class="font-bold text-[#1E4B35] text-xs mb-2">{{ item.price.toLocaleString() }} VND</div>
                     <button @click="simulatedAction('add_cart')" class="w-full py-1.5 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded text-[10px] font-bold transition flex items-center justify-center gap-1">
-                      <ShoppingCart class="w-3 h-3" /> Add to Cart
+                      <ShoppingCart class="w-3 h-3" /> {{ t.addToCart }}
                     </button>
                   </div>
                 </div>
@@ -396,19 +396,19 @@
           <!-- TAB CONTENT: TRACEABILITY HISTORY -->
           <div v-if="activeTab === 'traceability'" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
             <div>
-              <h3 class="font-bold text-gray-900 text-sm">Traceability History</h3>
-              <p class="text-xs text-gray-500 mt-0.5">Logs of all QR code batch verification reports you have visited.</p>
+              <h3 class="font-bold text-gray-900 text-sm">{{ t.traceHistoryTitle }}</h3>
+              <p class="text-xs text-gray-500 mt-0.5">{{ t.traceHistoryDesc }}</p>
             </div>
 
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr class="border-b border-gray-100 text-gray-400 font-bold uppercase text-[9px]">
-                    <th class="py-3 px-2">Batch / Lot ID</th>
-                    <th class="py-3 px-2">Product</th>
-                    <th class="py-3 px-2">Producer</th>
-                    <th class="py-3 px-2">Viewed On</th>
-                    <th class="py-3 px-2 text-right">Actions</th>
+                    <th class="py-3 px-2">{{ t.batchLotId }}</th>
+                    <th class="py-3 px-2">{{ t.product }}</th>
+                    <th class="py-3 px-2">{{ t.producer }}</th>
+                    <th class="py-3 px-2">{{ t.viewedOn }}</th>
+                    <th class="py-3 px-2 text-right">{{ t.actionsCol }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -424,7 +424,7 @@
                     <td class="py-4 px-2 text-gray-500">{{ trace.date }}</td>
                     <td class="py-4 px-2 text-right">
                       <router-link to="/traceability" class="px-3 py-1 bg-green-50 text-[#1E4B35] rounded text-[10px] font-bold hover:bg-[#1E4B35] hover:text-white transition inline-block">
-                        View Traceability
+                        {{ t.viewTraceability }}
                       </router-link>
                     </td>
                   </tr>
@@ -436,8 +436,8 @@
           <!-- TAB CONTENT: NOTIFICATIONS -->
           <div v-if="activeTab === 'notifications'" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
             <div>
-              <h3 class="font-bold text-gray-900 text-sm">Notifications Center</h3>
-              <p class="text-xs text-gray-500 mt-0.5">Manage updates on deliveries and new certified batches.</p>
+              <h3 class="font-bold text-gray-900 text-sm">{{ t.notificationsCenter }}</h3>
+              <p class="text-xs text-gray-500 mt-0.5">{{ t.notifDesc }}</p>
             </div>
 
             <!-- List -->
@@ -454,18 +454,18 @@
 
             <!-- Toggles -->
             <div class="space-y-4 pt-4 border-t border-gray-100">
-              <h4 class="font-bold text-gray-900 text-xs">Email Preference Alerts</h4>
+              <h4 class="font-bold text-gray-900 text-xs">{{ t.emailPreference }}</h4>
               <div class="flex justify-between items-center text-xs">
                 <div>
-                  <div class="font-bold text-gray-700">Order Dispatches</div>
-                  <p class="text-[10px] text-gray-400">Receive emails when your batch departs shipping warehouses.</p>
+                  <div class="font-bold text-gray-700">{{ t.orderDispatches }}</div>
+                  <p class="text-[10px] text-gray-400">{{ t.orderDispatchesDesc }}</p>
                 </div>
                 <input type="checkbox" checked class="text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4 rounded" />
               </div>
               <div class="flex justify-between items-center text-xs">
                 <div>
-                  <div class="font-bold text-gray-700">Purity Lab Results Releases</div>
-                  <p class="text-[10px] text-gray-400">Receive alerts when laboratory batch reports are attached to your purchased products.</p>
+                  <div class="font-bold text-gray-700">{{ t.purityLabReleases }}</div>
+                  <p class="text-[10px] text-gray-400">{{ t.purityLabReleasesDesc }}</p>
                 </div>
                 <input type="checkbox" checked class="text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4 rounded" />
               </div>
@@ -475,71 +475,71 @@
           <!-- TAB CONTENT: SECURITY -->
           <div v-if="activeTab === 'security'" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
             <div>
-              <h3 class="font-bold text-gray-900 text-sm">Security & Password</h3>
-              <p class="text-xs text-gray-500 mt-0.5">Manage options to protect your identity.</p>
+              <h3 class="font-bold text-gray-900 text-sm">{{ t.securityPassword }}</h3>
+              <p class="text-xs text-gray-500 mt-0.5">{{ t.securityDesc }}</p>
             </div>
 
             <form @submit.prevent="saveSecurity" class="space-y-4 border-b border-gray-100 pb-6">
-              <h4 class="font-bold text-gray-900 text-xs">Change Password</h4>
+              <h4 class="font-bold text-gray-900 text-xs">{{ t.changePassword }}</h4>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Current Password</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.currentPassword }}</label>
                   <input type="password" v-model="changePasswordForm.current" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" required />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">New Password</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.newPassword }}</label>
                   <input type="password" v-model="changePasswordForm.newPass" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" required />
                 </div>
                 <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Confirm Password</label>
+                  <label class="text-[10px] font-bold text-gray-400 uppercase">{{ t.confirmPassword }}</label>
                   <input type="password" v-model="changePasswordForm.confirm" class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-[#1E4B35]" required />
                 </div>
               </div>
               <div class="flex justify-end pt-2">
-                <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg text-xs font-bold transition">Update Password</button>
+                <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg text-xs font-bold transition">{{ t.updatePassword }}</button>
               </div>
             </form>
 
             <div class="flex justify-between items-center text-xs">
               <div>
-                <div class="font-bold text-gray-800">Two-Factor Authentication (2FA)</div>
-                <p class="text-[10px] text-gray-500">Provide secondary phone confirmation codes upon logins.</p>
+                <div class="font-bold text-gray-800">{{ t.twoFactorAuth }}</div>
+                <p class="text-[10px] text-gray-500">{{ t.twoFactorAuthDesc }}</p>
               </div>
-              <button @click="simulatedAction('2fa')" class="px-3.5 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition">Enable 2FA</button>
+              <button @click="simulatedAction('2fa')" class="px-3.5 py-2 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition">{{ t.enable2fa }}</button>
             </div>
           </div>
 
           <!-- Bottom Features Row (Always shown at account bottom) -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-white border border-gray-150 rounded-2xl">
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 text-left">
               <Lock class="w-6 h-6 text-[#1E4B35] flex-shrink-0" />
               <div>
-                <h4 class="font-bold text-gray-900 text-xs">Secure Payments</h4>
-                <p class="text-[9px] text-gray-500 mt-0.5">Multiple safe options</p>
+                <h4 class="font-bold text-gray-900 text-xs">{{ t.securePayments }}</h4>
+                <p class="text-[9px] text-gray-500 mt-0.5">{{ t.securePaymentsDesc }}</p>
               </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 text-left">
               <Sprout class="w-6 h-6 text-[#1E4B35] flex-shrink-0" />
               <div>
-                <h4 class="font-bold text-gray-900 text-xs">Quality Guaranteed</h4>
-                <p class="text-[9px] text-gray-500 mt-0.5">Carefully selected</p>
+                <h4 class="font-bold text-gray-900 text-xs">{{ t.qualityGuaranteed }}</h4>
+                <p class="text-[9px] text-gray-500 mt-0.5">{{ t.qualityGuaranteedDesc }}</p>
               </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 text-left">
               <RefreshCw class="w-6 h-6 text-[#1E4B35] flex-shrink-0" />
               <div>
-                <h4 class="font-bold text-gray-900 text-xs">Easy Returns</h4>
-                <p class="text-[9px] text-gray-500 mt-0.5">7-day support</p>
+                <h4 class="font-bold text-gray-900 text-xs">{{ t.easyReturns }}</h4>
+                <p class="text-[9px] text-gray-500 mt-0.5">{{ t.easyReturnsDesc }}</p>
               </div>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 text-left">
               <Headphones class="w-6 h-6 text-[#1E4B35] flex-shrink-0" />
               <div>
-                <h4 class="font-bold text-gray-900 text-xs">Friendly Support</h4>
-                <p class="text-[9px] text-gray-500 mt-0.5">We're here to help</p>
+                <h4 class="font-bold text-gray-900 text-xs">{{ t.friendlySupport }}</h4>
+                <p class="text-[9px] text-gray-500 mt-0.5">{{ t.friendlySupportDesc }}</p>
               </div>
             </div>
           </div>
@@ -550,43 +550,43 @@
 
     <!-- ADD ADDRESS MODAL -->
     <div v-if="isAddressModalOpen" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-      <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-gray-100">
+      <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-gray-100 text-left">
         <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-          <h3 class="font-bold text-gray-900 text-base">Add New Address</h3>
+          <h3 class="font-bold text-gray-900 text-base">{{ t.addNewAddress }}</h3>
           <button @click="isAddressModalOpen = false" class="text-gray-400 hover:text-gray-600 font-bold text-lg">&times;</button>
         </div>
 
         <form @submit.prevent="saveNewAddress" class="space-y-3 text-xs">
           <div>
-            <label class="font-bold text-gray-500 block mb-1">Recipient Name</label>
+            <label class="font-bold text-gray-500 block mb-1">{{ t.recipientName }}</label>
             <input type="text" v-model="newAddressForm.recipient" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. Nguyen Van An" required />
           </div>
           <div>
-            <label class="font-bold text-gray-500 block mb-1">Street Address</label>
+            <label class="font-bold text-gray-500 block mb-1">{{ t.streetAddress }}</label>
             <input type="text" v-model="newAddressForm.street" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. 123 Le Loi Street" required />
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="font-bold text-gray-500 block mb-1">City</label>
+              <label class="font-bold text-gray-500 block mb-1">{{ t.city }}</label>
               <input type="text" v-model="newAddressForm.city" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. Ho Chi Minh City" required />
             </div>
             <div>
-              <label class="font-bold text-gray-500 block mb-1">Country</label>
+              <label class="font-bold text-gray-500 block mb-1">{{ t.country }}</label>
               <input type="text" v-model="newAddressForm.country" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. Vietnam" required />
             </div>
           </div>
           <div>
-            <label class="font-bold text-gray-500 block mb-1">Phone Number</label>
+            <label class="font-bold text-gray-500 block mb-1">{{ t.phoneNumber }}</label>
             <input type="text" v-model="newAddressForm.phone" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. +84 912 345 678" required />
           </div>
           <div class="flex items-center gap-2 pt-1">
             <input type="checkbox" id="is_default" v-model="newAddressForm.isDefault" class="text-[#1E4B35] focus:ring-[#1E4B35]" />
-            <label for="is_default" class="text-gray-600 font-semibold cursor-pointer">Set as default shipping address</label>
+            <label for="is_default" class="text-gray-600 font-semibold cursor-pointer">{{ t.setDefaultShippingCheckbox }}</label>
           </div>
 
           <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
-            <button type="button" @click="isAddressModalOpen = false" class="px-4 py-2 border border-gray-300 rounded-lg font-bold text-gray-700">Cancel</button>
-            <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg font-bold transition">Add Address</button>
+            <button type="button" @click="isAddressModalOpen = false" class="px-4 py-2 border border-gray-300 rounded-lg font-bold text-gray-700">{{ t.cancel }}</button>
+            <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg font-bold transition">{{ t.addAddressBtn }}</button>
           </div>
         </form>
       </div>
@@ -624,6 +624,225 @@ onMounted(async () => {
     await appStore.fetchOrders()
   } catch (err) {
     console.error('Error loading account data:', err)
+  }
+})
+
+const sidebarTabs = computed(() => {
+  const isVi = appStore.lang === 'vi'
+  return {
+    overview: isVi ? 'Tổng quan' : 'Overview',
+    profile: isVi ? 'Thông tin hồ sơ' : 'Profile Details',
+    addresses: isVi ? 'Địa chỉ' : 'Addresses',
+    payments: isVi ? 'Phương thức thanh toán' : 'Payment Methods',
+    wishlist: isVi ? 'Yêu thích' : 'Wishlist',
+    traceability: isVi ? 'Lịch sử truy xuất' : 'Traceability History',
+    orders: isVi ? 'Đơn hàng của tôi' : 'My Orders',
+    notifications: isVi ? 'Thông báo' : 'Notifications',
+    security: isVi ? 'Bảo mật' : 'Security',
+    support: isVi ? 'Hỗ trợ' : 'Support',
+    producerDashboard: isVi ? 'Kênh nhà sản xuất' : 'Producer Dashboard',
+    admin: isVi ? 'Bảng quản trị' : 'Admin Control Panel',
+    logout: isVi ? 'Đăng xuất' : 'Log Out'
+  }
+})
+
+const t = computed(() => {
+  return appStore.lang === 'vi' ? {
+    home: 'Trang chủ',
+    myAccount: 'Tài khoản của tôi',
+    subTitle: 'Quản lý hồ sơ, đơn hàng, địa chỉ và tùy chọn của bạn.',
+    needHelp: 'Cần hỗ trợ?',
+    needHelpDesc: 'Đội ngũ hỗ trợ của chúng tôi luôn sẵn sàng giúp đỡ bạn với bất kỳ điều gì bạn cần.',
+    contactSupport: 'Liên hệ Hỗ trợ',
+    visitHelpCenter: 'Truy cập Trung tâm trợ giúp &rarr;',
+    demoAccount: 'Tài khoản thử nghiệm',
+    memberSince: 'Thành viên từ 10 tháng 5, 2026',
+    editProfileBtn: 'Chỉnh sửa hồ sơ',
+    recentOrdersLink: 'Đơn hàng gần đây &rarr;',
+    manageAddressesLink: 'Quản lý địa chỉ &rarr;',
+    viewWishlistLink: 'Xem danh sách yêu thích &rarr;',
+    viewHistoryLink: 'Xem lịch sử &rarr;',
+    profileDetails: 'Chi tiết hồ sơ',
+    edit: 'Sửa',
+    fullName: 'Họ và tên',
+    emailAddress: 'Địa chỉ email',
+    phoneNumber: 'Số điện thoại',
+    defaultAddress: 'Địa chỉ mặc định',
+    manage: 'Quản lý',
+    phoneLabel: 'Điện thoại',
+    recentOrders: 'Đơn hàng gần đây',
+    viewAllOrders: 'Xem tất cả đơn hàng &rarr;',
+    orderIdCol: 'Mã đơn hàng',
+    dateCol: 'Ngày',
+    itemsCol: 'Sản phẩm',
+    totalCol: 'Tổng tiền',
+    statusCol: 'Trạng thái',
+    actionsCol: 'Hành động',
+    noRecentOrders: 'Không tìm thấy đơn hàng nào gần đây.',
+    itemsCount: '{count} sản phẩm',
+    viewOrder: 'Xem đơn hàng',
+    editProfileInfo: 'Chỉnh sửa thông tin hồ sơ',
+    updateDetailsDesc: 'Cập nhật chi tiết để giữ cho tài khoản của bạn luôn mới nhất.',
+    dateOfBirth: 'Ngày sinh',
+    city: 'Thành phố',
+    country: 'Quốc gia',
+    cancel: 'Hủy',
+    saveChanges: 'Lưu thay đổi',
+    deliveryAddresses: 'Địa chỉ giao hàng',
+    deliveryAddressesDesc: 'Quản lý địa chỉ giao các sản phẩm có thể truy xuất nguồn gốc của bạn.',
+    addAddressBtn: '+ Thêm địa chỉ',
+    defaultShipping: 'Địa chỉ mặc định',
+    remove: 'Xóa',
+    setAsDefault: 'Đặt làm mặc định',
+    savedPaymentMethods: 'Phương thức thanh toán đã lưu',
+    paymentDesc: 'Quản lý ví và thẻ được kết nối với Green Trace.',
+    addPaymentBtn: '+ Thêm phương thức thanh toán',
+    defaultMethod: 'Phương thức mặc định',
+    linked: 'Đã liên kết',
+    vnpayWallet: 'Ví VNPay',
+    connectedVia: 'Đã kết nối qua {phone}',
+    disconnectWallet: 'Ngắt kết nối ví',
+    creditCard: 'Thẻ tín dụng',
+    visaEnding: 'Thẻ Visa đuôi {digits}',
+    expires: 'Hết hạn {date}',
+    delete: 'Xóa',
+    myWishlist: 'Danh sách yêu thích của tôi',
+    wishlistDesc: 'Danh sách các mặt hàng có thể truy xuất nguồn gốc đã lưu của bạn.',
+    addToCart: 'Thêm vào giỏ',
+    traceHistoryTitle: 'Lịch sử truy xuất nguồn gốc',
+    traceHistoryDesc: 'Nhật ký của tất cả các báo cáo xác minh lô hàng bằng mã QR bạn đã truy cập.',
+    batchLotId: 'Mã lô hàng',
+    product: 'Sản phẩm',
+    producer: 'Nhà sản xuất',
+    viewedOn: 'Xem lúc',
+    viewTraceability: 'Xem truy xuất',
+    notificationsCenter: 'Trung tâm thông báo',
+    notifDesc: 'Quản lý cập nhật về giao hàng và các lô hàng mới được chứng nhận.',
+    emailPreference: 'Cảnh báo tùy chọn email',
+    orderDispatches: 'Giao hàng',
+    orderDispatchesDesc: 'Nhận email khi lô hàng của bạn bắt đầu vận chuyển.',
+    purityLabReleases: 'Công bộ kết quả kiểm nghiệm độ tinh khiết',
+    purityLabReleasesDesc: 'Nhận cảnh báo khi báo cáo kiểm nghiệm của phòng thí nghiệm được đính kèm vào sản phẩm bạn đã mua.',
+    securityPassword: 'Bảo mật & Mật khẩu',
+    securityDesc: 'Quản lý các tùy chọn để bảo vệ danh tính của bạn.',
+    changePassword: 'Đổi mật khẩu',
+    currentPassword: 'Mật khẩu hiện tại',
+    newPassword: 'Mật khẩu mới',
+    confirmPassword: 'Xác nhận mật khẩu',
+    updatePassword: 'Cập nhật mật khẩu',
+    twoFactorAuth: 'Xác thực hai yếu tố (2FA)',
+    twoFactorAuthDesc: 'Cung cấp mã xác nhận điện thoại phụ khi đăng nhập.',
+    enable2fa: 'Bật 2FA',
+    securePayments: 'Thanh toán an toàn',
+    securePaymentsDesc: 'Nhiều lựa chọn an toàn',
+    qualityGuaranteed: 'Đảm bảo chất lượng',
+    qualityGuaranteedDesc: 'Được tuyển chọn kỹ lưỡng',
+    easyReturns: 'Trả hàng dễ dàng',
+    easyReturnsDesc: 'Hỗ trợ trong 7 ngày',
+    friendlySupport: 'Hỗ trợ thân thiện',
+    friendlySupportDesc: 'Chúng tôi luôn ở đây',
+    addNewAddress: 'Thêm địa chỉ mới',
+    recipientName: 'Tên người nhận',
+    streetAddress: 'Địa chỉ đường phố',
+    setDefaultShippingCheckbox: 'Đặt làm địa chỉ giao hàng mặc định'
+  } : {
+    home: 'Home',
+    myAccount: 'My Account',
+    subTitle: 'Manage your profile, orders, addresses, and preferences.',
+    needHelp: 'Need help?',
+    needHelpDesc: 'Our support team is here to help you with anything you need.',
+    contactSupport: 'Contact Support',
+    visitHelpCenter: 'Visit Help Center &rarr;',
+    demoAccount: 'Demo Account',
+    memberSince: 'Member since May 10, 2026',
+    editProfileBtn: 'Edit Profile',
+    recentOrdersLink: 'Recent Orders &rarr;',
+    manageAddressesLink: 'Manage addresses &rarr;',
+    viewWishlistLink: 'View wishlist &rarr;',
+    viewHistoryLink: 'View history &rarr;',
+    profileDetails: 'Profile Details',
+    edit: 'Edit',
+    fullName: 'Full Name',
+    emailAddress: 'Email Address',
+    phoneNumber: 'Phone Number',
+    defaultAddress: 'Default Address',
+    manage: 'Manage',
+    phoneLabel: 'Phone',
+    recentOrders: 'Recent Orders',
+    viewAllOrders: 'View all orders &rarr;',
+    orderIdCol: 'Order ID',
+    dateCol: 'Date',
+    itemsCol: 'Items',
+    totalCol: 'Total',
+    statusCol: 'Status',
+    actionsCol: 'Actions',
+    noRecentOrders: 'No recent orders found.',
+    itemsCount: '{count} items',
+    viewOrder: 'View Order',
+    editProfileInfo: 'Edit Profile Information',
+    updateDetailsDesc: 'Update your details to keep your account current.',
+    dateOfBirth: 'Date of Birth',
+    city: 'City',
+    country: 'Country',
+    cancel: 'Cancel',
+    saveChanges: 'Save Changes',
+    deliveryAddresses: 'Delivery Addresses',
+    deliveryAddressesDesc: 'Manage addresses where your traceable products are shipped.',
+    addAddressBtn: '+ Add Address',
+    defaultShipping: 'Default Shipping',
+    remove: 'Remove',
+    setAsDefault: 'Set as Default Address',
+    savedPaymentMethods: 'Saved Payment Methods',
+    paymentDesc: 'Manage your wallets and cards connected to Green Trace.',
+    addPaymentBtn: '+ Add Payment Method',
+    defaultMethod: 'Default Method',
+    linked: 'Linked',
+    vnpayWallet: 'VNPay Wallet',
+    connectedVia: 'Connected via {phone}',
+    disconnectWallet: 'Disconnect Wallet',
+    creditCard: 'Credit Card',
+    visaEnding: 'Visa Card ending in {digits}',
+    expires: 'Expires {date}',
+    delete: 'Delete',
+    myWishlist: 'My Wishlist',
+    wishlistDesc: 'Your saved traceable items list.',
+    addToCart: 'Add to Cart',
+    traceHistoryTitle: 'Traceability History',
+    traceHistoryDesc: 'Logs of all QR code batch verification reports you have visited.',
+    batchLotId: 'Batch / Lot ID',
+    product: 'Product',
+    producer: 'Producer',
+    viewedOn: 'Viewed On',
+    viewTraceability: 'View Traceability',
+    notificationsCenter: 'Notifications Center',
+    notifDesc: 'Manage updates on deliveries and new certified batches.',
+    emailPreference: 'Email Preference Alerts',
+    orderDispatches: 'Order Dispatches',
+    orderDispatchesDesc: 'Receive emails when your batch departs shipping warehouses.',
+    purityLabReleases: 'Purity Lab Results Releases',
+    purityLabReleasesDesc: 'Receive alerts when laboratory batch reports are attached to your purchased products.',
+    securityPassword: 'Security & Password',
+    securityDesc: 'Manage options to protect your identity.',
+    changePassword: 'Change Password',
+    currentPassword: 'Current Password',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    updatePassword: 'Update Password',
+    twoFactorAuth: 'Two-Factor Authentication (2FA)',
+    twoFactorAuthDesc: 'Provide secondary phone confirmation codes upon logins.',
+    enable2fa: 'Enable 2FA',
+    securePayments: 'Secure Payments',
+    securePaymentsDesc: 'Multiple safe options',
+    qualityGuaranteed: 'Quality Guaranteed',
+    qualityGuaranteedDesc: 'Carefully selected',
+    easyReturns: 'Easy Returns',
+    easyReturnsDesc: '7-day support',
+    friendlySupport: 'Friendly Support',
+    friendlySupportDesc: 'We\'re here to help',
+    addNewAddress: 'Add New Address',
+    recipientName: 'Recipient Name',
+    streetAddress: 'Street Address',
+    setDefaultShippingCheckbox: 'Set as default shipping address'
   }
 })
 
@@ -717,7 +936,7 @@ async function saveProfile() {
       country: profileData.value.country,
       image_url: profileData.value.photo
     })
-    alert('Profile updated successfully!')
+    alert(appStore.lang === 'vi' ? 'Cập nhật hồ sơ thành công!' : 'Profile updated successfully!')
     activeTab.value = 'overview'
   } catch (err) {
     alert(err.message || 'Failed to update profile')
@@ -742,19 +961,20 @@ async function saveNewAddress() {
     })
     isAddressModalOpen.value = false
     await loadAddresses()
-    alert('Address added successfully!')
+    alert(appStore.lang === 'vi' ? 'Thêm địa chỉ thành công!' : 'Address added successfully!')
   } catch (err) {
     alert(err.message || 'Failed to add address')
   }
 }
 
 async function deleteAddress(idx) {
-  if (confirm('Are you sure you want to delete this address?')) {
+  const confirmMsg = appStore.lang === 'vi' ? 'Bạn có chắc chắn muốn xóa địa chỉ này?' : 'Are you sure you want to delete this address?'
+  if (confirm(confirmMsg)) {
     try {
       const address = addressesList.value[idx]
       await appStore.deleteAddress(address.id)
       await loadAddresses()
-      alert('Address deleted successfully!')
+      alert(appStore.lang === 'vi' ? 'Đã xóa địa chỉ thành công!' : 'Address deleted successfully!')
     } catch (err) {
       alert(err.message || 'Failed to delete address')
     }
@@ -768,7 +988,7 @@ async function setDefaultAddress(idx) {
       is_default: true
     })
     await loadAddresses()
-    alert('Default address updated!')
+    alert(appStore.lang === 'vi' ? 'Đã cập nhật địa chỉ mặc định!' : 'Default address updated!')
   } catch (err) {
     alert(err.message || 'Failed to set default address')
   }
@@ -777,7 +997,7 @@ async function setDefaultAddress(idx) {
 async function removeFromWishlist(id) {
   try {
     await appStore.toggleWishlist(id)
-    alert('Removed from wishlist.')
+    alert(appStore.lang === 'vi' ? 'Đã xóa khỏi danh sách yêu thích.' : 'Removed from wishlist.')
   } catch (err) {
     alert(err.message || 'Failed to remove from wishlist')
   }
@@ -785,12 +1005,12 @@ async function removeFromWishlist(id) {
 
 async function saveSecurity() {
   if (changePasswordForm.value.newPass !== changePasswordForm.value.confirm) {
-    alert('Passwords do not match!')
+    alert(appStore.lang === 'vi' ? 'Mật khẩu phải trùng khớp!' : 'Passwords do not match!')
     return
   }
   try {
     await appStore.changePassword(changePasswordForm.value.current, changePasswordForm.value.newPass)
-    alert('Password changed successfully!')
+    alert(appStore.lang === 'vi' ? 'Đổi mật khẩu thành công!' : 'Password changed successfully!')
     changePasswordForm.value = { current: '', newPass: '', confirm: '' }
   } catch (err) {
     alert(err.message || 'Failed to change password')
@@ -798,15 +1018,16 @@ async function saveSecurity() {
 }
 
 async function triggerPhotoUpload() {
-  const newUrl = prompt('Enter image URL to change profile picture:', profileData.value.photo)
+  const promptMsg = appStore.lang === 'vi' ? 'Nhập URL hình ảnh để thay đổi ảnh đại diện:' : 'Enter image URL to change profile picture:'
+  const newUrl = prompt(promptMsg, profileData.value.photo)
   if (newUrl) {
     try {
       await appStore.updateProfile({
         image_url: newUrl
       })
-      alert('Photo updated!')
+      alert(appStore.lang === 'vi' ? 'Đã cập nhật ảnh đại diện!' : 'Photo updated!')
     } catch (err) {
-      alert('Failed to update photo')
+      alert(appStore.lang === 'vi' ? 'Không thể cập nhật ảnh!' : 'Failed to update photo')
     }
   }
 }

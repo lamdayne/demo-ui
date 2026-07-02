@@ -4,13 +4,13 @@
     <div class="border-b border-gray-200 bg-white">
       <div class="container mx-auto px-4 max-w-6xl py-4">
         <div class="text-sm text-gray-500 flex items-center gap-2">
-          <router-link to="/" class="hover:text-[#1E4B35]">Home</router-link>
+          <router-link to="/" class="hover:text-[#1E4B35]">{{ appStore.t('home') }}</router-link>
           <ChevronRight class="w-3.5 h-3.5" />
-          <router-link to="/products" class="hover:text-[#1E4B35]">Shop</router-link>
+          <router-link to="/products" class="hover:text-[#1E4B35]">{{ appStore.t('shop') }}</router-link>
           <ChevronRight class="w-3.5 h-3.5" />
-          <span class="text-gray-400">Honey</span>
+          <span class="text-gray-400">{{ product ? product.category : 'Honey' }}</span>
           <ChevronRight class="w-3.5 h-3.5" />
-          <span class="text-[#1E4B35] font-semibold">U Minh Forest Wild Honey, 500 ml</span>
+          <span class="text-[#1E4B35] font-semibold">{{ product ? product.name : 'U Minh Forest Wild Honey, 500 ml' }}</span>
         </div>
       </div>
     </div>
@@ -49,8 +49,8 @@
               <h1 class="text-3xl font-extrabold text-gray-900 mb-2 leading-tight">{{ product.name }}</h1>
               
               <div class="flex items-center gap-1.5 text-sm mb-4">
-                <span class="text-gray-500">by</span>
-                <router-link :to="'/producer/' + (product.producer_id || 1)" class="text-[#1E4B35] font-bold underline hover:text-[#163a29]">{{ product.producer_name || 'Verified Farm' }}</router-link>
+                <span class="text-gray-500">{{ appStore.t('by') }}</span>
+                <router-link :to="'/producer/' + (product.producer_id || 1)" class="text-[#1E4B35] font-bold underline hover:text-[#163a29]">{{ product.producer_name || appStore.t('verifiedFarm') }}</router-link>
               </div>
 
               <!-- Rating, Verification -->
@@ -59,16 +59,16 @@
                   <Star v-for="i in 5" :key="i" class="w-4 h-4 fill-current" />
                 </div>
                 <span class="font-bold text-gray-700">{{ product.rating || '5.0' }}</span>
-                <span class="text-gray-400">({{ product.reviews_count || '0' }} reviews)</span>
+                <span class="text-gray-400">({{ product.reviews_count || '0' }} {{ appStore.t('reviewsCount') }})</span>
                 <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-bold border border-green-200 flex items-center gap-1">
-                  <Check class="w-3 h-3"/> Verified Producer
+                  <Check class="w-3 h-3"/> {{ appStore.t('verifiedProducer') }}
                 </span>
               </div>
 
               <!-- Price -->
               <div class="mb-5">
                 <div class="text-3xl font-extrabold text-[#1E4B35]">{{ parseFloat(product.price).toLocaleString() }} VND</div>
-                <div class="text-[10px] text-gray-400 mt-0.5">(Tax included)</div>
+                <div class="text-[10px] text-gray-400 mt-0.5">({{ appStore.t('taxIncluded') }})</div>
               </div>
 
               <p class="text-xs text-gray-600 leading-relaxed mb-6">
@@ -79,24 +79,24 @@
               <div class="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5 mb-6 text-xs text-gray-600">
                 <div class="flex items-center gap-2">
                   <User class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Producer:</span> <span class="font-semibold text-gray-900">{{ product.producer_name || 'Verified Cooperative' }}</span></span>
+                  <span><span class="text-gray-400">{{ appStore.t('producerSpec') }}</span> <span class="font-semibold text-gray-900">{{ product.producer_name || 'Verified Cooperative' }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <MapPin class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Location:</span> <span class="font-semibold text-gray-900">{{ product.producer_location || 'Vietnam' }}</span></span>
+                  <span><span class="text-gray-400">{{ appStore.t('locationSpec') }}</span> <span class="font-semibold text-gray-900">{{ product.producer_location || 'Vietnam' }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <Package class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Category:</span> <span class="font-semibold text-gray-900">{{ product.category }}</span></span>
+                  <span><span class="text-gray-400">{{ appStore.t('categorySpec') }}</span> <span class="font-semibold text-gray-900">{{ product.category }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <Sparkles class="w-4 h-4 text-gray-400" />
-                  <span><span class="text-gray-400">Packaging:</span> <span class="font-semibold text-gray-900">{{ product.specifications?.packaging || 'Standard Pack' }}</span></span>
+                  <span><span class="text-gray-400">{{ appStore.t('packagingSpec') }}</span> <span class="font-semibold text-gray-900">{{ product.specifications?.packaging || 'Standard Pack' }}</span></span>
                 </div>
               </div>
             </div>
             <div v-else class="py-12 text-center text-gray-400 text-xs font-semibold">
-              Loading product details...
+              {{ appStore.t('loadingDetails') }}
             </div>
 
             <!-- Actions Row -->
@@ -113,11 +113,11 @@
                 </button>
 
                 <button @click="addToCart" class="flex-grow h-12 border border-[#1E4B35] text-[#1E4B35] font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-green-50 transition">
-                  <ShoppingCart class="w-5 h-5" /> Add to Cart
+                  <ShoppingCart class="w-5 h-5" /> {{ appStore.t('addToCart') }}
                 </button>
               </div>
               <router-link to="/checkout" class="w-full h-12 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg font-bold flex items-center justify-center transition shadow shadow-[#1E4B35]/25">
-                Buy Now
+                {{ appStore.t('buyNow') }}
               </router-link>
             </div>
 
@@ -127,16 +127,16 @@
         <!-- Trust Features Bar -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-gray-100 text-center">
           <div class="flex items-center justify-center gap-2 text-xs font-bold text-gray-700">
-            <Scan class="w-4 h-4 text-green-600" /> Traceable to Batch
+            <Scan class="w-4 h-4 text-green-600" /> {{ appStore.t('traceableToBatch') }}
           </div>
           <div class="flex items-center justify-center gap-2 text-xs font-bold text-gray-700">
-            <ShieldCheck class="w-4 h-4 text-green-600" /> Verified Producer
+            <ShieldCheck class="w-4 h-4 text-green-600" /> {{ appStore.t('verifiedProducer') }}
           </div>
           <div class="flex items-center justify-center gap-2 text-xs font-bold text-gray-700">
-            <PackageCheck class="w-4 h-4 text-green-600" /> Carefully Packed
+            <PackageCheck class="w-4 h-4 text-green-600" /> {{ appStore.t('carefullyPacked') }}
           </div>
           <div class="flex items-center justify-center gap-2 text-xs font-bold text-gray-700">
-            <CreditCard class="w-4 h-4 text-green-600" /> Secure Payments
+            <CreditCard class="w-4 h-4 text-green-600" /> {{ appStore.t('securePaymentsTitle') }}
           </div>
         </div>
       </div>
@@ -145,68 +145,68 @@
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <!-- Column 1: Why people choose this product -->
         <div class="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm space-y-5">
-          <h3 class="font-bold text-gray-900 text-sm">Why people choose this product</h3>
+          <h3 class="font-bold text-gray-900 text-sm">{{ appStore.t('whyPeopleChoose') }}</h3>
           
           <div class="flex gap-4">
             <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0"><Trees class="w-5 h-5 text-green-600"/></div>
             <div>
-              <h4 class="font-bold text-gray-900 text-xs mb-0.5">From the U Minh forest</h4>
-              <p class="text-[10px] text-gray-500 leading-normal">Sourced from melaleuca forest in Ca Mau biosphere reserve.</p>
+              <h4 class="font-bold text-gray-900 text-xs mb-0.5">{{ appStore.t('fromForest') }}</h4>
+              <p class="text-[10px] text-gray-500 leading-normal">{{ appStore.t('fromForestDesc') }}</p>
             </div>
           </div>
 
           <div class="flex gap-4">
             <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0"><Droplet class="w-5 h-5 text-green-600"/></div>
             <div>
-              <h4 class="font-bold text-gray-900 text-xs mb-0.5">Raw & unfiltered</h4>
-              <p class="text-[10px] text-gray-500 leading-normal">Minimally processed to retain natural pollen, enzymes and aroma.</p>
+              <h4 class="font-bold text-gray-900 text-xs mb-0.5">{{ appStore.t('rawUnfiltered') }}</h4>
+              <p class="text-[10px] text-gray-500 leading-normal">{{ appStore.t('rawUnfilteredDesc') }}</p>
             </div>
           </div>
 
           <div class="flex gap-4">
             <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0"><Globe class="w-5 h-5 text-green-600"/></div>
             <div>
-              <h4 class="font-bold text-gray-900 text-xs mb-0.5">Traceable & transparent</h4>
-              <p class="text-[10px] text-gray-500 leading-normal">Scan and explore the journey of your product from forest to jar.</p>
+              <h4 class="font-bold text-gray-900 text-xs mb-0.5">{{ appStore.t('traceableTransparent') }}</h4>
+              <p class="text-[10px] text-gray-500 leading-normal">{{ appStore.t('traceableTransparentDesc') }}</p>
             </div>
           </div>
         </div>
 
         <!-- Column 2: Batch record preview -->
         <div class="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
-          <h3 class="font-bold text-gray-900 text-sm mb-4">Batch record preview</h3>
+          <h3 class="font-bold text-gray-900 text-sm mb-4">{{ appStore.t('batchRecordPreview') }}</h3>
           
           <div class="border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50/50 space-y-3">
             <div class="flex justify-between items-center pb-2 border-b border-gray-100">
               <div>
-                <span class="text-[9px] text-gray-400 block">Batch ID</span>
+                <span class="text-[9px] text-gray-400 block">{{ appStore.t('batchId') }}</span>
                 <span class="font-mono font-bold text-xs text-gray-900">LOT-UMH-2605-001</span>
               </div>
-              <span class="bg-green-50 text-green-700 text-[8px] font-bold px-1.5 py-0.5 rounded border border-green-200">Sample Record</span>
+              <span class="bg-green-50 text-green-700 text-[8px] font-bold px-1.5 py-0.5 rounded border border-green-200">{{ appStore.t('sampleRecord') }}</span>
             </div>
             
             <div class="text-[10px] space-y-2">
               <div class="flex justify-between">
-                <span class="text-gray-400">Harvest Date</span>
+                <span class="text-gray-400">{{ appStore.t('harvestDate') }}</span>
                 <span class="font-semibold text-gray-700">19 May 2026</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-400">Location</span>
+                <span class="text-gray-400">{{ appStore.t('locationSpec') }}</span>
                 <span class="font-semibold text-gray-700">U Minh Forest, Ca Mau</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-400">Species Source</span>
+                <span class="text-gray-400">{{ appStore.t('speciesSource') }}</span>
                 <span class="font-semibold text-gray-700">Melaleuca (Tràm)</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-400">Status</span>
-                <span class="font-semibold text-gray-700">Sample record for preview</span>
+                <span class="text-gray-400">{{ appStore.t('status') }}</span>
+                <span class="font-semibold text-gray-700">{{ appStore.t('samplePreviewStatus') }}</span>
               </div>
             </div>
           </div>
 
           <router-link to="/traceability" class="w-full py-2 border border-gray-300 text-gray-700 text-xs font-bold text-center rounded-lg hover:bg-gray-50 transition mt-4 block">
-            View Batch Record
+            {{ appStore.t('viewBatchRecord') }}
           </router-link>
         </div>
 
@@ -215,9 +215,9 @@
           <div class="w-14 h-14 bg-green-50 rounded-full flex items-center justify-center text-[#1E4B35] mb-4">
             <PackageCheck class="w-7 h-7" />
           </div>
-          <h4 class="font-bold text-gray-900 text-sm mb-1.5">Delivered with care</h4>
+          <h4 class="font-bold text-gray-900 text-sm mb-1.5">{{ appStore.t('deliveredWithCare') }}</h4>
           <p class="text-xs text-gray-500 max-w-[200px] leading-relaxed">
-            We pack your order carefully to protect product quality. Plastic-light packaging.
+            {{ appStore.t('deliveredWithCareDesc') }}
           </p>
         </div>
       </div>
@@ -225,18 +225,18 @@
       <!-- Description Tabs -->
       <div class="bg-white border border-gray-200 rounded-3xl shadow-sm mb-8 overflow-hidden">
         <div class="flex border-b border-gray-100 bg-gray-50/50">
-          <button @click="activeDetailTab = 'overview'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'overview' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">Overview</button>
-          <button @click="activeDetailTab = 'story'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'story' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">Producer Story</button>
-          <button @click="activeDetailTab = 'records'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'records' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">Supporting Records</button>
-          <button @click="activeDetailTab = 'shipping'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'shipping' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">Shipping & Returns</button>
+          <button @click="activeDetailTab = 'overview'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'overview' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">{{ appStore.t('overviewTab') }}</button>
+          <button @click="activeDetailTab = 'story'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'story' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">{{ appStore.t('producerStoryTab') }}</button>
+          <button @click="activeDetailTab = 'records'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'records' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">{{ appStore.t('recordsTab') }}</button>
+          <button @click="activeDetailTab = 'shipping'" class="px-6 py-4 font-bold text-xs transition-all" :class="activeDetailTab === 'shipping' ? 'text-[#1E4B35] border-b-2 border-[#1E4B35]' : 'text-gray-400 hover:text-gray-900'">{{ appStore.t('shippingTab') }}</button>
         </div>
         <div class="p-6 lg:p-8">
           <div v-if="activeDetailTab === 'overview'" class="text-xs text-gray-600 leading-relaxed max-w-4xl space-y-3">
             <p>
-              U Minh Forest Wild Honey is collected by local beekeepers who place hives deep in the melaleuca forest of U Minh. The bees forage on seasonal blossoms, creating a honey that is floral, mellow and naturally aromatic. It is raw, unfiltered and gently packaged to keep its natural goodness.
+              {{ appStore.t('overviewText1') }}
             </p>
             <p>
-              By keeping the moisture content under 19%, our honey naturally inhibits fermentation and guarantees a long shelf life without requiring chemical preservatives or high-heat pasteurization.
+              {{ appStore.t('overviewText2') }}
             </p>
           </div>
           
@@ -246,54 +246,54 @@
                 <img src="https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=400" class="w-full h-full object-cover" />
               </div>
               <div class="space-y-2">
-                <h4 class="font-bold text-gray-900 text-sm">Harvesting Deep in the Melaleuca Biosphere</h4>
+                <h4 class="font-bold text-gray-900 text-sm">{{ appStore.t('storyTitle') }}</h4>
                 <p>
-                  U Minh Bee Farm was established in Ca Mau back in 2012 by a cooperative of local honey hunters. Traditionally, honey was gathered by wild foraging which was hazardous and unstable. By introducing sustainable hive placement techniques, the cooperative has stabilized livelihoods while protecting Ca Mau's unique wetlands.
+                  {{ appStore.t('storyText1') }}
                 </p>
                 <p>
-                  The beekeepers ensure that hives do not interfere with the natural fauna, and they refrain from feeding bees sugar syrups, allowing them to remain completely wild-foraged.
+                  {{ appStore.t('storyText2') }}
                 </p>
               </div>
             </div>
           </div>
 
           <div v-if="activeDetailTab === 'records'" class="text-xs text-gray-600 leading-relaxed max-w-4xl space-y-4">
-            <h4 class="font-bold text-gray-900 text-sm">Active Lab Verification Results</h4>
-            <p class="mb-3">Our honey goes through strict quality checking at third-party test labs. Below are key parameters from sample testing:</p>
+            <h4 class="font-bold text-gray-900 text-sm">{{ appStore.t('activeLabTitle') }}</h4>
+            <p class="mb-3">{{ appStore.t('activeLabDesc') }}</p>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div class="p-3 border border-gray-100 rounded-xl bg-gray-50/50">
-                <div class="text-gray-400 text-[10px]">Moisture Rate</div>
+                <div class="text-gray-400 text-[10px]">{{ appStore.t('moistureRate') }}</div>
                 <div class="font-bold text-base text-[#1E4B35] mt-1">18.5%</div>
-                <div class="text-[9px] text-gray-500 mt-0.5">Threshold: &lt; 20%</div>
+                <div class="text-[9px] text-gray-500 mt-0.5">{{ appStore.t('threshold') }} &lt; 20%</div>
               </div>
               <div class="p-3 border border-gray-100 rounded-xl bg-gray-50/50">
-                <div class="text-gray-400 text-[10px]">HMF Content</div>
+                <div class="text-gray-400 text-[10px]">{{ appStore.t('hmfContent') }}</div>
                 <div class="font-bold text-base text-[#1E4B35] mt-1">12 mg/kg</div>
-                <div class="text-[9px] text-gray-500 mt-0.5">Threshold: &lt; 40 mg/kg</div>
+                <div class="text-[9px] text-gray-500 mt-0.5">{{ appStore.t('threshold') }} &lt; 40 mg/kg</div>
               </div>
               <div class="p-3 border border-gray-100 rounded-xl bg-gray-50/50">
-                <div class="text-gray-400 text-[10px]">Diastase Activity</div>
+                <div class="text-gray-400 text-[10px]">{{ appStore.t('diastaseActivity') }}</div>
                 <div class="font-bold text-base text-[#1E4B35] mt-1">15.2 DN</div>
-                <div class="text-[9px] text-gray-500 mt-0.5">Threshold: &gt; 8 DN</div>
+                <div class="text-[9px] text-gray-500 mt-0.5">{{ appStore.t('threshold') }} &gt; 8 DN</div>
               </div>
               <div class="p-3 border border-gray-100 rounded-xl bg-gray-50/50">
-                <div class="text-gray-400 text-[10px]">Antibiotics</div>
-                <div class="font-bold text-base text-green-600 mt-1">Not Detected</div>
-                <div class="text-[9px] text-gray-500 mt-0.5">Zero tolerance policy</div>
+                <div class="text-gray-400 text-[10px]">{{ appStore.t('antibiotics') }}</div>
+                <div class="font-bold text-base text-green-600 mt-1">{{ appStore.t('notDetected') }}</div>
+                <div class="text-[9px] text-gray-500 mt-0.5">{{ appStore.t('zeroTolerance') }}</div>
               </div>
             </div>
           </div>
 
           <div v-if="activeDetailTab === 'shipping'" class="text-xs text-gray-600 leading-relaxed max-w-4xl space-y-3">
-            <h4 class="font-bold text-gray-900 text-sm">Delivery & Return Guidelines</h4>
+            <h4 class="font-bold text-gray-900 text-sm">{{ appStore.t('deliveryReturnGuide') }}</h4>
             <p>
-              <strong>Eco-Packaging:</strong> We prioritize minimizing plastics. Honey jars are encased in biodegradable honeycomb wrap and thick corrugated carton.
+              <strong>{{ appStore.t('ecoPackaging') }}</strong> {{ appStore.t('ecoPackagingDesc') }}
             </p>
             <p>
-              <strong>Shipping Timelines:</strong> Standard domestic delivery takes 2 to 4 business days. Same-day delivery is available in HCMC.
+              <strong>{{ appStore.t('shippingTimelines') }}</strong> {{ appStore.t('shippingTimelinesDesc') }}
             </p>
             <p>
-              <strong>7-Day Returns:</strong> If you receive a jar that has leaked, cracked, or has a broken seal, please contact our support desk immediately for a full replacement.
+              <strong>{{ appStore.t('sevenDayReturns') }}</strong> {{ appStore.t('sevenDayReturnsDesc') }}
             </p>
           </div>
         </div>
@@ -301,44 +301,44 @@
 
       <!-- Supporting Records -->
       <div class="mb-12">
-        <h3 class="font-bold text-gray-900 text-lg mb-2">Supporting Records</h3>
-        <p class="text-xs text-gray-400 mb-6">We provide sample records for transparency. Actual records vary by batch.</p>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">{{ appStore.t('recordsTab') }}</h3>
+        <p class="text-xs text-gray-400 mb-6">{{ appStore.t('sampleNote') }}</p>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
           <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex items-start gap-4">
             <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0 text-[#1E4B35]"><FileText class="w-5 h-5"/></div>
             <div>
-              <h4 class="font-bold text-gray-900 text-xs mb-1">Sample Batch Record</h4>
-              <p class="text-[10px] text-gray-500 leading-relaxed mb-3">See the product journey from harvest, handling, testing and packing.</p>
-              <button @click="isReportModalOpen = true" class="text-[10px] font-bold text-[#1E4B35] hover:underline flex items-center gap-1">View Sample Record &rarr;</button>
+              <h4 class="font-bold text-gray-900 text-xs mb-1">{{ appStore.t('sampleBatchRecordTitle') }}</h4>
+              <p class="text-[10px] text-gray-500 leading-relaxed mb-3">{{ appStore.t('sampleBatchRecordDesc') }}</p>
+              <button @click="isReportModalOpen = true" class="text-[10px] font-bold text-[#1E4B35] hover:underline flex items-center gap-1">{{ appStore.t('viewSampleRecordBtn') }} &rarr;</button>
             </div>
           </div>
 
           <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex items-start gap-4">
             <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0 text-[#1E4B35]"><FlaskConical class="w-5 h-5"/></div>
             <div>
-              <h4 class="font-bold text-gray-900 text-xs mb-1">Sample Lab Report</h4>
-              <p class="text-[10px] text-gray-500 leading-relaxed mb-3">Review key quality tests including moisture, HMF and antibiotic screening.</p>
-              <button @click="isReportModalOpen = true" class="text-[10px] font-bold text-[#1E4B35] hover:underline flex items-center gap-1">View Sample Report &rarr;</button>
+              <h4 class="font-bold text-gray-900 text-xs mb-1">{{ appStore.t('sampleLabReportTitle') }}</h4>
+              <p class="text-[10px] text-gray-500 leading-relaxed mb-3">{{ appStore.t('sampleLabReportDesc') }}</p>
+              <button @click="isReportModalOpen = true" class="text-[10px] font-bold text-[#1E4B35] hover:underline flex items-center gap-1">{{ appStore.t('viewSampleReportBtn') }} &rarr;</button>
             </div>
           </div>
 
           <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex items-start gap-4">
             <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0 text-[#1E4B35]"><User class="w-5 h-5"/></div>
             <div>
-              <h4 class="font-bold text-gray-900 text-xs mb-1">Reviewed Producer Profile</h4>
-              <p class="text-[10px] text-gray-500 leading-relaxed mb-3">Learn about the producer, farming practices and our verification process.</p>
-              <router-link to="/producer/1" class="text-[10px] font-bold text-[#1E4B35] hover:underline flex items-center gap-1">View Producer Profile &rarr;</router-link>
+              <h4 class="font-bold text-gray-900 text-xs mb-1">{{ appStore.t('reviewedProducerTitle') }}</h4>
+              <p class="text-[10px] text-gray-500 leading-relaxed mb-3">{{ appStore.t('reviewedProducerDesc') }}</p>
+              <router-link to="/producer/1" class="text-[10px] font-bold text-[#1E4B35] hover:underline flex items-center gap-1">{{ appStore.t('viewProducerProfileBtn') }} &rarr;</router-link>
             </div>
           </div>
         </div>
 
-        <p class="text-[10px] text-gray-400 italic">Note: All records above are samples for preview purposes and are not actual documents for this batch.</p>
+        <p class="text-[10px] text-gray-400 italic">{{ appStore.t('sampleNote') }}</p>
       </div>
 
       <!-- About the Producer -->
       <div class="bg-white border border-gray-200 rounded-3xl p-6 lg:p-8 shadow-sm mb-12">
-        <h3 class="font-bold text-gray-400 text-xs uppercase tracking-wider mb-6">About the Producer</h3>
+        <h3 class="font-bold text-gray-400 text-xs uppercase tracking-wider mb-6">{{ appStore.t('aboutProducer') }}</h3>
         <div class="flex flex-col lg:flex-row gap-8 items-center">
           <div class="w-full lg:w-1/3 h-52 bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 flex-shrink-0">
             <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=400" alt="Beekeepers" class="w-full h-full object-cover" />
@@ -346,20 +346,20 @@
           <div class="flex-grow space-y-4">
             <div class="flex items-center gap-3">
               <h4 class="font-bold text-gray-900 text-xl">U Minh Bee Farm</h4>
-              <span class="bg-green-50 text-green-700 text-[10px] px-2 py-0.5 rounded font-bold border border-green-200">Verified Producer</span>
+              <span class="bg-green-50 text-green-700 text-[10px] px-2 py-0.5 rounded font-bold border border-green-200">{{ appStore.t('verifiedProducer') }}</span>
             </div>
             <p class="text-xs text-gray-500 leading-relaxed">
-              A family-run farm in Ca Mau, dedicated to sustainable beekeeping in the U Minh forest. They follow responsible practices, protect the forest habitat and prioritize bee welfare.
+              {{ appStore.t('producerDesc') }}
             </p>
             <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-600 pt-2">
               <span class="flex items-center gap-1.5"><MapPin class="w-4 h-4 text-gray-400"/> Ca Mau, Vietnam</span>
-              <span class="flex items-center gap-1.5"><Leaf class="w-4 h-4 text-gray-400"/> Nature-friendly beekeeping</span>
-              <span class="flex items-center gap-1.5"><Award class="w-4 h-4 text-gray-400"/> 10+ years experience</span>
+              <span class="flex items-center gap-1.5"><Leaf class="w-4 h-4 text-gray-400"/> {{ appStore.t('natureFriendly') }}</span>
+              <span class="flex items-center gap-1.5"><Award class="w-4 h-4 text-gray-400"/> {{ appStore.t('yearsExperience') }}</span>
             </div>
           </div>
           <div class="flex-shrink-0">
             <router-link to="/producer/1" class="px-6 py-3 border border-gray-300 hover:border-[#1E4B35] hover:text-[#1E4B35] rounded-xl text-xs font-bold transition inline-block">
-              View Full Profile
+              {{ appStore.t('viewFullProfile') }}
             </router-link>
           </div>
         </div>
@@ -368,7 +368,7 @@
       <!-- You might also like -->
       <div class="mb-12">
         <div class="flex justify-between items-center mb-6">
-          <h3 class="font-bold text-gray-900 text-lg">You might also like</h3>
+          <h3 class="font-bold text-gray-900 text-lg">{{ appStore.t('youMayAlsoLike') }}</h3>
           <div class="flex gap-2">
             <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-gray-400 hover:text-gray-600 transition"><ChevronLeft class="w-4 h-4"/></button>
             <button class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:border-gray-400 hover:text-gray-600 transition"><ChevronRight class="w-4 h-4"/></button>
@@ -395,7 +395,7 @@
 
       <!-- What customers say -->
       <div class="bg-white border border-gray-200 rounded-3xl p-6 lg:p-8 shadow-sm">
-        <h3 class="font-bold text-gray-900 text-base mb-6">What customers say</h3>
+        <h3 class="font-bold text-gray-900 text-base mb-6">{{ appStore.t('whatCustomersSay') }}</h3>
         
         <div class="flex flex-col md:flex-row items-start justify-between gap-6 border-b border-gray-100 pb-6 mb-6">
           <div class="flex items-start gap-4">
@@ -405,13 +405,13 @@
             <div>
               <div class="flex items-center gap-2 mb-1">
                 <span class="font-bold text-gray-900 text-sm">Thanh H.</span>
-                <span class="bg-green-50 text-green-700 text-[8px] font-bold px-1.5 py-0.5 rounded border border-green-150">Verified Buyer</span>
+                <span class="bg-green-50 text-green-700 text-[8px] font-bold px-1.5 py-0.5 rounded border border-green-150">{{ appStore.t('verifiedBuyer') }}</span>
               </div>
               <div class="flex text-yellow-400 mb-2">
                 <Star v-for="i in 5" :key="i" class="w-3.5 h-3.5 fill-current" />
               </div>
               <p class="text-xs text-gray-600 leading-relaxed">
-                Lovely natural aroma and not too sweet. I like that I can check the batch journey. Will definitely reorder.
+                {{ appStore.t('reviewText') }}
               </p>
             </div>
           </div>
@@ -420,7 +420,7 @@
 
         <div class="text-center">
           <a href="#" class="text-xs font-bold text-[#1E4B35] hover:underline flex items-center justify-center gap-1">
-            View all 128 reviews <ArrowRight class="w-4 h-4" />
+            {{ appStore.t('viewAllReviews') }} <ArrowRight class="w-4 h-4" />
           </a>
         </div>
       </div>
@@ -436,28 +436,28 @@
           <Check class="w-6 h-6" />
         </div>
         
-        <h3 class="font-bold text-gray-900 text-base">Added to Cart!</h3>
-        <p class="text-xs text-gray-500">You've successfully added {{ qty }}x U Minh Forest Wild Honey to your cart.</p>
+        <h3 class="font-bold text-gray-900 text-base">{{ appStore.t('addedToCartTitle') }}</h3>
+        <p class="text-xs text-gray-500">{{ appStore.t('addedToCartDesc') }}</p>
         
         <div class="border border-gray-100 rounded-xl p-3 bg-gray-50 flex items-center gap-3 text-left">
           <div class="w-12 h-12 rounded overflow-hidden bg-white border border-gray-200 flex-shrink-0">
             <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=100" class="w-full h-full object-cover" />
           </div>
           <div class="text-xs">
-            <h4 class="font-bold text-gray-900 line-clamp-1">U Minh Forest Wild Honey</h4>
-            <div class="text-gray-500 mt-0.5">Qty: {{ qty }}</div>
-            <div class="font-bold text-[#1E4B35] mt-0.5">{{ (229000 * qty).toLocaleString() }} VND</div>
+            <h4 class="font-bold text-gray-900 line-clamp-1">{{ product ? product.name : 'U Minh Forest Wild Honey' }}</h4>
+            <div class="text-gray-500 mt-0.5">{{ appStore.t('qtyLabel') }} {{ qty }}</div>
+            <div class="font-bold text-[#1E4B35] mt-0.5">{{ product ? (product.price * qty).toLocaleString() : (229000 * qty).toLocaleString() }} VND</div>
           </div>
         </div>
 
         <div class="flex flex-col gap-2 pt-2">
           <router-link to="/checkout" class="w-full py-2.5 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg text-xs font-bold text-center block transition">
-            Proceed to Checkout
+            {{ appStore.t('proceedToCheckout') }}
           </router-link>
           <router-link to="/cart" class="w-full py-2.5 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg text-xs font-bold text-center block transition">
-            View Shopping Cart
+            {{ appStore.t('viewShoppingCart') }}
           </router-link>
-          <button @click="isCartModalOpen = false" class="text-xs text-gray-400 hover:text-gray-600 font-semibold pt-1">Continue Shopping</button>
+          <button @click="isCartModalOpen = false" class="text-xs text-gray-400 hover:text-gray-600 font-semibold pt-1">{{ appStore.t('continueShopping') }}</button>
         </div>
       </div>
     </div>
@@ -472,65 +472,65 @@
             <FlaskConical class="w-5 h-5" />
           </div>
           <div>
-            <h3 class="font-bold text-gray-900 text-base">Laboratory Analysis Report</h3>
-            <p class="text-xs text-gray-400">Batch Code: LOT-UMH-2605-001</p>
+            <h3 class="font-bold text-gray-900 text-base">{{ appStore.t('labAnalysisReport') }}</h3>
+            <p class="text-xs text-gray-400">{{ appStore.t('batchCode') }} LOT-UMH-2605-001</p>
           </div>
         </div>
 
         <div class="border border-gray-200 rounded-2xl p-5 bg-gray-50/50 space-y-4 text-xs">
           <div class="flex justify-between items-center text-[10px] text-gray-400 uppercase font-bold border-b border-gray-100 pb-2">
-            <span>Testing Facility: Eurofins Agri Testing</span>
-            <span>Date: 22 May 2026</span>
+            <span>{{ appStore.t('testingFacility') }} Eurofins Agri Testing</span>
+            <span>{{ appStore.t('date') }} 22 May 2026</span>
           </div>
 
           <div class="grid grid-cols-2 gap-x-6 gap-y-3">
             <div>
-              <span class="text-gray-400 block text-[9px] uppercase">Product Name</span>
+              <span class="text-gray-400 block text-[9px] uppercase">{{ appStore.t('productName') }}</span>
               <span class="font-semibold text-gray-700">U Minh Wild Honey, 500 ml</span>
             </div>
             <div>
-              <span class="text-gray-400 block text-[9px] uppercase">Manufacturer</span>
+              <span class="text-gray-400 block text-[9px] uppercase">{{ appStore.t('manufacturer') }}</span>
               <span class="font-semibold text-gray-700">U Minh Bee Farm Co.</span>
             </div>
             <div>
-              <span class="text-gray-400 block text-[9px] uppercase">Report Status</span>
-              <span class="font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-150 inline-block mt-0.5">PASSED / VERIFIED</span>
+              <span class="text-gray-400 block text-[9px] uppercase">{{ appStore.t('reportStatus') }}</span>
+              <span class="font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded border border-green-150 inline-block mt-0.5">{{ appStore.t('passedVerified') }}</span>
             </div>
             <div>
-              <span class="text-gray-400 block text-[9px] uppercase">Accreditation</span>
+              <span class="text-gray-400 block text-[9px] uppercase">{{ appStore.t('accreditation') }}</span>
               <span class="font-semibold text-gray-700">ISO/IEC 17025 standard</span>
             </div>
           </div>
 
           <div class="border-t border-gray-100 pt-3">
-            <h4 class="font-bold text-gray-800 mb-2">Physicochemical Test Metrics</h4>
+            <h4 class="font-bold text-gray-800 mb-2">{{ appStore.t('physicoChemical') }}</h4>
             <div class="space-y-2">
               <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100">
-                <span class="font-medium text-gray-700">Water / Moisture Content</span>
+                <span class="font-medium text-gray-700">{{ appStore.t('moistureRate') }}</span>
                 <div class="text-right">
                   <span class="font-bold text-[#1E4B35]">18.5%</span>
-                  <span class="text-[9px] text-gray-400 block">Required: &le; 20%</span>
+                  <span class="text-[9px] text-gray-400 block">{{ appStore.t('required') }} &le; 20%</span>
                 </div>
               </div>
               <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100">
-                <span class="font-medium text-gray-700">Hydroxymethylfurfural (HMF)</span>
+                <span class="font-medium text-gray-700">{{ appStore.t('hmfContent') }}</span>
                 <div class="text-right">
                   <span class="font-bold text-[#1E4B35]">12.0 mg/kg</span>
-                  <span class="text-[9px] text-gray-400 block">Required: &le; 40 mg/kg</span>
+                  <span class="text-[9px] text-gray-400 block">{{ appStore.t('required') }} &le; 40 mg/kg</span>
                 </div>
               </div>
               <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100">
-                <span class="font-medium text-gray-700">Diastase Enzyme Activity</span>
+                <span class="font-medium text-gray-700">{{ appStore.t('diastaseActivity') }}</span>
                 <div class="text-right">
                   <span class="font-bold text-[#1E4B35]">15.2 DN</span>
-                  <span class="text-[9px] text-gray-400 block">Required: &ge; 8.0 DN</span>
+                  <span class="text-[9px] text-gray-400 block">{{ appStore.t('required') }} &ge; 8.0 DN</span>
                 </div>
               </div>
               <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-gray-100">
-                <span class="font-medium text-gray-700">C3/C4 Sugars (Adulteration test)</span>
+                <span class="font-medium text-gray-700">{{ appStore.t('c3c4Sugars') }}</span>
                 <div class="text-right">
-                  <span class="font-bold text-green-600">Negative / 0% Detected</span>
-                  <span class="text-[9px] text-gray-400 block">Pure honey verification</span>
+                  <span class="font-bold text-green-600">{{ appStore.t('notDetected') }}</span>
+                  <span class="text-[9px] text-gray-400 block">{{ appStore.t('pureHoneyVerif') }}</span>
                 </div>
               </div>
             </div>
@@ -539,7 +539,7 @@
 
         <div class="flex justify-end gap-2 pt-2 border-t border-gray-150">
           <button @click="isReportModalOpen = false" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg text-xs font-bold transition">
-            Close Report
+            {{ appStore.t('closeReport') }}
           </button>
         </div>
       </div>

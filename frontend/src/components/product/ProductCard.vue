@@ -11,8 +11,8 @@
 
       <!-- Badges Top Left -->
       <div class="absolute top-3 left-3 flex flex-col gap-1 z-10">
-        <span v-if="product.topMatch" class="bg-[#1E4B35] text-white text-xs font-semibold px-2.5 py-1 rounded-md">Top Match</span>
-        <span v-if="product.isBundle" class="bg-[#1E4B35] text-white text-xs font-semibold px-2.5 py-1 rounded-md">Bundle</span>
+        <span v-if="product.topMatch" class="bg-[#1E4B35] text-white text-xs font-semibold px-2.5 py-1 rounded-md">{{ appStore.t('topMatch') || 'Top Match' }}</span>
+        <span v-if="product.isBundle" class="bg-[#1E4B35] text-white text-xs font-semibold px-2.5 py-1 rounded-md">{{ appStore.t('bundleBadge') || 'Bundle' }}</span>
       </div>
 
       <!-- Badge Top Right -->
@@ -68,7 +68,7 @@
         <div class="flex items-baseline gap-2 mb-1">
           <span class="text-lg font-bold text-gray-900">{{ product.price.toLocaleString() }} VND</span>
         </div>
-        <p v-if="product.batch" class="text-xs text-gray-500 mb-4">Batch: {{ product.batch }}</p>
+        <p v-if="product.batch" class="text-xs text-gray-500 mb-4">{{ appStore.t('batchLabel') || 'Batch:' }} {{ product.batch }}</p>
         <p v-else-if="product.saveDesc" class="text-xs text-gray-500 mb-4">{{ product.saveDesc }}</p>
         
         <button 
@@ -76,14 +76,14 @@
           @click="appStore.addToCart({ id: product.id, name: product.name, price: product.price, image_url: product.image, producer_name: product.producer }, 1)"
           class="w-full py-2.5 rounded-lg border border-[#1E4B35] text-[#1E4B35] font-semibold flex items-center justify-center gap-2 hover:bg-[#1E4B35] hover:text-white transition-colors"
         >
-          <ShoppingCart class="w-4 h-4" /> Add to Cart
+          <ShoppingCart class="w-4 h-4" /> {{ appStore.t('addToCart') }}
         </button>
         <router-link 
           v-else 
           :to="'/product/' + product.id"
           class="w-full py-2.5 rounded-lg border border-[#1E4B35] text-[#1E4B35] font-semibold flex items-center justify-center gap-2 hover:bg-[#1E4B35] hover:text-white transition-colors text-center"
         >
-          View Bundle
+          {{ appStore.t('viewBundle') || 'View Bundle' }}
         </router-link>
       </div>
     </div>
