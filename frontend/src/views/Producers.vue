@@ -11,7 +11,7 @@
         </div>
         <div class="w-full md:w-1/2 flex justify-end">
           <div class="w-full max-w-md h-64 md:h-80 bg-gray-200 rounded-2xl overflow-hidden relative shadow-lg">
-            <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600" alt="Meet Reviewed Producers" class="w-full h-full object-cover object-center" />
+            <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783002817/734755797_1325279163146746_2847268805525389078_n_c8tlf4.png" alt="Meet Reviewed Producers" class="w-full h-full object-cover object-center" />
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@
           <div class="p-6 flex flex-col flex-grow">
             <h3 class="text-xl font-bold text-gray-900 mb-1">{{ producer.name }}</h3>
             <div class="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
-              <MapPin class="w-4 h-4" /> {{ producer.location }}
+              <MapPin class="w-4 h-4" /> {{ appStore.localizeAddress(producer.location) }}
             </div>
             <p class="text-sm text-gray-600 mb-5 flex-grow line-clamp-3 leading-relaxed">{{ producer.desc }}</p>
 

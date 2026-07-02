@@ -16,6 +16,16 @@ export const useAppStore = defineStore('app', () => {
     return translations[lang.value]?.[key] || key;
   }
 
+  // Removes Vietnamese diacritics for EN display (e.g. "Hà Nội" → "Ha Noi")
+  function localizeAddress(str) {
+    if (!str) return str;
+    if (lang.value !== 'en') return str;
+    // Handle đ/Đ separately (not covered by NFD decomposition)
+    let result = str.replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    // Decompose combined characters and strip combining diacritical marks
+    return result.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   const token = ref(localStorage.getItem('gt_token') || '');
   const user = ref(JSON.parse(localStorage.getItem('gt_user')) || null);
   const cart = ref(JSON.parse(localStorage.getItem('gt_cart')) || []);
@@ -572,6 +582,7 @@ export const useAppStore = defineStore('app', () => {
     fetchAdminCoupons,
     createAdminCoupon,
     deleteAdminCoupon,
-    validateCouponCode
+    validateCouponCode,
+    localizeAddress
   };
 });

@@ -83,7 +83,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                   <MapPin class="w-4.5 h-4.5 text-gray-400" />
-                  <span><span class="text-gray-400">{{ appStore.t('locationSpec') }}</span> <span class="font-semibold text-gray-900">{{ product.producer_location || 'Vietnam' }}</span></span>
+                  <span><span class="text-gray-400">{{ appStore.t('locationSpec') }}</span> <span class="font-semibold text-gray-900">{{ appStore.localizeAddress(product.producer_location || 'Vietnam') }}</span></span>
                 </div>
                 <div class="flex items-center gap-2">
                   <Package class="w-4.5 h-4.5 text-gray-400" />
@@ -194,7 +194,7 @@
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-400">{{ appStore.t('locationSpec') }}</span>
-                <span class="font-semibold text-gray-800">{{ activeBatch ? activeBatch.location : 'U Minh Forest, Ca Mau' }}</span>
+                <span class="font-semibold text-gray-800">{{ appStore.localizeAddress(activeBatch ? activeBatch.location : 'U Minh Forest, Ca Mau') }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-400">{{ activeBatch ? (appStore.lang === 'vi' ? 'Nguồn loài' : 'Species Source') : appStore.t('speciesSource') }}</span>

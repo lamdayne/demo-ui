@@ -111,7 +111,7 @@
                 <Hexagon class="w-6 h-6"/>
               </div>
               <h4 class="font-bold text-gray-900 text-sm">{{ appStore.lang === 'en' ? 'Harvest / Collection' : 'Thu hoạch / Thu gom' }}</h4>
-              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">{{ appStore.lang === 'en' ? 'Collected at location: ' : 'Thu hoạch tại: ' }}{{ batchData.location || 'Local apiary' }}</p>
+              <p class="text-[11px] text-gray-500 mt-1 max-w-[130px] leading-tight">{{ appStore.lang === 'en' ? 'Collected at location: ' : 'Thu hoạch tại: ' }}{{ appStore.localizeAddress(batchData.location || 'Local apiary') }}</p>
               <span class="text-[10px] font-bold text-[#1E4B35] mt-2 block">{{ new Date(batchData.harvest_date).toLocaleDateString() }}</span>
             </div>
 
@@ -193,7 +193,7 @@
               </div>
               <div class="flex justify-between py-1.5">
                 <span class="text-gray-500">{{ appStore.lang === 'en' ? 'Location Origin' : 'Nguồn gốc xuất xứ' }}</span>
-                <span class="font-semibold text-gray-900">{{ batchData.location }}</span>
+                <span class="font-semibold text-gray-900">{{ appStore.localizeAddress(batchData.location) }}</span>
               </div>
             </div>
           </div>
@@ -210,13 +210,13 @@
               </div>
               <div>
                 <h4 class="font-bold text-gray-900 text-sm">{{ batchData.producer_name }}</h4>
-                <p class="text-xs text-gray-500 mt-0.5">{{ appStore.lang === 'en' ? 'Location: ' : 'Địa chỉ: ' }}{{ batchData.producer_location }}</p>
+                <p class="text-xs text-gray-500 mt-0.5">{{ appStore.lang === 'en' ? 'Location: ' : 'Địa chỉ: ' }}{{ appStore.localizeAddress(batchData.producer_location) }}</p>
               </div>
             </div>
             <div class="space-y-3 text-sm text-gray-700">
               <div class="flex justify-between py-1.5 border-b border-gray-50">
                 <span class="text-gray-500">{{ appStore.lang === 'en' ? 'Origin Province' : 'Tỉnh thành xuất xứ' }}</span>
-                <span class="font-semibold text-gray-900">{{ batchData.producer_location }}</span>
+                <span class="font-semibold text-gray-900">{{ appStore.localizeAddress(batchData.producer_location) }}</span>
               </div>
               <div class="flex justify-between py-1.5 border-b border-gray-50">
                 <span class="text-gray-500">{{ appStore.lang === 'en' ? 'Producer Code' : 'Mã nhà sản xuất' }}</span>
