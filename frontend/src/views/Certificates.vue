@@ -254,7 +254,7 @@
             <h4 class="font-bold text-gray-900 text-sm">{{ t.helpTitle }}</h4>
             
             <div class="w-20 h-20 rounded-full overflow-hidden border border-gray-100 shadow-sm bg-gray-50">
-              <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783001450/039e1ccf-46a9-44c2-9894-2709fd2caa46.png" alt="Support agent" class="w-full h-full object-cover" />
+              <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783001672/4aa2f6f8-996c-455d-bd27-443c5d8346eb.png" alt="Support agent" class="w-full h-full object-cover" />
             </div>
             
             <p class="text-[11px] text-gray-500 leading-normal max-w-[200px]">
