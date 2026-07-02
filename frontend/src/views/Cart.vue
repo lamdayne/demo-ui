@@ -48,7 +48,7 @@
                   <div class="flex items-center gap-1.5 text-sm text-gray-600 mb-1">
                     <User class="w-4 h-4 text-green-600" /> {{ item.producer_name || appStore.t('verifiedProducer') }}
                   </div>
-                  <p class="text-xs text-gray-500">{{ appStore.t('locationSpec') || 'Location:' }} {{ item.producer_location || 'Vietnam' }}</p>
+                  <p class="text-xs text-gray-500">{{ appStore.t('locationSpec') || 'Location:' }} {{ appStore.localizeAddress(item.producer_location || 'Vietnam') }}</p>
                 </div>
                 <div class="col-span-1 md:col-span-2 flex flex-col items-center">
                   <div class="flex items-center border border-gray-200 rounded-lg h-10 w-28 bg-white mb-2">

@@ -55,7 +55,7 @@
         
         <div class="w-full md:w-2/5 mt-12 md:mt-0 relative h-80 lg:h-[450px]">
           <div class="w-full h-full bg-gray-200 rounded-3xl overflow-hidden shadow-2xl relative">
-             <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600" alt="Smiling farmer with fresh produce" class="w-full h-full object-cover object-center" />
+             <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783003478/734555016_1342639110533602_5621359612570324386_n_caocha.png" alt="Smiling farmer with fresh produce" class="w-full h-full object-cover object-center" />
           </div>
         </div>
       </div>
@@ -211,7 +211,7 @@
                <div class="flex flex-col justify-between flex-grow">
                  <div>
                    <h4 class="font-bold text-gray-900 group-hover:text-[#1E4B35] transition-colors mb-1">{{ producer.name }}</h4>
-                   <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-2"><MapPin class="w-3 h-3"/> {{ producer.location }}</div>
+                   <div class="flex items-center gap-1 text-[10px] text-gray-500 mb-2"><MapPin class="w-3 h-3"/> {{ appStore.localizeAddress(producer.location) }}</div>
                    <p class="text-[10px] text-gray-600 leading-tight line-clamp-2">{{ producer.description }}</p>
                  </div>
                  <div class="bg-green-50 text-green-700 text-[10px] font-medium px-2 py-0.5 rounded w-fit border border-green-200 mt-2">{{ appStore.t('verifiedPartner') }}</div>
