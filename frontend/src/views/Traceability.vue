@@ -319,40 +319,6 @@
         </div>
       </div>
 
-      <!-- Related Actions -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-        <router-link to="/products" class="border border-gray-200 bg-white rounded-xl p-4 flex items-center gap-3 hover:border-[#1E4B35] transition text-left">
-          <ArrowLeft class="w-5 h-5 text-gray-400" />
-          <div>
-            <h4 class="font-bold text-gray-900 text-xs">{{ appStore.lang === 'en' ? 'Back to Product' : 'Quay lại sản phẩm' }}</h4>
-            <p class="text-[10px] text-gray-500">{{ appStore.lang === 'en' ? 'View product details' : 'Xem chi tiết sản phẩm' }}</p>
-          </div>
-        </router-link>
-
-        <router-link to="/support" class="border border-gray-200 bg-white rounded-xl p-4 flex items-center gap-3 hover:border-[#1E4B35] transition text-left">
-          <HelpCircle class="w-5 h-5 text-gray-400" />
-          <div>
-            <h4 class="font-bold text-gray-900 text-xs">{{ appStore.lang === 'en' ? 'Contact Support' : 'Liên hệ hỗ trợ' }}</h4>
-            <p class="text-[10px] text-gray-500">{{ appStore.lang === 'en' ? 'Ask us anything' : 'Hỏi chúng tôi bất cứ điều gì' }}</p>
-          </div>
-        </router-link>
-
-        <router-link to="/producer/1" class="border border-gray-200 bg-white rounded-xl p-4 flex items-center gap-3 hover:border-[#1E4B35] transition text-left">
-          <User class="w-5 h-5 text-gray-400" />
-          <div>
-            <h4 class="font-bold text-gray-900 text-xs">{{ appStore.lang === 'en' ? 'View Producer' : 'Xem nhà sản xuất' }}</h4>
-            <p class="text-[10px] text-gray-500">{{ appStore.lang === 'en' ? 'See producer profile' : 'Xem hồ sơ nhà sản xuất' }}</p>
-          </div>
-        </router-link>
-
-        <button class="border border-gray-200 bg-white rounded-xl p-4 flex items-center gap-3 hover:border-[#1E4B35] transition text-left">
-          <Share2 class="w-5 h-5 text-gray-400" />
-          <div>
-            <h4 class="font-bold text-gray-900 text-xs">{{ appStore.lang === 'en' ? 'Share This Batch' : 'Chia sẻ lô hàng' }}</h4>
-            <p class="text-[10px] text-gray-500">{{ appStore.lang === 'en' ? 'Share with others' : 'Chia sẻ với người khác' }}</p>
-          </div>
-        </button>
-      </div>
 
       <!-- Testimonial Community Quote -->
       <div class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
