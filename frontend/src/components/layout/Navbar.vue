@@ -1,32 +1,16 @@
 <template>
   <header class="bg-white sticky top-0 z-50 border-b border-gray-100 shadow-sm">
-    <!-- Onboarding Topbar (Partner page) -->
-    <div v-if="route.path === '/partner'" class="bg-[#0B3B24] text-white text-xs py-2.5 px-4">
-      <div class="container mx-auto flex justify-between items-center relative max-w-6xl">
-        <div class="flex items-center gap-2 opacity-90">
-          <Leaf class="w-3.5 h-3.5 text-white" />
-          <span class="font-semibold">{{ appStore.lang === 'en' ? 'Prototype Onboarding Flow – For Local Producers & Co-ops' : 'Luồng thử nghiệm Onboarding - Cho nhà sản xuất & Hợp tác xã' }}</span>
-        </div>
-        <div class="hidden md:block opacity-90 text-center">
-          {{ appStore.lang === 'en' ? 'This is a sample data collection form. Submitting does not create a live account.' : 'Đây là biểu mẫu thu thập dữ liệu thử nghiệm. Gửi thông tin không tạo tài khoản thật.' }}
-        </div>
-        <button class="hover:opacity-80 transition">
-          <X class="w-4 h-4 text-white" />
-        </button>
-      </div>
-    </div>
-    
     <!-- Regular Topbar -->
-    <div v-else class="bg-[#0B3B24] text-white text-xs py-2">
+    <div class="bg-[#0B3B24] text-white text-xs py-2">
       <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
         <div class="flex items-center gap-2 opacity-90">
           <Leaf class="w-3 h-3" />
-          <span>{{ appStore.lang === 'en' ? 'Academic Prototype – Sample Data – 2026' : 'Nguyên mẫu học thuật - Dữ liệu thử nghiệm - 2026' }}</span>
+          <span>{{ appStore.t('navPrototype') }}</span>
         </div>
         <div class="text-center flex-grow hidden md:block opacity-90">
-          <span v-if="route.path === '/cart'">{{ appStore.lang === 'en' ? 'Curated traceable marketplace for traceable agricultural products' : 'Chợ nông sản có truy xuất nguồn gốc chất lượng cao' }}</span>
-          <span v-else-if="route.path.startsWith('/producer/')">{{ appStore.lang === 'en' ? 'Curated B2C marketplace for traceable agricultural products' : 'Chợ kết nối trực tiếp với nhà sản xuất nông sản sạch' }}</span>
-          <span v-else>{{ appStore.lang === 'en' ? 'Curated traceable agricultural products' : 'Sản phẩm nông nghiệp có nguồn gốc minh bạch' }}</span>
+          <span v-if="route.path === '/cart'">{{ appStore.t('navCartMsg') }}</span>
+          <span v-else-if="route.path.startsWith('/producer/')">{{ appStore.t('navProducerMsg') }}</span>
+          <span v-else>{{ appStore.t('navDefaultMsg') }}</span>
         </div>
         <button @click="appStore.toggleLanguage()" class="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition opacity-90 focus:outline-none">
           <Globe class="w-3 h-3 text-white" />

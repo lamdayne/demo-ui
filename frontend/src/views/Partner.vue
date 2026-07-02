@@ -133,7 +133,7 @@
                     <div class="flex items-center gap-4">
                       <div class="w-24 h-24 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 flex-shrink-0 relative shadow-inner">
                         <img v-if="imageUrl" :src="imageUrl" class="w-full h-full object-cover" />
-                        <div v-else class="w-full h-full flex items-center justify-center text-gray-300 text-xs">No Image</div>
+                        <div v-else class="w-full h-full flex items-center justify-center text-gray-300 text-xs">{{ appStore.t('noImage') }}</div>
                       </div>
                       <div class="space-y-2">
                         <button type="button" @click="triggerUpload" :disabled="uploading" class="px-4 py-2 bg-white border border-gray-300 hover:border-[#1E4B35] text-gray-700 text-xs font-bold rounded-lg transition flex items-center gap-1.5">
@@ -344,11 +344,11 @@
             <div class="text-sm text-gray-700 space-y-1.5 mb-4 text-left">
               <div class="flex items-center gap-2 justify-center">
                 <Mail class="w-4 h-4 text-gray-400" />
-                <span class="font-semibold text-gray-900">partners@greentrace.ph</span>
+                <span class="font-semibold text-gray-900">greentracevietnam@gmail.com</span>
               </div>
               <div class="flex items-center gap-2 justify-center">
                 <Phone class="w-4 h-4 text-gray-400" />
-                <span class="font-semibold text-gray-900">+63 912 345 6789</span>
+                <span class="font-semibold text-gray-900">0797931176</span>
               </div>
               <div class="text-center text-[10px] text-gray-400">{{ appStore.t('hoursLabel') }}</div>
             </div>
@@ -439,10 +439,10 @@ async function onImageUpload(e) {
   try {
     const url = await appStore.uploadImage(file)
     imageUrl.value = url
-    appStore.triggerToast('Cover image uploaded successfully!')
+    appStore.triggerToast(appStore.t('partnerUploadSuccess'))
   } catch (err) {
     console.error(err)
-    appStore.triggerToast('Failed to upload image.')
+    appStore.triggerToast(appStore.t('partnerUploadFailed'))
   } finally {
     uploading.value = false
   }
@@ -450,16 +450,16 @@ async function onImageUpload(e) {
 
 async function submitOnboard() {
   if (!appStore.user) {
-    appStore.triggerToast('Please log in first to onboard.')
+    appStore.triggerToast(appStore.t('partnerLoginRequired'))
     router.push('/login')
     return
   }
   if (!name.value.trim() || !locationStr.value.trim() || !description.value.trim()) {
-    appStore.triggerToast('Please fill out all required fields marked with *')
+    appStore.triggerToast(appStore.t('partnerFillRequired'))
     return
   }
   if (!termsAccepted.value) {
-    appStore.triggerToast('Please accept the declaration to proceed.')
+    appStore.triggerToast(appStore.t('partnerAcceptTerms'))
     return
   }
 
@@ -471,13 +471,13 @@ async function submitOnboard() {
       history: history.value.trim(),
       image_url: imageUrl.value.trim() || 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=600'
     })
-    appStore.triggerToast('Onboarded successfully as a partner!')
+    appStore.triggerToast(appStore.t('partnerSuccess'))
     // Update user role to producer in local state
     appStore.user.role = 'producer'
     router.push('/producer-dashboard')
   } catch (err) {
     console.error(err)
-    appStore.triggerToast(err.message || 'Server error during onboarding.')
+    appStore.triggerToast(err.message || appStore.t('partnerError'))
   }
 }
 </script>
