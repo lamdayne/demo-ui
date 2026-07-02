@@ -890,6 +890,8 @@
                 <option>Tea</option>
                 <option>Vegetables</option>
                 <option>Fruits</option>
+                <option>Bundle</option>
+                <option>Meat</option>
               </select>
             </div>
             <div>
