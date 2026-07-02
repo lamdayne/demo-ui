@@ -31,12 +31,15 @@
       </button>
     </div>
     
-    <div class="p-5 flex flex-col flex-grow">
-      <h3 class="font-bold text-gray-900 text-lg leading-tight mb-2 line-clamp-2">
+    <div class="p-5 flex flex-col flex-grow text-left">
+      <h3 class="font-bold text-gray-900 text-lg leading-tight mb-1 line-clamp-2">
         <router-link :to="'/product/' + product.id" class="hover:text-[#1E4B35] transition-colors">
-          {{ product.name }}
+          {{ (appStore.lang === 'en' && product.specifications?.name_en) ? product.specifications.name_en : product.name }}
         </router-link>
       </h3>
+      <div v-if="product.specifications?.size" class="text-xs text-gray-500 mb-2 font-medium">
+        {{ appStore.lang === 'vi' ? 'Quy cách' : 'Size' }}: {{ product.specifications.size }}
+      </div>
       
       <div class="flex items-center gap-1.5 text-sm mb-1 text-gray-700">
         <User class="w-4 h-4 text-green-600" />

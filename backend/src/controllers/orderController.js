@@ -119,3 +119,18 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error retrieving order details' });
   }
 };
+
+export const updateOrderStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const result = await pool.query("UPDATE orders SET status = $1 WHERE id = $2 RETURNING *", [status, id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+    res.json({ success: true, message: 'Order status updated', order: result.rows[0] });
+  } catch (error) {
+    console.error('Update order status error:', error);
+    res.status(500).json({ success: false, message: 'Server error updating order status' });
+  }
+};

@@ -525,10 +525,10 @@ const nextDoc = () => {
 }
 
 const openPreview = (type) => {
-  alert(`Opening modal preview for ${type} sample file...`)
+  appStore.triggerToast(`Opening modal preview for ${type} sample file...`)
 }
 
 const openGallery = () => {
-  alert('Opening all mock previews list...')
+  appStore.triggerToast('Opening all mock previews list...')
 }
 </script>

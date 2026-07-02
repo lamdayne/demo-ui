@@ -358,7 +358,7 @@ const activeDetailsOrderId = ref(null)
 
 onMounted(async () => {
   if (!appStore.token) {
-    alert('Please login to view your orders.')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Vui lòng đăng nhập để xem đơn hàng của bạn.' : 'Please login to view your orders.')
     router.push('/')
     return
   }
@@ -507,26 +507,26 @@ const toggleOrderDetails = (orderId) => {
 }
 
 const trackOrder = () => {
-  alert('Simulating shipment location tracking on map...')
+  appStore.triggerToast(appStore.lang === 'vi' ? 'Đang mô phỏng định vị lô hàng trên bản đồ...' : 'Simulating shipment location tracking on map...')
 }
 
 const reorder = () => {
-  alert('Added items from this order to your current cart!')
+  appStore.triggerToast(appStore.lang === 'vi' ? 'Đã thêm các sản phẩm từ đơn hàng này vào giỏ hàng!' : 'Added items from this order to your current cart!')
 }
 
 const editAddress = () => {
-  alert('Simulated action: Editing delivery details...')
+  appStore.triggerToast(appStore.lang === 'vi' ? 'Thao tác mô phỏng: Chỉnh sửa thông tin giao hàng...' : 'Simulated action: Editing delivery details...')
 }
 
 const viewPayment = () => {
-  alert('Simulated action: Checking bank statement response...')
+  appStore.triggerToast(appStore.lang === 'vi' ? 'Thao tác mô phỏng: Kiểm tra phản hồi sao kê ngân hàng...' : 'Simulated action: Checking bank statement response...')
 }
 
 const simulatedInvoice = () => {
-  alert('Downloading invoice copy...')
+  appStore.triggerToast(appStore.lang === 'vi' ? 'Đang tải bản sao hóa đơn...' : 'Downloading invoice copy...')
 }
 
 const requestReturn = () => {
-  alert('Simulating Return Request workflow: Select items to return.')
+  appStore.triggerToast(appStore.lang === 'vi' ? 'Mô phỏng quy trình Trả hàng: Vui lòng chọn sản phẩm cần trả.' : 'Simulating Return Request workflow: Select items to return.')
 }
 </script>

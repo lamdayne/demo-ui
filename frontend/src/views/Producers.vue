@@ -423,11 +423,17 @@ onMounted(async () => {
     if (list && list.length > 0) {
       producers.value = list.map(p => {
         const staticP = staticProducers.value.find(sp => sp.id === p.id)
+        const details = p.details || {}
+        
+        const name = (appStore.lang === 'en' && details.farm_name_en) ? details.farm_name_en : ((appStore.lang === 'vi' && details.farm_name_vi) ? details.farm_name_vi : (staticP ? staticP.name : p.name))
+        const location = (appStore.lang === 'en' && details.location_en) ? details.location_en : ((appStore.lang === 'vi' && details.location_vi) ? details.location_vi : (staticP ? staticP.location : p.location))
+        const desc = (appStore.lang === 'en' && details.hero_desc_en) ? details.hero_desc_en : ((appStore.lang === 'vi' && details.hero_desc_vi) ? details.hero_desc_vi : (staticP ? staticP.desc : p.description))
+        
         return {
           id: p.id,
-          name: staticP ? staticP.name : p.name,
-          location: staticP ? staticP.location : p.location,
-          desc: staticP ? staticP.desc : p.description,
+          name,
+          location,
+          desc,
           products: staticP ? staticP.products : (appStore.lang === 'vi' ? 'Mật ong, Ngũ cốc, Trà' : 'Honey, Grains, Tea'),
           batches: staticP ? staticP.batches : 5,
           featured: p.id % 2 === 1,

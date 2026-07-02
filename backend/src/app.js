@@ -10,7 +10,6 @@ import wishlistRoutes from './routes/wishlistRoutes.js';
 import supportRoutes from './routes/supportRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-
 const app = express();
 
 // Middlewares

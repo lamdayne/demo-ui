@@ -7,7 +7,7 @@
         <ChevronRight class="w-3.5 h-3.5" />
         <router-link to="/producers" class="hover:text-[#1E4B35]">{{ t.producers }}</router-link>
         <ChevronRight class="w-3.5 h-3.5" />
-        <span class="text-[#1E4B35] font-semibold">{{ producer?.name || (appStore.lang === 'vi' ? 'Trang trại Ong U Minh' : 'U Minh Bee Farm') }}</span>
+        <span class="text-[#1E4B35] font-semibold">{{ localizedName }}</span>
       </div>
     </div>
 
@@ -17,13 +17,13 @@
         <!-- Left Hero Content -->
         <div class="w-full lg:w-[55%] p-8 lg:p-12 flex flex-col justify-between">
           <div>
-            <h1 class="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">{{ producer?.name || (appStore.lang === 'vi' ? 'Trang trại Ong U Minh' : 'U Minh Bee Farm') }}</h1>
+            <h1 class="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">{{ localizedName }}</h1>
             <div class="flex items-center gap-1.5 text-green-300 text-sm font-semibold mb-6">
               <MapPin class="w-4 h-4 fill-current" />
-              <span>{{ producer?.location || (appStore.lang === 'vi' ? 'Cà Mau, Việt Nam' : 'Ca Mau, Viet Nam') }}</span>
+              <span>{{ localizedLocation }}</span>
             </div>
             <p class="text-green-50 text-base leading-relaxed mb-8 max-w-xl">
-              {{ producer?.description || (appStore.lang === 'vi' ? 'Thu hoạch mật ong rừng tự nhiên từ rừng tràm U Minh với sự tôn trọng thiên nhiên và đàn ong.' : 'Harvesting wild honey from the melaleuca forests of U Minh with respect for nature and bee colonies.') }}
+              {{ localizedDescription }}
             </p>
             <div class="flex flex-wrap gap-4 mb-8">
               <router-link to="/products" class="bg-white text-[#1E4B35] px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-green-50 transition shadow-md">
@@ -42,35 +42,35 @@
               <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-2">
                 <Home class="w-5 h-5 text-green-300" />
               </div>
-              <span class="text-[10px] text-green-200">{{ t.familyFarm }}</span>
-              <span class="text-xs font-bold text-white">{{ t.est2002 }}</span>
+              <span class="text-[10px] text-green-200">{{ appStore.lang === 'vi' ? 'Thành lập' : 'Established' }}</span>
+              <span class="text-xs font-bold text-white">{{ (appStore.lang === 'en' && producer?.details?.established_en) ? producer.details.established_en : ((appStore.lang === 'vi' && producer?.details?.established_vi) ? producer.details.established_vi : t.est2002) }}</span>
             </div>
             <div class="flex flex-col items-center text-center">
               <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-2">
                 <Sun class="w-5 h-5 text-green-300" />
               </div>
-              <span class="text-[10px] text-green-200">{{ t.sustainable }}</span>
-              <span class="text-xs font-bold text-white">{{ t.beekeeping }}</span>
+              <span class="text-[10px] text-green-200">{{ appStore.lang === 'vi' ? 'Kinh nghiệm' : 'Experience' }}</span>
+              <span class="text-xs font-bold text-white">{{ (appStore.lang === 'en' && producer?.details?.experience_en) ? producer.details.experience_en : ((appStore.lang === 'vi' && producer?.details?.experience_vi) ? producer.details.experience_vi : t.beekeeping) }}</span>
             </div>
             <div class="flex flex-col items-center text-center">
               <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-2">
                 <Trees class="w-5 h-5 text-green-300" />
               </div>
-              <span class="text-[10px] text-green-200">{{ t.forestFriendly }}</span>
-              <span class="text-xs font-bold text-white">{{ t.practices }}</span>
+              <span class="text-[10px] text-green-200">{{ appStore.lang === 'vi' ? 'Phương thức' : 'Practice' }}</span>
+              <span class="text-xs font-bold text-white">{{ (appStore.lang === 'en' && producer?.details?.practice_1_en) ? producer.details.practice_1_en : ((appStore.lang === 'vi' && producer?.details?.practice_1_vi) ? producer.details.practice_1_vi : t.practices) }}</span>
             </div>
             <div class="flex flex-col items-center text-center">
               <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-2">
                 <Users class="w-5 h-5 text-green-300" />
               </div>
-              <span class="text-[10px] text-green-200">{{ t.localCommunity }}</span>
-              <span class="text-xs font-bold text-white">{{ t.partner }}</span>
+              <span class="text-[10px] text-green-200">{{ appStore.lang === 'vi' ? 'Trạng thái' : 'Status' }}</span>
+              <span class="text-xs font-bold text-white">{{ (appStore.lang === 'en' && producer?.details?.status_en) ? producer.details.status_en : ((appStore.lang === 'vi' && producer?.details?.status_vi) ? producer.details.status_vi : t.partner) }}</span>
             </div>
           </div>
         </div>
         <!-- Right Hero Image -->
         <div class="w-full lg:w-[45%] h-64 lg:h-auto min-h-[350px] relative overflow-hidden">
-          <img :src="producer?.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800'" :alt="producer?.name || 'Beekeeper'" class="w-full h-full object-cover object-center" />
+          <img :src="producer?.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=800'" :alt="localizedName" class="w-full h-full object-cover object-center" />
           <div class="absolute inset-0 bg-gradient-to-t lg:bg-gradient-to-r from-[#1E4B35] via-transparent to-transparent opacity-60 lg:opacity-100"></div>
         </div>
       </div>
@@ -86,7 +86,9 @@
           </div>
           <div class="text-left">
             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ t.sampleProducts }}</span>
-            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">{{ productsList.length }}</div>
+            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">
+              {{ (appStore.lang === 'en' && producer?.details?.portfolio_en) ? producer.details.portfolio_en : ((appStore.lang === 'vi' && producer?.details?.portfolio_vi) ? producer.details.portfolio_vi : productsList.length) }}
+            </div>
             <p class="text-xs text-gray-500 mb-3 leading-relaxed">{{ t.sampleProductsDesc }}</p>
             <router-link to="/products" class="text-xs font-bold text-green-700 hover:text-green-800 flex items-center gap-1">
               {{ t.viewProducts }} <ArrowRight class="w-3.5 h-3.5" />
@@ -100,7 +102,9 @@
           </div>
           <div class="text-left">
             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ t.sampleBatches }}</span>
-            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">2</div>
+            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">
+              {{ (appStore.lang === 'en' && producer?.details?.batches_en) ? producer.details.batches_en : ((appStore.lang === 'vi' && producer?.details?.batches_vi) ? producer.details.batches_vi : (batchesList.length || 2)) }}
+            </div>
             <p class="text-xs text-gray-500 mb-3 leading-relaxed">{{ t.sampleBatchesDesc }}</p>
             <a href="#batches" class="text-xs font-bold text-green-700 hover:text-green-800 flex items-center gap-1">
               {{ t.viewBatches }} <ArrowRight class="w-3.5 h-3.5" />
@@ -114,7 +118,9 @@
           </div>
           <div class="text-left">
             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ t.supportingRecords }}</span>
-            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">3</div>
+            <div class="text-3xl font-extrabold text-[#1E4B35] my-0.5">
+              {{ (appStore.lang === 'en' && producer?.details?.records_en) ? producer.details.records_en : ((appStore.lang === 'vi' && producer?.details?.records_vi) ? producer.details.records_vi : 3) }}
+            </div>
             <p class="text-xs text-gray-500 mb-3 leading-relaxed">{{ t.supportingRecordsDesc }}</p>
             <a href="#records" class="text-xs font-bold text-green-700 hover:text-green-800 flex items-center gap-1">
               {{ t.viewRecords }} <ArrowRight class="w-3.5 h-3.5" />
@@ -131,7 +137,7 @@
         <div class="lg:col-span-5 space-y-5 text-left">
           <h2 class="text-2xl lg:text-3xl font-bold text-gray-900">{{ t.producerStory }}</h2>
           <p class="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
-            {{ producer?.history || (appStore.lang === 'vi' ? 'Sâu trong rừng U Minh, Cà Mau, nơi các kênh rạch len lỏi qua những hàng cây tràm và vùng đất ngập nước theo mùa, ong tìm thấy nguồn mật hoa dồi dào từ hoa tràm hoang dã. Trang trại Ong U Minh được thành lập bởi ông Nguyễn Văn An, người học nghề nuôi ong từ cha mình và tiếp tục truyền lại cho thế hệ sau.\n\nTrang trại di chuyển các đàn ong một cách tự nhiên theo các mùa hoa nở, tránh hóa chất và để lại đủ mật cho ong. Điều này giúp bảo vệ các bầy ong, hỗ trợ đa dạng sinh học và giữ cho rừng luôn khỏe mạnh lâu dài.\n\nBằng cách hợp tác với Green Trace, Trang trại Ong U Minh chia sẻ sự minh bạch trong từng hũ mật ong—để bạn có thể yên tâm thưởng thức.' : 'Deep in the U Minh forest of Ca Mau, where the canals weave through melaleuca trees and seasonally flooded wetlands, bees find abundant nectar from wild flowers. U Minh Bee Farm was founded by Mr. Nguyen Van An, who learned beekeeping from his father and continues to pass it down to the next generation.\n\nThe farm migrates hives naturally with the blooming seasons, avoids chemicals, and leaves enough honey for the bees. This helps protect colonies, supports biodiversity, and keeps the forest healthy for the long term.\n\nBy working with Green Trace, U Minh Bee Farm shares transparency in every jar of honey—so you can enjoy it with confidence.') }}
+            {{ localizedHistory }}
           </p>
           <button class="bg-white border border-gray-300 text-gray-700 px-5 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 hover:bg-gray-50 shadow-sm transition">
             <MapPin class="w-4 h-4 text-green-600" />
@@ -149,8 +155,10 @@
               <Calendar class="w-6 h-6" />
             </div>
             <div>
-              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">{{ t.twentyYears }}</h4>
-              <p class="text-xs text-gray-500">{{ t.experience }}</p>
+              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">
+                {{ (appStore.lang === 'en' && producer?.details?.experience_en) ? producer.details.experience_en : ((appStore.lang === 'vi' && producer?.details?.experience_vi) ? producer.details.experience_vi : t.twentyYears) }}
+              </h4>
+              <p class="text-xs text-gray-500">{{ appStore.lang === 'vi' ? 'Kinh nghiệm nuôi trồng' : 'Farming Experience' }}</p>
             </div>
           </div>
           <div class="flex gap-4">
@@ -158,8 +166,10 @@
               <Home class="w-6 h-6" />
             </div>
             <div>
-              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">{{ t.oneFiftyHives }}</h4>
-              <p class="text-xs text-gray-500">{{ t.managedNaturally }}</p>
+              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">
+                {{ (appStore.lang === 'en' && producer?.details?.groups_en) ? producer.details.groups_en : ((appStore.lang === 'vi' && producer?.details?.groups_vi) ? producer.details.groups_vi : t.oneFiftyHives) }}
+              </h4>
+              <p class="text-xs text-gray-500">{{ appStore.lang === 'vi' ? 'Nhóm sản phẩm chính' : 'Main Product Groups' }}</p>
             </div>
           </div>
           <div class="flex gap-4">
@@ -167,8 +177,10 @@
               <Leaf class="w-6 h-6" />
             </div>
             <div>
-              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">{{ t.forestFriendly }}</h4>
-              <p class="text-xs text-gray-500">{{ t.noChemicals }}</p>
+              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">
+                {{ (appStore.lang === 'en' && producer?.details?.established_en) ? producer.details.established_en : ((appStore.lang === 'vi' && producer?.details?.established_vi) ? producer.details.established_vi : t.est2002) }}
+              </h4>
+              <p class="text-xs text-gray-500">{{ appStore.lang === 'vi' ? 'Năm thành lập' : 'Established Year' }}</p>
             </div>
           </div>
           <div class="flex gap-4">
@@ -176,8 +188,10 @@
               <Users class="w-6 h-6" />
             </div>
             <div>
-              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">{{ t.localImpact }}</h4>
-              <p class="text-xs text-gray-500">{{ t.supportsFamilies }}</p>
+              <h4 class="font-extrabold text-gray-900 text-lg leading-tight">
+                {{ (appStore.lang === 'en' && producer?.details?.model_en) ? producer.details.model_en : ((appStore.lang === 'vi' && producer?.details?.model_vi) ? producer.details.model_vi : t.localImpact) }}
+              </h4>
+              <p class="text-xs text-gray-500">{{ appStore.lang === 'vi' ? 'Mô hình hoạt động' : 'Producer Model' }}</p>
             </div>
           </div>
         </div>
@@ -187,22 +201,22 @@
     <!-- Verification checklist banner -->
     <div class="container mx-auto px-4 max-w-6xl mb-16">
       <div class="bg-[#F8FAF9] border border-green-100 rounded-3xl p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden text-left">
-        <div class="z-10">
+        <div class="z-10 w-full">
           <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
             {{ t.whyReviewed }}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
             <div class="flex items-center gap-3 text-sm text-gray-700">
               <CheckCircle2 class="w-5 h-5 text-green-600 flex-shrink-0" />
-              <span>{{ t.reviewCheck1 }}</span>
+              <span>{{ (appStore.lang === 'en' && producer?.details?.practice_1_en) ? producer.details.practice_1_en : ((appStore.lang === 'vi' && producer?.details?.practice_1_vi) ? producer.details.practice_1_vi : t.reviewCheck1) }}</span>
             </div>
             <div class="flex items-center gap-3 text-sm text-gray-700">
               <CheckCircle2 class="w-5 h-5 text-green-600 flex-shrink-0" />
-              <span>{{ t.reviewCheck2 }}</span>
+              <span>{{ (appStore.lang === 'en' && producer?.details?.practice_2_en) ? producer.details.practice_2_en : ((appStore.lang === 'vi' && producer?.details?.practice_2_vi) ? producer.details.practice_2_vi : t.reviewCheck2) }}</span>
             </div>
             <div class="flex items-center gap-3 text-sm text-gray-700">
               <CheckCircle2 class="w-5 h-5 text-green-600 flex-shrink-0" />
-              <span>{{ t.reviewCheck3 }}</span>
+              <span>{{ (appStore.lang === 'en' && producer?.details?.practice_3_en) ? producer.details.practice_3_en : ((appStore.lang === 'vi' && producer?.details?.practice_3_vi) ? producer.details.practice_3_vi : t.reviewCheck3) }}</span>
             </div>
             <div class="flex items-center gap-3 text-sm text-gray-700">
               <CheckCircle2 class="w-5 h-5 text-green-600 flex-shrink-0" />
@@ -219,7 +233,7 @@
     <!-- Products Section -->
     <div class="container mx-auto px-4 max-w-6xl mb-16 text-left">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">{{ t.productsFrom.replace('{name}', producer?.name || (appStore.lang === 'vi' ? 'Trang trại Ong U Minh' : 'U Minh Bee Farm')) }}</h2>
+        <h2 class="text-2xl font-bold text-gray-900">{{ t.productsFrom.replace('{name}', localizedName) }}</h2>
         <router-link to="/products" class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1">
           {{ t.viewAllProducts }} <ArrowRight class="w-4 h-4" />
         </router-link>
@@ -235,7 +249,7 @@
             </div>
             <div class="p-5 flex flex-col flex-grow">
               <h3 class="font-bold text-gray-900 text-base leading-tight mb-2">
-                {{ prod.name }}
+                {{ (appStore.lang === 'en' && prod.specifications?.name_en) ? prod.specifications.name_en : prod.name }}
               </h3>
               <p class="text-xs text-gray-500 mb-4 flex-grow line-clamp-3">
                 {{ prod.description }}
@@ -286,51 +300,77 @@
         </a>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Batch 1 -->
-        <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-5 hover:shadow-md transition">
-          <div class="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 relative">
-            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Wild Honey" class="w-full h-full object-cover" />
-            <div class="absolute bottom-1 right-1 bg-green-600 text-white text-[9px] px-1 rounded-sm">{{ t.sampled }}</div>
-          </div>
-          <div class="flex-grow">
-            <h4 class="font-extrabold text-gray-900 text-base mb-1">UMH-HNY-2026-001</h4>
-            <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
-              <div>{{ t.productCol }}:</div>
-              <div class="font-semibold text-gray-700">{{ appStore.lang === 'vi' ? 'Mật ong U Minh 500ml' : 'U Minh Honey 500ml' }}</div>
-              <div>{{ t.sampledCol }}:</div>
-              <div class="text-gray-700">10 May 2026</div>
-              <div>{{ t.statusCol }}:</div>
-              <div class="font-semibold text-green-600 flex items-center gap-1">
-                {{ t.testCompleted }} <CheckCircle2 class="w-3.5 h-3.5" />
+        <template v-if="batchesList.length > 0">
+          <div v-for="bat in batchesList" :key="bat.id" class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-5 hover:shadow-md transition">
+            <div class="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 relative">
+              <img :src="producer?.image_url || 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200'" class="w-full h-full object-cover" />
+              <div class="absolute bottom-1 right-1 bg-green-600 text-white text-[9px] px-1 rounded-sm">{{ t.sampled }}</div>
+            </div>
+            <div class="flex-grow">
+              <h4 class="font-extrabold text-gray-900 text-base mb-1 font-mono">{{ bat.id }}</h4>
+              <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
+                <div>{{ t.productCol }}:</div>
+                <div class="font-semibold text-gray-700">{{ bat.product_name || bat.species_source }}</div>
+                <div>{{ t.sampledCol }}:</div>
+                <div class="text-gray-700">{{ formatDate(bat.harvest_date) }}</div>
+                <div>{{ t.statusCol }}:</div>
+                <div class="font-semibold text-green-600 flex items-center gap-1">
+                  {{ t.testCompleted }} <CheckCircle2 class="w-3.5 h-3.5" />
+                </div>
               </div>
             </div>
+            <router-link :to="`/traceability?batch=${bat.id}`" class="px-4 py-2 border rounded-lg text-xs font-bold text-[#1E4B35] border-[#1E4B35]/20 hover:bg-green-50 transition self-center text-center">
+              {{ t.viewBatch }}
+            </router-link>
           </div>
-          <button class="px-4 py-2 border rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition self-center">
-            {{ t.viewBatch }}
-          </button>
-        </div>
-        <!-- Batch 2 -->
-        <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-5 hover:shadow-md transition">
-          <div class="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 relative">
-            <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Wild Honey" class="w-full h-full object-cover" />
-          </div>
-          <div class="flex-grow">
-            <h4 class="font-extrabold text-gray-900 text-base mb-1">UMH-HNY-2026-002</h4>
-            <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
-              <div>{{ t.productCol }}:</div>
-              <div class="font-semibold text-gray-700">{{ appStore.lang === 'vi' ? 'Mật ong U Minh 500ml' : 'U Minh Honey 500ml' }}</div>
-              <div>{{ t.sampledCol }}:</div>
-              <div class="text-gray-700">28 May 2026</div>
-              <div>{{ t.statusCol }}:</div>
-              <div class="font-semibold text-green-600 flex items-center gap-1">
-                {{ t.testCompleted }} <CheckCircle2 class="w-3.5 h-3.5" />
+        </template>
+        <template v-else>
+          <!-- Batch 1 -->
+          <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-5 hover:shadow-md transition">
+            <div class="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 relative">
+              <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Wild Honey" class="w-full h-full object-cover" />
+              <div class="absolute bottom-1 right-1 bg-green-600 text-white text-[9px] px-1 rounded-sm">{{ t.sampled }}</div>
+            </div>
+            <div class="flex-grow">
+              <h4 class="font-extrabold text-gray-900 text-base mb-1">UMH-HNY-2026-001</h4>
+              <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
+                <div>{{ t.productCol }}:</div>
+                <div class="font-semibold text-gray-700">{{ appStore.lang === 'vi' ? 'Mật ong U Minh 500ml' : 'U Minh Honey 500ml' }}</div>
+                <div>{{ t.sampledCol }}:</div>
+                <div class="text-gray-700">10 May 2026</div>
+                <div>{{ t.statusCol }}:</div>
+                <div class="font-semibold text-green-600 flex items-center gap-1">
+                  {{ t.testCompleted }} <CheckCircle2 class="w-3.5 h-3.5" />
+                </div>
               </div>
             </div>
+            <button class="px-4 py-2 border rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition self-center">
+              {{ t.viewBatch }}
+            </button>
           </div>
-          <button class="px-4 py-2 border rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition self-center">
-            {{ t.viewBatch }}
-          </button>
-        </div>
+          <!-- Batch 2 -->
+          <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex items-center gap-5 hover:shadow-md transition">
+            <div class="w-20 h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 relative">
+              <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200" alt="Wild Honey" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex-grow">
+              <h4 class="font-extrabold text-gray-900 text-base mb-1">UMH-HNY-2026-002</h4>
+              <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-500">
+                <div>{{ t.productCol }}:</div>
+                <div class="font-semibold text-gray-700">{{ appStore.lang === 'vi' ? 'Mật ong U Minh 500ml' : 'U Minh Honey 500ml' }}</div>
+                <div>{{ t.sampledCol }}:</div>
+                <div class="text-gray-700">28 May 2026</div>
+                <div>{{ t.statusCol }}:</div>
+                <div class="font-semibold text-green-600 flex items-center gap-1">
+                  {{ t.testCompleted }} <CheckCircle2 class="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+            <button class="px-4 py-2 border rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 transition self-center">
+              {{ t.viewBatch }}
+            </button>
+          </div>
+        </template>
       </div>
     </div>
 
@@ -524,6 +564,59 @@ const appStore = useAppStore()
 
 const producer = ref(null)
 const productsList = ref([])
+const batchesList = ref([])
+
+const localizedName = computed(() => {
+  const details = producer.value?.details
+  if (appStore.lang === 'en' && details?.farm_name_en) return details.farm_name_en
+  if (appStore.lang === 'vi' && details?.farm_name_vi) return details.farm_name_vi
+  return producer.value?.name || (appStore.lang === 'vi' ? 'Trang trại Ong U Minh' : 'U Minh Bee Farm')
+})
+
+const localizedLocation = computed(() => {
+  const details = producer.value?.details
+  if (appStore.lang === 'en' && details?.location_en) return details.location_en
+  if (appStore.lang === 'vi' && details?.location_vi) return details.location_vi
+  return producer.value?.location || (appStore.lang === 'vi' ? 'Cà Mau, Việt Nam' : 'Ca Mau, Viet Nam')
+})
+
+const localizedDescription = computed(() => {
+  const details = producer.value?.details
+  if (appStore.lang === 'en' && details?.hero_desc_en) return details.hero_desc_en
+  if (appStore.lang === 'vi' && details?.hero_desc_vi) return details.hero_desc_vi
+  return producer.value?.description || (appStore.lang === 'vi' ? 'Thu hoạch mật ong rừng tự nhiên từ rừng tràm U Minh với sự tôn trọng thiên nhiên và đàn ong.' : 'Harvesting wild honey from the melaleuca forests of U Minh with respect for nature and bee colonies.')
+})
+
+const localizedHistory = computed(() => {
+  const details = producer.value?.details
+  if (appStore.lang === 'en' && details?.hero_desc_en) return details.hero_desc_en // Default fallback to description if history is not provided
+  if (appStore.lang === 'vi' && details?.hero_desc_vi) return details.hero_desc_vi
+  return producer.value?.history || (appStore.lang === 'vi' ? 'Sâu trong rừng U Minh, Cà Mau, nơi các kênh rạch len lỏi qua những hàng cây tràm và vùng đất ngập nước theo mùa, ong tìm thấy nguồn mật hoa dồi dào từ hoa tràm hoang dã. Trang trại Ong U Minh được thành lập bởi ông Nguyễn Văn An, người học nghề nuôi ong từ cha mình và tiếp tục truyền lại cho thế hệ sau.\n\nTrang trại di chuyển các đàn ong một cách tự nhiên theo các mùa hoa nở, tránh hóa chất và để lại đủ mật cho ong. Điều này giúp bảo vệ các bầy ong, hỗ trợ đa dạng sinh học và giữ cho rừng luôn khỏe mạnh lâu dài.\n\nBằng cách hợp tác với Green Trace, Trang trại Ong U Minh chia sẻ sự minh bạch trong từng hũ mật ong—để bạn có thể yên tâm thưởng thức.' : 'Deep in the U Minh forest of Ca Mau, where the canals weave through melaleuca trees and seasonally flooded wetlands, bees find abundant nectar from wild flowers. U Minh Bee Farm was founded by Mr. Nguyen Van An, who learned beekeeping from his father and continues to pass it down to the next generation.\n\nThe farm migrates hives naturally with the blooming seasons, avoids chemicals, and leaves enough honey for the bees. This helps protect colonies, supports biodiversity, and keeps the forest healthy for the long term.\n\nBy working with Green Trace, U Minh Bee Farm shares transparency in every jar of honey—so you can enjoy it with confidence.')
+})
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  const date = new Date(dateStr)
+  return date.toLocaleDateString(appStore.lang === 'vi' ? 'vi-VN' : 'en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+}
+
+onMounted(async () => {
+  const id = route.params.id
+  try {
+    const data = await appStore.fetchProducer(id)
+    producer.value = data
+    productsList.value = data.products || []
+    
+    const batchesData = await appStore.fetchBatches(id)
+    batchesList.value = batchesData || []
+  } catch (err) {
+    console.error('Error loading producer detail page:', err)
+  }
+})
 
 const t = computed(() => {
   return appStore.lang === 'vi' ? {

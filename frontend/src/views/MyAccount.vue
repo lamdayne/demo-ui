@@ -85,6 +85,13 @@
                 <button @click="triggerPhotoUpload" class="absolute bottom-0 inset-x-0 bg-black/50 text-white py-1 text-[9px] font-bold text-center hover:bg-black/75 transition">
                   <Camera class="w-3 h-3 mx-auto" />
                 </button>
+                <input 
+                  type="file" 
+                  ref="avatarFileInput" 
+                  accept="image/*" 
+                  class="hidden" 
+                  @change="handleAvatarUpload" 
+                />
               </div>
               <div class="text-center md:text-left space-y-1.5">
                 <div class="flex flex-wrap items-center justify-center md:justify-start gap-2">
@@ -604,6 +611,7 @@ const router = useRouter()
 const appStore = useAppStore()
 
 const activeTab = ref('overview')
+const avatarFileInput = ref(null)
 
 function handleLogout() {
   appStore.logout()
@@ -936,10 +944,10 @@ async function saveProfile() {
       country: profileData.value.country,
       image_url: profileData.value.photo
     })
-    alert(appStore.lang === 'vi' ? 'Cập nhật hồ sơ thành công!' : 'Profile updated successfully!')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Cập nhật hồ sơ thành công!' : 'Profile updated successfully!')
     activeTab.value = 'overview'
   } catch (err) {
-    alert(err.message || 'Failed to update profile')
+    appStore.triggerToast(err.message || 'Failed to update profile')
   }
 }
 
@@ -961,22 +969,22 @@ async function saveNewAddress() {
     })
     isAddressModalOpen.value = false
     await loadAddresses()
-    alert(appStore.lang === 'vi' ? 'Thêm địa chỉ thành công!' : 'Address added successfully!')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Thêm địa chỉ thành công!' : 'Address added successfully!')
   } catch (err) {
-    alert(err.message || 'Failed to add address')
+    appStore.triggerToast(err.message || 'Failed to add address')
   }
 }
 
 async function deleteAddress(idx) {
   const confirmMsg = appStore.lang === 'vi' ? 'Bạn có chắc chắn muốn xóa địa chỉ này?' : 'Are you sure you want to delete this address?'
-  if (confirm(confirmMsg)) {
+  if (await appStore.triggerConfirm(confirmMsg)) {
     try {
       const address = addressesList.value[idx]
       await appStore.deleteAddress(address.id)
       await loadAddresses()
-      alert(appStore.lang === 'vi' ? 'Đã xóa địa chỉ thành công!' : 'Address deleted successfully!')
+      appStore.triggerToast(appStore.lang === 'vi' ? 'Đã xóa địa chỉ thành công!' : 'Address deleted successfully!')
     } catch (err) {
-      alert(err.message || 'Failed to delete address')
+      appStore.triggerToast(err.message || 'Failed to delete address')
     }
   }
 }
@@ -988,51 +996,56 @@ async function setDefaultAddress(idx) {
       is_default: true
     })
     await loadAddresses()
-    alert(appStore.lang === 'vi' ? 'Đã cập nhật địa chỉ mặc định!' : 'Default address updated!')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Đã cập nhật địa chỉ mặc định!' : 'Default address updated!')
   } catch (err) {
-    alert(err.message || 'Failed to set default address')
+    appStore.triggerToast(err.message || 'Failed to set default address')
   }
 }
 
 async function removeFromWishlist(id) {
   try {
     await appStore.toggleWishlist(id)
-    alert(appStore.lang === 'vi' ? 'Đã xóa khỏi danh sách yêu thích.' : 'Removed from wishlist.')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Đã xóa khỏi danh sách yêu thích.' : 'Removed from wishlist.')
   } catch (err) {
-    alert(err.message || 'Failed to remove from wishlist')
+    appStore.triggerToast(err.message || 'Failed to remove from wishlist')
   }
 }
 
 async function saveSecurity() {
   if (changePasswordForm.value.newPass !== changePasswordForm.value.confirm) {
-    alert(appStore.lang === 'vi' ? 'Mật khẩu phải trùng khớp!' : 'Passwords do not match!')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Mật khẩu phải trùng khớp!' : 'Passwords do not match!')
     return
   }
   try {
     await appStore.changePassword(changePasswordForm.value.current, changePasswordForm.value.newPass)
-    alert(appStore.lang === 'vi' ? 'Đổi mật khẩu thành công!' : 'Password changed successfully!')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Đổi mật khẩu thành công!' : 'Password changed successfully!')
     changePasswordForm.value = { current: '', newPass: '', confirm: '' }
   } catch (err) {
-    alert(err.message || 'Failed to change password')
+    appStore.triggerToast(err.message || 'Failed to change password')
   }
 }
 
-async function triggerPhotoUpload() {
-  const promptMsg = appStore.lang === 'vi' ? 'Nhập URL hình ảnh để thay đổi ảnh đại diện:' : 'Enter image URL to change profile picture:'
-  const newUrl = prompt(promptMsg, profileData.value.photo)
-  if (newUrl) {
-    try {
-      await appStore.updateProfile({
-        image_url: newUrl
-      })
-      alert(appStore.lang === 'vi' ? 'Đã cập nhật ảnh đại diện!' : 'Photo updated!')
-    } catch (err) {
-      alert(appStore.lang === 'vi' ? 'Không thể cập nhật ảnh!' : 'Failed to update photo')
-    }
+function triggerPhotoUpload() {
+  if (avatarFileInput.value) {
+    avatarFileInput.value.click()
+  }
+}
+
+async function handleAvatarUpload(e) {
+  const file = e.target.files[0]
+  if (!file) return
+  try {
+    const url = await appStore.uploadImage(file)
+    await appStore.updateProfile({
+      image_url: url
+    })
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Đã cập nhật ảnh đại diện!' : 'Photo updated!')
+  } catch (err) {
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Không thể cập nhật ảnh!' : 'Failed to update photo')
   }
 }
 
 function simulatedAction(type) {
-  alert(`Simulated action: ${type}`)
+  appStore.triggerToast(`Simulated action: ${type}`)
 }
 </script>

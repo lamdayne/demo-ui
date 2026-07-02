@@ -5,7 +5,8 @@ export const getProducts = async (req, res) => {
 
   try {
     let queryText = `
-      SELECT p.*, pr.name as producer_name, pr.location as producer_location 
+      SELECT p.*, pr.name as producer_name, pr.location as producer_location,
+             (SELECT id FROM batches WHERE product_id = p.id ORDER BY harvest_date DESC LIMIT 1) as latest_batch_id
       FROM products p
       LEFT JOIN producers pr ON p.producer_id = pr.id
     `;

@@ -666,7 +666,7 @@ const changeRole = async (userId, role) => {
 }
 
 const removeUser = async (userId) => {
-  if (!confirm('Are you sure you want to permanently delete this user account?')) return
+  if (!await appStore.triggerConfirm('Are you sure you want to permanently delete this user account?')) return
   try {
     await appStore.deleteAdminUser(userId)
     appStore.triggerToast('User account deleted successfully!')
@@ -713,7 +713,7 @@ const addCoupon = async () => {
 }
 
 const removeCoupon = async (couponId) => {
-  if (!confirm('Are you sure you want to delete this coupon?')) return
+  if (!await appStore.triggerConfirm('Are you sure you want to delete this coupon?')) return
   try {
     await appStore.deleteAdminCoupon(couponId)
     appStore.triggerToast('Coupon deleted successfully!')

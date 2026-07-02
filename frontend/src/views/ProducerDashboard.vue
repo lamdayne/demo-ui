@@ -188,7 +188,7 @@
                           <img :src="prod.image_url" class="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <h4 class="font-bold text-gray-900 text-[10px] leading-tight">{{ prod.name }}</h4>
+                          <h4 class="font-bold text-gray-900 text-[10px] leading-tight">{{ (appStore.lang === 'en' && prod.specifications?.name_en) ? prod.specifications.name_en : prod.name }}</h4>
                           <p class="text-[8px] text-gray-400">{{ prod.category }}</p>
                         </div>
                       </div>
@@ -253,13 +253,13 @@
                   <div class="col-span-2 text-right">{{ t.actionsCol }}</div>
                 </div>
                 <div class="divide-y divide-gray-150">
-                  <div v-for="prod in products" :key="prod.id" class="grid grid-cols-12 px-4 py-3.5 text-xs items-center hover:bg-gray-50/30 transition">
+                  <div v-for="prod in paginatedProducts" :key="prod.id" class="grid grid-cols-12 px-4 py-3.5 text-xs items-center hover:bg-gray-50/30 transition">
                     <div class="col-span-5 flex items-center gap-3">
                       <div class="w-10 h-10 rounded-lg overflow-hidden border border-gray-150 flex-shrink-0 bg-gray-50">
                         <img :src="prod.image_url" class="w-full h-full object-cover" />
                       </div>
                       <div>
-                        <h4 class="font-bold text-gray-950 text-xs">{{ prod.name }}</h4>
+                        <h4 class="font-bold text-gray-950 text-xs">{{ (appStore.lang === 'en' && prod.specifications?.name_en) ? prod.specifications.name_en : prod.name }}</h4>
                         <p class="text-[10px] text-gray-400 line-clamp-1 mt-0.5">{{ prod.description }}</p>
                       </div>
                     </div>
@@ -281,6 +281,37 @@
                   <div v-if="products.length === 0" class="text-center py-10 text-xs text-gray-400">
                     {{ t.noProductsAddedCatalog }}
                   </div>
+                </div>
+              </div>
+
+              <!-- Pagination for Products -->
+              <div v-if="totalPagesProducts > 1" class="flex justify-center border-t border-gray-150 pt-5 mt-5">
+                <div class="flex items-center gap-2">
+                  <button 
+                    :disabled="productsCurrentPage === 1" 
+                    @click="productsCurrentPage--"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:hover:bg-transparent"
+                  >
+                    <ChevronLeft class="w-4 h-4" />
+                  </button>
+                  
+                  <button 
+                    v-for="page in totalPagesProducts" 
+                    :key="page"
+                    @click="productsCurrentPage = page"
+                    class="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-xs transition"
+                    :class="productsCurrentPage === page ? 'bg-[#1E4B35] text-white shadow' : 'text-gray-700 hover:bg-gray-100'"
+                  >
+                    {{ page }}
+                  </button>
+
+                  <button 
+                    :disabled="productsCurrentPage === totalPagesProducts" 
+                    @click="productsCurrentPage++"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:hover:bg-transparent"
+                  >
+                    <ChevronRight class="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -314,7 +345,7 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-150">
-                    <tr v-for="bat in batches" :key="bat.id" class="hover:bg-gray-50/30 transition">
+                    <tr v-for="bat in paginatedBatches" :key="bat.id" class="hover:bg-gray-50/30 transition">
                       <td class="px-4 py-3 font-mono font-bold text-[#1E4B35]">{{ bat.id }}</td>
                       <td class="px-4 py-3 font-semibold text-gray-900">{{ bat.product_name }}</td>
                       <td class="px-4 py-3 text-gray-600">{{ new Date(bat.harvest_date).toLocaleDateString() }}</td>
@@ -344,6 +375,37 @@
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              <!-- Pagination for Batches -->
+              <div v-if="totalPagesBatches > 1" class="flex justify-center border-t border-gray-150 pt-5 mt-5">
+                <div class="flex items-center gap-2">
+                  <button 
+                    :disabled="batchesCurrentPage === 1" 
+                    @click="batchesCurrentPage--"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:hover:bg-transparent"
+                  >
+                    <ChevronLeft class="w-4 h-4" />
+                  </button>
+                  
+                  <button 
+                    v-for="page in totalPagesBatches" 
+                    :key="page"
+                    @click="batchesCurrentPage = page"
+                    class="w-8 h-8 rounded-full flex items-center justify-center font-semibold text-xs transition"
+                    :class="batchesCurrentPage === page ? 'bg-[#1E4B35] text-white shadow' : 'text-gray-700 hover:bg-gray-100'"
+                  >
+                    {{ page }}
+                  </button>
+
+                  <button 
+                    :disabled="batchesCurrentPage === totalPagesBatches" 
+                    @click="batchesCurrentPage++"
+                    class="w-8 h-8 rounded-full flex items-center justify-center text-gray-700 hover:bg-gray-100 disabled:opacity-50 disabled:hover:bg-transparent"
+                  >
+                    <ChevronRight class="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -418,9 +480,18 @@
                       <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">{{ t.totalEarnedCol }}</span>
                       <span class="font-extrabold text-gray-900">{{ (ord.price * ord.quantity).toLocaleString() }} VND</span>
                     </div>
-                    <span class="bg-green-50 text-green-700 text-[10px] px-2.5 py-0.5 rounded-full font-bold border border-green-200">
-                      {{ ord.status === 'Completed' && appStore.lang === 'vi' ? 'Đã hoàn thành' : ord.status }}
-                    </span>
+                    <div class="flex items-center">
+                      <select 
+                        :value="ord.status" 
+                        @change="changeOrderStatus(ord.order_id, $event.target.value)"
+                        class="bg-green-50 text-[#1E4B35] text-xs px-2.5 py-1 rounded-lg font-bold border border-green-200 focus:outline-none focus:ring-1 focus:ring-[#1E4B35] cursor-pointer"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="bg-gray-50 rounded-xl p-3 text-xs border border-gray-100 flex justify-between items-center">
                     <span class="text-gray-600">{{ t.productPurchased }} <strong class="text-gray-900">{{ ord.product_name }}</strong></span>
@@ -478,6 +549,179 @@
                     <label class="block text-xs font-bold text-gray-700 mb-1.5 uppercase">{{ t.detailedStoryHistory }}</label>
                     <textarea v-model="myProducer.history" rows="5" class="w-full px-3.5 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none"></textarea>
                   </div>
+                  
+                  <div class="border-t pt-5 mt-6 space-y-4">
+                    <h4 class="font-bold text-gray-900 text-sm mb-3 flex items-center gap-1.5">
+                      <span class="w-1.5 h-3 bg-[#1E4B35] rounded-full"></span>
+                      {{ appStore.lang === 'vi' ? 'Chi tiết hồ sơ đối tác (Song ngữ Anh - Việt)' : 'Partner Profile Details (Bilingual English - Vietnamese)' }}
+                    </h4>
+                    
+                    <div class="space-y-4">
+                      <!-- Farm Name Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Tên Farm (Tiếng Anh)' : 'Farm Name (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.farm_name_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Tên Farm (Tiếng Việt)' : 'Farm Name (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.farm_name_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Location Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Địa điểm (Tiếng Anh)' : 'Location (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.location_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Địa điểm (Tiếng Việt)' : 'Location (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.location_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Hero Description Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Mô tả nổi bật (Tiếng Anh)' : 'Hero Description (English)' }}</label>
+                          <textarea v-model="myProducer.details.hero_desc_en" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Mô tả nổi bật (Tiếng Việt)' : 'Hero Description (Vietnamese)' }}</label>
+                          <textarea v-model="myProducer.details.hero_desc_vi" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none"></textarea>
+                        </div>
+                      </div>
+
+                      <!-- Profile Status Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Trạng thái hồ sơ (Tiếng Anh)' : 'Profile Status (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.status_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Trạng thái hồ sơ (Tiếng Việt)' : 'Profile Status (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.status_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Established / Experience Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Năm thành lập (Tiếng Anh)' : 'Established (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.established_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Năm thành lập (Tiếng Việt)' : 'Established (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.established_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Kinh nghiệm (Tiếng Anh)' : 'Experience (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.experience_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Kinh nghiệm (Tiếng Việt)' : 'Experience (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.experience_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Portfolio / Batches / Records Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Danh mục sản phẩm (Tiếng Anh)' : 'Product Portfolio (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.portfolio_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Danh mục sản phẩm (Tiếng Việt)' : 'Product Portfolio (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.portfolio_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Lô hàng mẫu (Tiếng Anh)' : 'Sample Batches (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.batches_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Lô hàng mẫu (Tiếng Việt)' : 'Sample Batches (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.batches_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Hồ sơ hỗ trợ (Tiếng Anh)' : 'Supporting Records (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.records_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Hồ sơ hỗ trợ (Tiếng Việt)' : 'Supporting Records (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.records_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Main Product Groups Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Nhóm sản phẩm chính (Tiếng Anh)' : 'Main Product Groups (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.groups_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Nhóm sản phẩm chính (Tiếng Việt)' : 'Main Product Groups (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.groups_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Producer Model Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Mô hình hoạt động (Tiếng Anh)' : 'Producer Model (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.model_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Mô hình hoạt động (Tiếng Việt)' : 'Producer Model (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.model_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <!-- Key Practices 1, 2, 3 Translations -->
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Phương thức cốt lõi 1 (Tiếng Anh)' : 'Key Practice 1 (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.practice_1_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Phương thức cốt lõi 1 (Tiếng Việt)' : 'Key Practice 1 (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.practice_1_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Phương thức cốt lõi 2 (Tiếng Anh)' : 'Key Practice 2 (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.practice_2_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Phương thức cốt lõi 2 (Tiếng Việt)' : 'Key Practice 2 (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.practice_2_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Phương thức cốt lõi 3 (Tiếng Anh)' : 'Key Practice 3 (English)' }}</label>
+                          <input type="text" v-model="myProducer.details.practice_3_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                        <div>
+                          <label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">{{ appStore.lang === 'vi' ? 'Phương thức cốt lõi 3 (Tiếng Việt)' : 'Key Practice 3 (Vietnamese)' }}</label>
+                          <input type="text" v-model="myProducer.details.practice_3_vi" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-1 focus:ring-[#1E4B35] focus:outline-none" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
                   <button @click="saveProfile" class="flex items-center gap-1.5 px-5 py-2.5 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-xl text-xs font-bold transition">
                     <Save class="w-4 h-4" /> {{ t.saveProfileBtn }}
                   </button>
@@ -626,6 +870,16 @@
           <div>
             <label class="block font-bold text-gray-700 mb-1">{{ t.productName }}</label>
             <input type="text" v-model="productForm.name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1E4B35]" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">{{ appStore.lang === 'vi' ? 'Tên tiếng Anh' : 'English Name' }}</label>
+              <input type="text" v-model="productForm.specifications.name_en" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1E4B35]" />
+            </div>
+            <div>
+              <label class="block font-bold text-gray-700 mb-1">{{ appStore.lang === 'vi' ? 'Quy cách' : 'Specification / Size' }}</label>
+              <input type="text" v-model="productForm.specifications.size" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#1E4B35]" />
+            </div>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
@@ -790,14 +1044,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/appStore'
 import { 
   MapPin, LayoutDashboard, Package, Layers, FileText, ShoppingBag, 
   Store, MessageSquare, HelpCircle, Calendar, ShieldAlert, CloudUpload, 
   FlaskConical, Award, Leaf, BookOpen, Video, Users, ShieldCheck, Lock,
-  Plus, Trash2, Edit, Save, X, ChevronDown, ChevronUp, CheckCircle, AlertCircle, QrCode
+  Plus, Trash2, Edit, Save, X, ChevronDown, ChevronUp, CheckCircle, AlertCircle, QrCode, ChevronLeft, ChevronRight
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -816,6 +1070,43 @@ const records = ref([
   { id: 1, name: 'VietGAP Certificate 2026.pdf', type: 'Certificate', date: '2026-05-10', status: 'Passed / Verified' },
   { id: 2, name: 'Lab Report LOT-UMH-2605-001.pdf', type: 'Lab Report', date: '2026-05-17', status: 'Passed / Verified' }
 ])
+
+// Pagination state
+const productsPerPage = ref(5)
+const productsCurrentPage = ref(1)
+
+const batchesPerPage = ref(5)
+const batchesCurrentPage = ref(1)
+
+const totalPagesProducts = computed(() => {
+  return Math.ceil(products.value.length / productsPerPage.value) || 1
+})
+
+const paginatedProducts = computed(() => {
+  const start = (productsCurrentPage.value - 1) * productsPerPage.value
+  return products.value.slice(start, start + productsPerPage.value)
+})
+
+const totalPagesBatches = computed(() => {
+  return Math.ceil(batches.value.length / batchesPerPage.value) || 1
+})
+
+const paginatedBatches = computed(() => {
+  const start = (batchesCurrentPage.value - 1) * batchesPerPage.value
+  return batches.value.slice(start, start + batchesPerPage.value)
+})
+
+watch(products, () => {
+  if (productsCurrentPage.value > totalPagesProducts.value) {
+    productsCurrentPage.value = Math.max(1, totalPagesProducts.value)
+  }
+}, { deep: true })
+
+watch(batches, () => {
+  if (batchesCurrentPage.value > totalPagesBatches.value) {
+    batchesCurrentPage.value = Math.max(1, totalPagesBatches.value)
+  }
+}, { deep: true })
 
 const messages = computed(() => {
   const isVi = appStore.lang === 'vi'
@@ -836,7 +1127,10 @@ const productForm = ref({
   category: 'Honey',
   image_url: '',
   specifications: {
-    detail_images: []
+    detail_images: [],
+    name_en: '',
+    size: '',
+    batch: ''
   }
 })
 
@@ -1160,6 +1454,8 @@ const loadData = async () => {
       return
     }
 
+    myProducer.value.details = myProducer.value.details || {}
+
     // 2. Fetch stats
     stats.value = await appStore.fetchProducerStats()
 
@@ -1187,9 +1483,12 @@ const openAddProduct = () => {
     description: '',
     price: 0,
     category: 'Honey',
-    image_url: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=300',
+    image_url: '',
     specifications: {
-      detail_images: []
+      detail_images: [],
+      name_en: '',
+      size: '',
+      batch: ''
     }
   }
   productModalOpen.value = true
@@ -1197,10 +1496,13 @@ const openAddProduct = () => {
 
 const openEditProduct = (prod) => {
   editingProduct.value = prod
-  const specs = prod.specifications || {}
+  const specs = JSON.parse(JSON.stringify(prod.specifications || {}))
   if (!specs.detail_images) {
     specs.detail_images = []
   }
+  if (!specs.name_en) specs.name_en = ''
+  if (!specs.size) specs.size = ''
+  if (!specs.batch) specs.batch = ''
   productForm.value = {
     name: prod.name,
     description: prod.description,
@@ -1228,9 +1530,20 @@ const submitProduct = async () => {
   }
 }
 
+const changeOrderStatus = async (orderId, newStatus) => {
+  try {
+    await appStore.updateOrderStatus(orderId, newStatus)
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Cập nhật trạng thái đơn hàng thành công!' : 'Order status updated successfully!')
+    await loadData()
+  } catch (error) {
+    console.error('Failed to update order status:', error)
+    appStore.triggerToast(error.message || 'Failed to update order status.')
+  }
+}
+
 const deleteProduct = async (id) => {
   const confirmMsg = appStore.lang === 'vi' ? 'Bạn có chắc chắn muốn xóa sản phẩm này không?' : 'Are you sure you want to delete this product?'
-  if (!confirm(confirmMsg)) return
+  if (!await appStore.triggerConfirm(confirmMsg)) return
   try {
     await appStore.deleteProduct(id)
     appStore.triggerToast(appStore.lang === 'vi' ? 'Xóa sản phẩm thành công!' : 'Product deleted successfully!')
@@ -1293,7 +1606,7 @@ const submitBatch = async () => {
 
 const deleteBatch = async (id) => {
   const confirmMsg = appStore.lang === 'vi' ? 'Bạn có chắc chắn muốn xóa lô hàng này không?' : 'Are you sure you want to delete this batch?'
-  if (!confirm(confirmMsg)) return
+  if (!await appStore.triggerConfirm(confirmMsg)) return
   try {
     await appStore.deleteBatch(id)
     appStore.triggerToast(appStore.lang === 'vi' ? 'Xóa lô hàng thành công!' : 'Batch deleted successfully!')
@@ -1325,7 +1638,8 @@ const saveProfile = async () => {
       location: myProducer.value.location,
       description: myProducer.value.description,
       history: myProducer.value.history,
-      image_url: myProducer.value.image_url
+      image_url: myProducer.value.image_url,
+      details: myProducer.value.details
     })
     appStore.triggerToast(appStore.lang === 'vi' ? 'Hồ sơ cửa hàng đã được cập nhật thành công!' : 'Store profile updated successfully!')
     await loadData()

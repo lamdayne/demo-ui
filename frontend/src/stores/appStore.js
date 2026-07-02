@@ -35,6 +35,26 @@ export const useAppStore = defineStore('app', () => {
     }, 3500);
   }
 
+  // Global Confirmation Dialog state
+  const confirmDialog = ref({ show: false, title: '', message: '', resolve: null });
+
+  function triggerConfirm(message, title = 'Confirm') {
+    confirmDialog.value.title = title;
+    confirmDialog.value.message = message;
+    confirmDialog.value.show = true;
+    return new Promise((resolve) => {
+      confirmDialog.value.resolve = resolve;
+    });
+  }
+
+  function handleConfirmResponse(ok) {
+    confirmDialog.value.show = false;
+    if (confirmDialog.value.resolve) {
+      confirmDialog.value.resolve(ok);
+      confirmDialog.value.resolve = null;
+    }
+  }
+
   // Sync token session
   watch(token, (newVal) => {
     if (newVal) localStorage.setItem('gt_token', newVal);
@@ -249,7 +269,7 @@ export const useAppStore = defineStore('app', () => {
 
   async function toggleWishlist(productId) {
     if (!token.value) {
-      alert('Please log in to save items to your wishlist.');
+      triggerToast(lang.value === 'vi' ? 'Vui lòng đăng nhập để lưu sản phẩm vào danh sách yêu thích.' : 'Please log in to save items to your wishlist.');
       return;
     }
     const exists = wishlist.value.some(w => parseInt(w.id) === parseInt(productId));
@@ -337,6 +357,10 @@ export const useAppStore = defineStore('app', () => {
     return data.order;
   }
 
+  async function updateOrderStatus(id, status) {
+    return await apiCall(`/orders/${id}/status`, 'PUT', { status });
+  }
+
   // Notifications inbox endpoints
   async function fetchNotifications() {
     if (!token.value) return;
@@ -409,10 +433,67 @@ export const useAppStore = defineStore('app', () => {
     return data.coupon;
   }
 
+  function compressImage(file, maxWidth = 1024, maxHeight = 1024, quality = 0.8) {
+    return new Promise((resolve, reject) => {
+      if (!file.type.startsWith('image/')) {
+        return resolve(file);
+      }
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob((blob) => {
+            if (!blob) {
+              resolve(file);
+              return;
+            }
+            const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".jpg", {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            resolve(compressedFile);
+          }, 'image/jpeg', quality);
+        };
+        img.onerror = () => resolve(file);
+      };
+      reader.onerror = () => resolve(file);
+    });
+  }
+
   // Image Upload helper
   async function uploadImage(file) {
+    let fileToUpload = file;
+    try {
+      fileToUpload = await compressImage(file);
+    } catch (e) {
+      console.warn('Client-side compression failed, uploading raw file', e);
+    }
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', fileToUpload);
     const data = await apiCall('/upload', 'POST', formData);
     return data.url;
   }
@@ -469,6 +550,7 @@ export const useAppStore = defineStore('app', () => {
     placeOrder,
     fetchOrders,
     fetchOrder,
+    updateOrderStatus,
     fetchNotifications,
     markNotificationRead,
     submitSupport,
@@ -476,6 +558,9 @@ export const useAppStore = defineStore('app', () => {
     toastMessage,
     showToast,
     triggerToast,
+    confirmDialog,
+    triggerConfirm,
+    handleConfirmResponse,
     fetchAdminStats,
     fetchAdminUsers,
     updateAdminUserRole,

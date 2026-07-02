@@ -149,15 +149,15 @@ export const getDashboardStats = async (req, res) => {
 };
 
 export const updateProducerProfile = async (req, res) => {
-  const { name, location, description, history, image_url } = req.body;
+  const { name, location, description, history, image_url, details } = req.body;
 
   try {
     const result = await pool.query(
       `UPDATE producers 
-       SET name = $1, location = $2, description = $3, history = $4, image_url = $5
-       WHERE user_id = $6
+       SET name = $1, location = $2, description = $3, history = $4, image_url = $5, details = $6
+       WHERE user_id = $7
        RETURNING *`,
-      [name, location, description, history, image_url, req.user.id]
+      [name, location, description, history, image_url, details ? JSON.stringify(details) : null, req.user.id]
     );
 
     if (result.rows.length === 0) {

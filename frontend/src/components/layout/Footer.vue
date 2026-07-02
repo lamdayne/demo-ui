@@ -14,17 +14,16 @@
             {{ appStore.t('footerBrandDesc2') }}
           </p>
           <div class="flex gap-3 text-[#1E4B35]">
-            <a href="#" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
+            <a href="https://www.facebook.com/share/19Ap5vrMrw/" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
               <Facebook class="w-4 h-4 fill-current" />
             </a>
-            <a href="#" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
+            <a href="https://www.instagram.com/greentrace.vn?igsh=dnQwemJtMzN2dWcx" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
               <Instagram class="w-4 h-4" />
             </a>
-            <a href="#" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
-              <Youtube class="w-4 h-4" />
-            </a>
-            <a href="#" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
-              <Linkedin class="w-4 h-4 fill-current" />
+            <a href="https://www.tiktok.com/@green.trace.vietnam?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center hover:bg-[#1E4B35] hover:text-white transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+              </svg>
             </a>
           </div>
         </div>
@@ -104,7 +103,7 @@
 </template>
 
 <script setup>
-import { Leaf, Facebook, Instagram, Youtube, Linkedin, Mail, Phone, Clock, MapPin, ArrowUp } from 'lucide-vue-next'
+import { Leaf, Facebook, Instagram, Mail, Phone, Clock, MapPin, ArrowUp } from 'lucide-vue-next'
 import { useAppStore } from '@/stores/appStore'
 
 const appStore = useAppStore()

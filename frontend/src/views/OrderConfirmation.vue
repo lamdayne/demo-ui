@@ -468,10 +468,10 @@ const activeStepIndex = computed(() => {
 })
 
 const simulatedAction = () => {
-  alert('Simulated Action: Opening tracking system for this parcel...')
+  appStore.triggerToast('Simulated Action: Opening tracking system for this parcel...')
 }
 
 const simulatedInvoice = () => {
-  alert('Simulated Action: Generating mock PDF invoice for LOT GT-' + (order.value?.id || '001'))
+  appStore.triggerToast('Simulated Action: Generating mock PDF invoice for LOT GT-' + (order.value?.id || '001'))
 }
 </script>

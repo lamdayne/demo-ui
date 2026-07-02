@@ -55,8 +55,12 @@ export const initDb = async () => {
         history TEXT,
         image_url VARCHAR(255),
         verified BOOLEAN DEFAULT TRUE,
+        details JSONB DEFAULT '{}'::jsonb,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+    await client.query(`
+      ALTER TABLE producers ADD COLUMN IF NOT EXISTS details JSONB DEFAULT '{}'::jsonb;
     `);
 
     // 3. Create Products Table
@@ -265,26 +269,62 @@ export const initDb = async () => {
       const f4Id = f4.rows[0].id;
 
       // 5. THUY HANH FARM — TP. Hồ Chí Minh
+      const thuyHanhDetails = {
+        farm_name_en: "Thuy Hanh Farm",
+        farm_name_vi: "Thuy Hanh Farm",
+        location_en: "Ho Chi Minh City, Vietnam",
+        location_vi: "TP. Hồ Chí Minh, Việt Nam",
+        hero_desc_en: "Urban hydroponic greens and fresh everyday food for city households.",
+        hero_desc_vi: "Rau thủy canh đô thị và thực phẩm tươi hằng ngày dành cho gia đình thành thị.",
+        status_en: "Verified Producer Hub",
+        status_vi: "Cụm nhà sản xuất đã được xem xét",
+        established_en: "Est. 2018",
+        established_vi: "Thành lập năm 2018",
+        experience_en: "7+ Years of Urban Farming Experience",
+        experience_vi: "Hơn 7 năm kinh nghiệm nông nghiệp đô thị",
+        portfolio_en: "10 Products",
+        portfolio_vi: "10 sản phẩm",
+        batches_en: "4 Sample Batches",
+        batches_vi: "4 lô hàng mẫu",
+        records_en: "5 Supporting Records",
+        records_vi: "5 hồ sơ hỗ trợ",
+        groups_en: "Hydroponic vegetables, herbs, salad kits, eggs and cleaned chicken",
+        groups_vi: "Rau thủy canh, rau gia vị, bộ salad, trứng và gà sơ chế",
+        model_en: "Urban Farm and Fresh-Food Partner Hub",
+        model_vi: "Cụm trang trại đô thị và đối tác thực phẩm tươi",
+        practice_1_en: "Controlled Hydroponic Growing",
+        practice_1_vi: "Trồng thủy canh trong môi trường kiểm soát",
+        practice_2_en: "Harvest-to-City Distribution",
+        practice_2_vi: "Phân phối trực tiếp từ farm đến thành phố",
+        practice_3_en: "Fresh Batch Management",
+        practice_3_vi: "Quản lý thực phẩm tươi theo từng lô"
+      };
+
       const f5 = await client.query(`
-        INSERT INTO producers (user_id, name, location, description, history, image_url)
+        INSERT INTO producers (user_id, name, location, description, history, image_url, details)
         VALUES (
           $1, 
           'Thuy Hanh Farm', 
           'Ho Chi Minh City, Vietnam', 
           'Urban hydroponic greens and fresh everyday food for city households.', 
           'Est. 2018. 7+ Years of Urban Farming Experience, delivering hydroponic vegetables, herbs, salad kits, eggs and cleaned chicken.', 
-          'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=400'
+          'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=400',
+          $2::jsonb
         )
         RETURNING id
-      `, [producerUserId]);
+      `, [producerUserId, JSON.stringify(thuyHanhDetails)]);
       const f5Id = f5.rows[0].id;
 
-      const addProd = async (farmId, name, price, cat, img, size, batchCode) => {
+      const addProd = async (farmId, name, price, cat, img, size, batchCode, nameEn = '') => {
+        const specs = { size, origin: 'Vietnam', batch: batchCode };
+        if (nameEn) {
+          specs.name_en = nameEn;
+        }
         const p = await client.query(`
           INSERT INTO products (producer_id, name, description, price, category, image_url, rating, reviews_count, specifications)
           VALUES ($1, $2, $3, $4, $5, $6, 4.8, 50, $7::jsonb)
           RETURNING id
-        `, [farmId, name, `Sản phẩm sạch chất lượng cao ${name} từ trang trại của chúng tôi.`, price, cat, img, JSON.stringify({ size, origin: 'Vietnam' })]);
+        `, [farmId, name, `Sản phẩm sạch chất lượng cao ${name} từ trang trại của chúng tôi.`, price, cat, img, JSON.stringify(specs)]);
         const pId = p.rows[0].id;
         
         await client.query(`
@@ -295,10 +335,10 @@ export const initDb = async () => {
       };
 
       // Seed products & batches for Yen Nhi Farm
-      const thuyHanhP1 = await addProd(f1Id, 'Nho xanh Ninh Thuận', 99000, 'Fruits', 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&q=80&w=300', '1 kg', 'YNF-GRG-260701-01');
-      await addProd(f1Id, 'Nho đỏ Ninh Thuận', 79000, 'Fruits', 'https://images.unsplash.com/photo-1508747703725-719ae25db3e4?auto=format&fit=crop&q=80&w=300', '1 kg', 'YNF-RGR-260701-01');
-      await addProd(f1Id, 'Táo xanh Ninh Thuận', 49000, 'Fruits', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&q=80&w=300', '1 kg', 'YNF-JJB-260701-01');
-      await addProd(f1Id, 'Măng tây xanh', 69000, 'Vegetables', 'https://images.unsplash.com/photo-1515471204579-24b8759a0a56?auto=format&fit=crop&q=80&w=300', '500 g', 'YNF-ASP-260701-01');
+      const thuyHanhP1 = await addProd(f1Id, 'Nho xanh Ninh Thuận', 99000, 'Fruits', 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&q=80&w=300', '1 kg', 'YNF-GRG-260701-01', 'Ninh Thuận Green Grapes');
+      await addProd(f1Id, 'Nho đỏ Ninh Thuận', 79000, 'Fruits', 'https://images.unsplash.com/photo-1508747703725-719ae25db3e4?auto=format&fit=crop&q=80&w=300', '1 kg', 'YNF-RGR-260701-01', 'Ninh Thuận Red Grapes');
+      await addProd(f1Id, 'Táo xanh Ninh Thuận', 49000, 'Fruits', 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&q=80&w=300', '1 kg', 'YNF-JJB-260701-01', 'Ninh Thuận Green Jujubes');
+      await addProd(f1Id, 'Măng tây xanh', 69000, 'Vegetables', 'https://images.unsplash.com/photo-1515471204579-24b8759a0a56?auto=format&fit=crop&q=80&w=300', '500 g', 'YNF-ASP-260701-01', 'Green Asparagus');
       await addProd(f1Id, 'Tỏi Ninh Thuận', 59000, 'Vegetables', 'https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?auto=format&fit=crop&q=80&w=300', '300 g', 'YNF-GAR-260701-01');
       await addProd(f1Id, 'Mật ong hoa rừng', 169000, 'Honey', 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=300', '500 ml', 'YNF-HON-260701-01');
       await addProd(f1Id, 'Nho khô phơi nắng', 89000, 'Fruits', 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&q=80&w=300', '200 g', 'YNF-RAI-260701-01');

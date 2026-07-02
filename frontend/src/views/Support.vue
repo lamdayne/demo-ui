@@ -552,14 +552,14 @@ const t = computed(() => {
 })
 
 const submitForm = () => {
-  alert(t.value.demoFormSubmit)
+  appStore.triggerToast(t.value.demoFormSubmit)
 }
 
 const startLiveChat = () => {
-  alert(t.value.demoChatSubmit)
+  appStore.triggerToast(t.value.demoChatSubmit)
 }
 
 const reportConcern = () => {
-  alert(t.value.demoConcernSubmit)
+  appStore.triggerToast(t.value.demoConcernSubmit)
 }
 </script>

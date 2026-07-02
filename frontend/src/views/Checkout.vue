@@ -120,34 +120,35 @@
           </div>
 
           <!-- 3. Delivery Method -->
-          <div class="border border-[#1E4B35] rounded-xl p-6 bg-[#F8FAF9] shadow-sm">
+          <div class="border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
             <h2 class="text-xl font-bold text-gray-900 flex items-center gap-3 mb-6">
               <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">3</span>
-              Delivery Method
+              {{ appStore.lang === 'vi' ? 'Phương thức giao hàng' : 'Delivery Method' }}
             </h2>
             <div class="space-y-3">
-              <label class="flex items-center justify-between p-4 border border-[#1E4B35] bg-[#F0FDF4] rounded-lg cursor-pointer">
+              <label 
+                v-for="method in deliveryMethods" 
+                :key="method.id" 
+                class="flex items-center justify-between p-4 border rounded-xl cursor-pointer transition-all duration-200"
+                :class="selectedDelivery === method.id ? 'border-[#1E4B35] bg-[#F0FDF4]' : 'border-gray-200 bg-white hover:border-gray-300'"
+              >
                 <div class="flex items-center gap-4">
-                  <input type="radio" checked name="delivery" class="text-[#1E4B35] focus:ring-[#1E4B35] w-5 h-5" />
-                  <Truck class="w-6 h-6 text-[#1E4B35]" />
-                  <div>
-                    <div class="font-bold text-gray-900">Standard Shipping</div>
-                    <div class="text-sm text-gray-500">Delivery in 3-5 business days</div>
+                  <input 
+                    type="radio" 
+                    :value="method.id" 
+                    v-model="selectedDelivery" 
+                    name="delivery" 
+                    class="text-[#1E4B35] focus:ring-[#1E4B35] w-5 h-5 cursor-pointer" 
+                  />
+                  <img :src="method.logo" :alt="method.carrier" class="h-8 w-auto object-contain flex-shrink-0 bg-white p-0.5 rounded" />
+                  <div class="text-left">
+                    <div class="font-bold text-gray-900 text-sm">{{ method.name }}</div>
+                    <div class="text-xs text-gray-500 mt-0.5">{{ appStore.lang === 'vi' ? method.descVi : method.desc }}</div>
                   </div>
                 </div>
-                <div class="font-bold text-gray-900">30,000 VND</div>
-              </label>
-              
-              <label class="flex items-center justify-between p-4 border border-gray-200 bg-white rounded-lg cursor-pointer hover:border-gray-300">
-                <div class="flex items-center gap-4">
-                  <input type="radio" name="delivery" class="text-[#1E4B35] focus:ring-[#1E4B35] w-5 h-5" />
-                  <Truck class="w-6 h-6 text-gray-400" />
-                  <div>
-                    <div class="font-bold text-gray-900">Express Shipping</div>
-                    <div class="text-sm text-gray-500">Delivery in 1-2 business days</div>
-                  </div>
+                <div class="font-bold text-gray-900 text-sm">
+                  {{ subtotalPrice >= 500000 ? (appStore.lang === 'vi' ? 'Miễn phí' : 'Free') : method.price.toLocaleString() + ' VND' }}
                 </div>
-                <div class="font-bold text-gray-900">60,000 VND</div>
               </label>
             </div>
           </div>
@@ -158,14 +159,7 @@
               <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">4</span>
               {{ appStore.t('paymentMethod') }}
             </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-               <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'MoMo' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
-                 <input type="radio" value="MoMo" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
-                 <div class="w-12 h-12 bg-[#A50064] rounded-lg text-white font-bold flex items-center justify-center mb-2">mo<br/>mo</div>
-                 <div class="font-bold text-gray-900 text-sm">{{ appStore.t('momoLabel') }}</div>
-                 <div class="text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded mt-1">Simulated payment</div>
-               </label>
-
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'VNPay' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
                  <input type="radio" value="VNPay" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
                  <div class="w-12 h-12 bg-blue-100 rounded-lg text-blue-600 flex items-center justify-center mb-2"><CreditCard class="w-6 h-6"/></div>
@@ -178,13 +172,6 @@
                  <div class="w-12 h-12 bg-gray-100 rounded-lg text-gray-600 flex items-center justify-center mb-2"><Banknote class="w-6 h-6"/></div>
                  <div class="font-bold text-gray-900 text-sm leading-tight">{{ appStore.t('codLabel') }}</div>
                  <div class="text-[10px] text-gray-500 mt-1">Pay when you receive</div>
-               </label>
-               
-               <label class="rounded-xl p-4 flex flex-col items-center text-center cursor-pointer relative" :class="paymentMethod === 'Card' ? 'border-2 border-[#1E4B35] bg-[#F8FAF9]' : 'border border-gray-200 hover:border-gray-300 bg-white'">
-                 <input type="radio" value="Card" v-model="paymentMethod" name="payment" class="absolute top-3 left-3 text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4" />
-                 <div class="w-12 h-12 bg-gray-100 rounded-lg text-gray-600 flex items-center justify-center mb-2"><CreditCard class="w-6 h-6"/></div>
-                 <div class="font-bold text-gray-900 text-sm leading-tight">Card Payment</div>
-                 <div class="text-[10px] text-green-600 bg-green-100 px-2 py-0.5 rounded mt-1">Simulated payment</div>
                </label>
             </div>
             <p class="text-xs text-gray-500 flex items-center gap-1.5">
@@ -435,7 +422,56 @@ const city = ref('')
 const province = ref('')
 const postalCode = ref('')
 const notes = ref('')
-const paymentMethod = ref('MoMo')
+const paymentMethod = ref('VNPay')
+
+const selectedDelivery = ref('standard')
+const deliveryMethods = ref([
+  {
+    id: 'standard',
+    name: 'Giao tiết kiệm (Standard Eco)',
+    carrier: 'Viettel Post',
+    desc: 'Delivery in 2-3 business days',
+    descVi: 'Giao trong 2-3 ngày làm việc',
+    price: 12000,
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/8/80/Viettel_Post_logo.svg'
+  },
+  {
+    id: 'fast',
+    name: 'Giao nhanh (Next-day)',
+    carrier: 'Giao Hàng Nhanh (GHN)',
+    desc: 'Delivery tomorrow',
+    descVi: 'Giao hàng vào ngày mai',
+    price: 18000,
+    logo: 'https://static.ybox.vn/2022/8/5/1660242139108-logo.png'
+  },
+  {
+    id: 'chilled',
+    name: 'Giao bảo quản lạnh (Chilled)',
+    carrier: 'ABA cooltrans',
+    desc: '1-2 days (Temperature 0 - 4°C)',
+    descVi: 'Giao 1-2 ngày (Nhiệt độ 0 - 4°C)',
+    price: 20000,
+    logo: 'https://static.ybox.vn/2025/3/5/1742532386651-ABA-cooltrans-logo.jpg'
+  },
+  {
+    id: 'express',
+    name: 'Giao tức thời (Same-day)',
+    carrier: 'Ahamove',
+    desc: 'Deliver today (6-8 hours)',
+    descVi: 'Giao hàng trong ngày (6-8 giờ)',
+    price: 25000,
+    logo: 'https://pos.nvncdn.com/4e732c-26/art/artCT/20200110_0VQJNbkpdGU2xAWRTyUbrMWM.png'
+  },
+  {
+    id: 'frozen',
+    name: 'Giao bảo quản đông lạnh (Frozen)',
+    carrier: 'ABA cooltrans',
+    desc: '1-2 days (Temperature < -18°C)',
+    descVi: 'Giao 1-2 ngày (Nhiệt độ < -18°C)',
+    price: 25000,
+    logo: 'https://static.ybox.vn/2025/3/5/1742532386651-ABA-cooltrans-logo.jpg'
+  }
+])
 
 onMounted(async () => {
   try {
@@ -500,7 +536,8 @@ const discountPrice = computed(() => {
 
 const shippingFee = computed(() => {
   if (subtotalPrice.value >= 500000 || subtotalPrice.value === 0) return 0
-  return 30000
+  const method = deliveryMethods.value.find(m => m.id === selectedDelivery.value)
+  return method ? method.price : 12000
 })
 
 const totalPrice = computed(() => {
@@ -509,7 +546,7 @@ const totalPrice = computed(() => {
 
 const placeOrder = async () => {
   if (appStore.cart.length === 0) {
-    alert('Your cart is empty!')
+    appStore.triggerToast(appStore.lang === 'vi' ? 'Giỏ hàng của bạn đang trống!' : 'Your cart is empty!')
     return
   }
   
@@ -527,7 +564,7 @@ const placeOrder = async () => {
       router.push('/confirmation')
     }
   } catch (error) {
-    alert('Failed to place order: ' + error.message)
+    appStore.triggerToast((appStore.lang === 'vi' ? 'Đặt hàng thất bại: ' : 'Failed to place order: ') + error.message)
   }
 }
 </script>
