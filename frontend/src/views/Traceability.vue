@@ -39,12 +39,20 @@
         <p class="text-gray-600 font-medium">{{ appStore.lang === 'en' ? 'Retrieving batch records and lab analyses...' : 'Đang truy xuất hồ sơ lô hàng và kết quả kiểm nghiệm...' }}</p>
       </div>
 
+      <!-- Empty State (no search yet) -->
+      <div v-else-if="!hasSearched" class="bg-white border border-dashed border-gray-300 rounded-2xl p-16 text-center shadow-sm mb-8">
+        <div class="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
+          <Search class="w-8 h-8 text-[#1E4B35]" />
+        </div>
+        <h3 class="font-bold text-gray-900 text-lg mb-2">{{ appStore.lang === 'en' ? 'Enter a Batch ID to begin' : 'Nhập mã lô hàng để bắt đầu' }}</h3>
+        <p class="text-sm text-gray-500 max-w-md mx-auto">{{ appStore.lang === 'en' ? 'Type a batch or lot number in the search box above and press Search to view its full traceability report.' : 'Nhập mã lô hoặc số lô vào ô tìm kiếm phía trên và nhấn Tìm kiếm để xem báo cáo truy xuất đầy đủ.' }}</p>
+      </div>
+
       <!-- Error State -->
       <div v-else-if="errorMsg" class="bg-red-50 border border-red-200 rounded-2xl p-8 text-center shadow-sm mb-8">
         <Info class="w-12 h-12 text-red-500 mx-auto mb-3" />
         <h3 class="font-bold text-red-900 text-lg mb-1">{{ appStore.lang === 'en' ? 'Lookup Failed' : 'Tra cứu thất bại' }}</h3>
-        <p class="text-red-700 text-sm mb-4">{{ errorMsg }}</p>
-        <button @click="searchId = 'LOT-UMH-2605-001'; handleSearch();" class="text-sm font-semibold text-[#1E4B35] hover:underline">{{ appStore.lang === 'en' ? 'Reset to sample batch' : 'Đặt lại về lô hàng mẫu' }}</button>
+        <p class="text-red-700 text-sm">{{ errorMsg }}</p>
       </div>
 
       <template v-else-if="batchData">
@@ -367,7 +375,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ChevronRight, Info, Check, QrCode, Hexagon, Droplet, CheckCircle2, Package, Truck, User, ArrowRight, FileText, FlaskConical, ExternalLink, ShieldCheck, Leaf, ArrowLeft, HelpCircle, Share2, Quote } from 'lucide-vue-next'
+import { ChevronRight, Info, Check, Search, QrCode, Hexagon, Droplet, CheckCircle2, Package, Truck, User, ArrowRight, FileText, FlaskConical, ExternalLink, ShieldCheck, Leaf, ArrowLeft, HelpCircle, Share2, Quote } from 'lucide-vue-next'
 import { useAppStore } from '@/stores/appStore'
 
 const route = useRoute()
@@ -375,21 +383,24 @@ const router = useRouter()
 const appStore = useAppStore()
 const windowLocationOrigin = ref(window.location.origin)
 
-const searchId = ref(route.query.batch || 'LOT-UMH-2605-001')
+// Only pre-fill if a batch query param is present in the URL
+const searchId = ref(route.query.batch || '')
 const batchData = ref(null)
 const loading = ref(false)
 const errorMsg = ref('')
+const hasSearched = ref(false)
 
 async function loadBatch(id) {
   if (!id) return
   loading.value = true
   errorMsg.value = ''
+  batchData.value = null
   try {
     const data = await appStore.fetchBatch(id)
     batchData.value = data
   } catch (err) {
     batchData.value = null
-    errorMsg.value = err.message || 'Batch not found. Please verify the Batch ID.'
+    errorMsg.value = err.message || (appStore.lang === 'en' ? 'Batch not found. Please verify the Batch ID.' : 'Không tìm thấy lô hàng. Vui lòng kiểm tra lại mã lô.')
   } finally {
     loading.value = false
   }
@@ -397,17 +408,23 @@ async function loadBatch(id) {
 
 function handleSearch() {
   if (!searchId.value.trim()) return
+  hasSearched.value = true
   router.replace({ query: { batch: searchId.value.trim() } })
   loadBatch(searchId.value.trim())
 }
 
 onMounted(() => {
-  loadBatch(searchId.value)
+  // Only auto-load if a batch ID is in the URL
+  if (route.query.batch) {
+    hasSearched.value = true
+    loadBatch(route.query.batch)
+  }
 })
 
 watch(() => route.query.batch, (newBatch) => {
   if (newBatch) {
     searchId.value = newBatch
+    hasSearched.value = true
     loadBatch(newBatch)
   }
 })
