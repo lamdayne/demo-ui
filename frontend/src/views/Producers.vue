@@ -163,7 +163,7 @@
       <!-- Producer Story Banner -->
       <div class="flex flex-col md:flex-row gap-8 items-center mb-16 bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
         <div class="w-full md:w-2/5 h-64 md:h-80 bg-gray-200 relative overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1531206715517-5c0ba140e2b8?auto=format&fit=crop&q=80&w=500" alt="Producer Story" class="w-full h-full object-cover" />
+          <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783001392/514dbfec-c4ca-4bcb-b4e0-41c5d1d75bcf.png" alt="Producer Story" class="w-full h-full object-cover" />
         </div>
         <div class="flex-grow p-8 md:p-10">
           <p class="text-xs font-bold text-[#1E4B35] uppercase tracking-widest mb-3">{{ t.storyTag }}</p>

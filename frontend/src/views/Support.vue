@@ -31,7 +31,7 @@
 
         <div class="w-full md:w-auto flex justify-center flex-shrink-0">
           <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg relative bg-gray-100">
-            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200" alt="Support Agent" class="w-full h-full object-cover" />
+            <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783001672/4aa2f6f8-996c-455d-bd27-443c5d8346eb.png" alt="Support Agent" class="w-full h-full object-cover" />
           </div>
         </div>
       </div>
