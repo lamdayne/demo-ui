@@ -2,15 +2,15 @@
   <div class="bg-white min-h-screen pb-16">
     <!-- Hero Section -->
     <div class="relative overflow-hidden bg-gray-50">
-      <div class="container mx-auto px-4 max-w-6xl relative z-10 flex flex-col md:flex-row items-center py-12 lg:py-20 gap-8">
+      <div class="container mx-auto px-4 max-w-6xl relative z-10 flex flex-col md:flex-row items-center py-6 lg:py-10 gap-6">
         <div class="w-full md:w-1/2">
-          <h1 class="text-4xl lg:text-5xl font-bold text-[#1E4B35] mb-4 leading-tight">{{ t.title }}</h1>
-          <p class="text-gray-700 text-lg max-w-lg leading-relaxed">
+          <h1 class="text-3xl lg:text-4xl font-bold text-[#1E4B35] mb-2 leading-tight">{{ t.title }}</h1>
+          <p class="text-gray-700 text-sm max-w-lg leading-relaxed">
             {{ t.desc }}
           </p>
         </div>
         <div class="w-full md:w-1/2 flex justify-end">
-          <div class="w-full max-w-md h-64 md:h-80 bg-gray-200 rounded-2xl overflow-hidden relative shadow-lg">
+          <div class="w-full max-w-md h-44 md:h-56 bg-gray-200 rounded-2xl overflow-hidden relative shadow-lg">
             <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783002817/734755797_1325279163146746_2847268805525389078_n_c8tlf4.png" alt="Meet Reviewed Producers" class="w-full h-full object-cover object-center" />
           </div>
         </div>
@@ -71,46 +71,32 @@
       </div>
 
       <!-- Producers Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-        <div v-for="producer in producers" :key="producer.id" class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition flex flex-col h-full group">
-          <div class="relative h-48 bg-gray-100 overflow-hidden">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div v-for="producer in producers" :key="producer.id" class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition flex flex-col group">
+          <div class="relative h-32 bg-gray-100 overflow-hidden flex-shrink-0">
             <img v-if="producer.image" :src="producer.image" :alt="producer.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            <Image v-else class="w-12 h-12 text-gray-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <Image v-else class="w-8 h-8 text-gray-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             
-            <div v-if="producer.featured" class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full shadow-sm text-xs font-bold text-[#1E4B35] flex items-center gap-1">
-              <Star class="w-3.5 h-3.5 fill-current" /> {{ t.featuredBadge }}
+            <div v-if="producer.featured" class="absolute top-2 right-2 bg-white px-2 py-0.5 rounded-full shadow-sm text-[10px] font-bold text-[#1E4B35] flex items-center gap-1">
+              <Star class="w-3 h-3 fill-current" /> {{ t.featuredBadge }}
             </div>
-            <div v-if="producer.verified && !producer.featured" class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full shadow-sm text-xs font-bold text-green-700 flex items-center gap-1">
-              <CheckCircle2 class="w-3.5 h-3.5 text-green-500" /> {{ t.verifiedBadge }}
+            <div v-if="producer.verified && !producer.featured" class="absolute top-2 right-2 bg-white px-2 py-0.5 rounded-full shadow-sm text-[10px] font-bold text-green-700 flex items-center gap-1">
+              <CheckCircle2 class="w-3 h-3 text-green-500" /> {{ t.verifiedBadge }}
             </div>
           </div>
-          <div class="p-6 flex flex-col flex-grow">
-            <h3 class="text-xl font-bold text-gray-900 mb-1">{{ producer.name }}</h3>
-            <div class="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
-              <MapPin class="w-4 h-4" /> {{ appStore.localizeAddress(producer.location) }}
+          <div class="p-4 flex flex-col flex-grow">
+            <h3 class="text-sm font-bold text-gray-900 mb-0.5 truncate">{{ producer.name }}</h3>
+            <div class="flex items-center gap-1 text-xs text-gray-500 mb-2">
+              <MapPin class="w-3 h-3 flex-shrink-0" />
+              <span class="truncate">{{ appStore.localizeAddress(producer.location) }}</span>
             </div>
-            <p class="text-sm text-gray-600 mb-5 flex-grow line-clamp-3 leading-relaxed">{{ producer.desc }}</p>
+            <p class="text-xs text-gray-600 mb-3 flex-grow line-clamp-2 leading-relaxed">{{ producer.desc }}</p>
 
-            <div class="space-y-2 mb-5">
-              <div>
-                <p class="text-xs font-semibold text-[#1E4B35] mb-1">{{ t.sampleProducts }}</p>
-                <div class="flex items-center gap-2 text-sm text-gray-700">
-                  <Package class="w-4 h-4 text-gray-400" /> {{ producer.products }}
-                </div>
-              </div>
-              <div>
-                <p class="text-xs font-semibold text-[#1E4B35] mb-1">{{ t.sampleBatches }}</p>
-                <div class="flex items-center gap-2 text-sm text-gray-700">
-                  <FileText class="w-4 h-4 text-gray-400" /> {{ producer.batches }}
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3 mt-auto">
-              <router-link :to="`/producer/${producer.id}`" class="py-2.5 rounded-lg border border-gray-300 text-center text-sm font-bold text-gray-700 hover:bg-gray-50 transition">
+            <div class="grid grid-cols-2 gap-2 mt-auto">
+              <router-link :to="`/producer/${producer.id}`" class="py-1.5 rounded-lg border border-gray-300 text-center text-xs font-bold text-gray-700 hover:bg-gray-50 transition">
                 {{ t.viewProfile }}
               </router-link>
-              <router-link to="/products" class="py-2.5 rounded-lg bg-[#1E4B35] text-white text-center text-sm font-bold hover:bg-[#163a29] transition shadow-md shadow-[#1E4B35]/20">
+              <router-link to="/products" class="py-1.5 rounded-lg bg-[#1E4B35] text-white text-center text-xs font-bold hover:bg-[#163a29] transition">
                 {{ t.shopProducts }}
               </router-link>
             </div>

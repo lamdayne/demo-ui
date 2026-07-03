@@ -62,27 +62,23 @@
           <div class="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center mb-4">
             <Heart class="w-6 h-6 text-[#1E4B35]" />
           </div>
-          <h3 class="font-bold text-gray-900 text-lg mb-3">{{ t.valuesTitle }}</h3>
-          <ul class="text-sm text-gray-600 space-y-2 flex-grow">
-            <li class="flex items-start gap-2">
-              <CheckCircle2 class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-              <span>{{ t.val1 }}</span>
+          <h3 class="font-bold text-gray-900 text-lg mb-4">{{ t.valuesTitle }}</h3>
+          <ul class="space-y-3 flex-grow">
+            <li class="border-l-4 border-[#1E4B35] pl-3">
+              <div class="font-bold text-gray-900 text-sm">Transparency &amp; Accountability</div>
+              <div class="text-xs text-gray-500">Minh bạch &amp; Trách nhiệm giải trình</div>
             </li>
-            <li class="flex items-start gap-2">
-              <CheckCircle2 class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-              <span>{{ t.val2 }}</span>
+            <li class="border-l-4 border-[#1E4B35] pl-3">
+              <div class="font-bold text-gray-900 text-sm">Safety</div>
+              <div class="text-xs text-gray-500">An toàn</div>
             </li>
-            <li class="flex items-start gap-2">
-              <CheckCircle2 class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-              <span>{{ t.val3 }}</span>
+            <li class="border-l-4 border-[#1E4B35] pl-3">
+              <div class="font-bold text-gray-900 text-sm">Sustainability</div>
+              <div class="text-xs text-gray-500">Bền vững</div>
             </li>
-            <li class="flex items-start gap-2">
-              <CheckCircle2 class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-              <span>{{ t.val4 }}</span>
-            </li>
-            <li class="flex items-start gap-2">
-              <CheckCircle2 class="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-              <span>{{ t.val5 }}</span>
+            <li class="border-l-4 border-[#1E4B35] pl-3">
+              <div class="font-bold text-gray-900 text-sm">Innovation</div>
+              <div class="text-xs text-gray-500">Đổi mới</div>
             </li>
           </ul>
         </div>
@@ -289,7 +285,7 @@
         <h2 class="text-2xl font-bold text-center text-gray-900 mb-2">{{ t.scopeTitle }}</h2>
         <p class="text-sm text-gray-500 text-center mb-10">{{ t.scopeSubtitle }}</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
           <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center gap-6">
             <div class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
               <ShoppingBag class="w-7 h-7 text-[#1E4B35]" />
@@ -313,19 +309,6 @@
                 <span class="text-xs font-bold text-gray-900">{{ t.scopeProducerLbl }}</span>
               </div>
               <p class="text-[11px] text-gray-500 mt-1">{{ t.scopeProducerDesc }}</p>
-            </div>
-          </div>
-
-          <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center gap-6">
-            <div class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
-              <ClipboardList class="w-7 h-7 text-[#1E4B35]" />
-            </div>
-            <div>
-              <div class="flex items-baseline gap-1.5">
-                <span class="text-3xl font-extrabold text-[#1E4B35]">{{ t.scopeBatchVal }}</span>
-                <span class="text-xs font-bold text-gray-900">{{ t.scopeBatchLbl }}</span>
-              </div>
-              <p class="text-[11px] text-gray-500 mt-1">{{ t.scopeBatchDesc }}</p>
             </div>
           </div>
         </div>
@@ -404,10 +387,10 @@ const t = computed(() => {
     intro1: 'Green Trace là một mô hình thử nghiệm học thuật nhằm trình diễn cách thức thu thập, kiểm duyệt và trình bày dữ liệu nông nghiệp đã xác thực, giúp người tiêu dùng đưa ra quyết định mua sắm rõ ràng hơn.',
     intro2: 'Chúng tôi làm việc với các nhà sản xuất mẫu và dữ liệu mô phỏng để minh họa một mô hình thực tế cho sự minh bạch—dễ hiểu, dễ xác minh, đồng thời được xây dựng để học hỏi và cải tiến không ngừng.',
     missionTitle: 'Sứ mệnh',
-    missionDesc: 'Làm cho thông tin sản phẩm trở nên rõ ràng, có thể kiểm duyệt và dễ tiếp cận—để người tiêu dùng tự tin lựa chọn và nhà sản xuất phát triển bền vững dựa trên niềm tin.',
+    missionDesc: 'Sứ mệnh của Green Trace là làm cho thương mại thực phẩm hữu cơ trở nên minh bạch và có trách nhiệm hơn bằng cách kết nối các đối tác nhà cung cấp đủ tiêu chuẩn với người tiêu dùng thông qua thông tin truy xuất nguồn gốc có cấu trúc, giao dịch kỹ thuật số dễ tiếp cận và dịch vụ hoàn thiện của bên thứ ba.',
     visionTitle: 'Tầm nhìn',
-    visionDesc: 'Một tương lai nơi sự minh bạch là tiêu chuẩn cho nông sản, được thúc đẩy bởi công nghệ đơn giản, tiêu chuẩn chung và văn hóa trách nhiệm giải trình.',
-    valuesTitle: 'Giá trị cốt lõi',
+    visionDesc: 'Green Trace hướng đến trở thành một chợ kỹ thuật số đáng tin cậy cho thực phẩm hữu cơ có thể truy xuất nguồn gốc tại Việt Nam và phát triển một mô hình có thể mở rộng để sau này áp dụng cho các thị trường Đông Nam Á được lựa chọn sau khi thiết lập nền tảng trong nước khả thi.',
+    valuesTitle: 'Giá trị cốt lõi (TSSI)',
     val1: 'Minh bạch hơn giả định',
     val2: 'Bằng chứng hơn tuyên bố',
     val3: 'Công bằng cho nhà sản xuất và người tiêu dùng',
@@ -454,12 +437,12 @@ const t = computed(() => {
     reviewedBadgeSub: 'Không phải chứng nhận của CP',
     scopeTitle: 'Quy mô thử nghiệm (2026)',
     scopeSubtitle: 'Trình diễn học thuật với phạm vi giới hạn và dữ liệu mô phỏng.',
-    scopeProdVal: '6',
+    scopeProdVal: '50+',
     scopeProdLbl: 'Sản phẩm mẫu',
-    scopeProdDesc: 'Sáu danh mục với các mặt hàng đại diện.',
-    scopeProducerVal: '6',
+    scopeProdDesc: 'Nhiều danh mục với các mặt hàng đại diện.',
+    scopeProducerVal: '5+',
     scopeProducerLbl: 'Nhà sản xuất mẫu',
-    scopeProducerDesc: 'Sáu hồ sơ nhà sản xuất đã xác minh.',
+    scopeProducerDesc: 'Hồ sơ nhà sản xuất mẫu đã xác minh.',
     scopeBatchVal: '12',
     scopeBatchLbl: 'Lô hàng mô phỏng',
     scopeBatchDesc: 'Mười hai lô hàng với hồ sơ truy xuất nguồn gốc đầy đủ.',
@@ -477,10 +460,10 @@ const t = computed(() => {
     intro1: 'Green Trace is an academic prototype that demonstrates how verified agricultural data can be collected, reviewed and presented to help people make clearer purchasing decisions.',
     intro2: 'We work with sample producers and sample data to illustrate a practical model for transparency—simple to understand, easy to verify, and built for learning and improvement.',
     missionTitle: 'Our Mission',
-    missionDesc: 'Make product information clearer, reviewable, and accessible—so consumers can choose with more confidence and producers can grow with trust.',
+    missionDesc: 'Green Trace\'s mission is to make organic food commerce more transparent and accountable by connecting qualified supplier partners with consumers through structured traceability information, accessible digital transactions and coordinated third-party fulfillment.',
     visionTitle: 'Our Vision',
-    visionDesc: 'A future where transparency is standard for agricultural products, powered by simple technology, shared standards, and a culture of accountability.',
-    valuesTitle: 'Our Core Values',
+    visionDesc: 'Green Trace aims to become a trusted digital marketplace for traceable organic food in Vietnam and to develop a scalable model that may later be adapted to selected Southeast Asian markets after establishing a viable domestic foundation.',
+    valuesTitle: 'Core Values (TSSI)',
     val1: 'Transparency over assumptions',
     val2: 'Evidence over claims',
     val3: 'Fairness for producers and consumers',
@@ -527,12 +510,12 @@ const t = computed(() => {
     reviewedBadgeSub: 'Not government certified',
     scopeTitle: 'Pilot Scope (2026)',
     scopeSubtitle: 'Academic demonstration with limited scope and mock inputs.',
-    scopeProdVal: '6',
+    scopeProdVal: '50+',
     scopeProdLbl: 'Sample Products',
-    scopeProdDesc: 'Six categories with representative items.',
-    scopeProducerVal: '6',
+    scopeProdDesc: 'Multiple categories with representative items.',
+    scopeProducerVal: '5+',
     scopeProducerLbl: 'Sample Producers',
-    scopeProducerDesc: 'Six verified sample producer profiles.',
+    scopeProducerDesc: 'Verified sample producer profiles.',
     scopeBatchVal: '12',
     scopeBatchLbl: 'Simulated Batches',
     scopeBatchDesc: 'Twelve batches with complete traceability records.',
