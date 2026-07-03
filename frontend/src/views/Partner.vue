@@ -153,54 +153,90 @@
                 <h3 class="font-bold text-gray-900 mb-4 flex items-center gap-2">
                   <Package class="w-5 h-5 text-[#1E4B35]" /> {{ appStore.t('categories') }}
                 </h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="grid grid-cols-4 md:grid-cols-7 gap-3 mb-4">
                   <div 
                     @click="toggleCategory('Honey')"
                     :class="[
-                      'border rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer transition select-none',
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
                       selectedCategories.includes('Honey') 
                         ? 'border-green-500 bg-green-50' 
                         : 'border-gray-200 hover:border-[#1E4B35]'
                     ]"
                   >
-                    <Hexagon class="w-6 h-6 text-yellow-500" />
-                    <span :class="['text-sm font-semibold', selectedCategories.includes('Honey') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('honeyCat') }}</span>
+                    <Hexagon class="w-5 h-5 text-yellow-500" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Honey') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('honeyCat') }}</span>
                   </div>
                   <div 
                     @click="toggleCategory('Rice & Grains')"
                     :class="[
-                      'border rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer transition select-none',
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
                       selectedCategories.includes('Rice & Grains') 
                         ? 'border-green-500 bg-green-50' 
                         : 'border-gray-200 hover:border-[#1E4B35]'
                     ]"
                   >
-                    <Wheat class="w-6 h-6 text-yellow-600" />
-                    <span :class="['text-sm font-semibold', selectedCategories.includes('Rice & Grains') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('riceGrainsCat') }}</span>
+                    <Wheat class="w-5 h-5 text-yellow-600" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Rice & Grains') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('riceGrainsCat') }}</span>
                   </div>
                   <div 
                     @click="toggleCategory('Fruits')"
                     :class="[
-                      'border rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer transition select-none',
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
                       selectedCategories.includes('Fruits') 
                         ? 'border-green-500 bg-green-50' 
                         : 'border-gray-200 hover:border-[#1E4B35]'
                     ]"
                   >
-                    <Apple class="w-6 h-6 text-red-500" />
-                    <span :class="['text-sm font-semibold', selectedCategories.includes('Fruits') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('fruitsCat') }}</span>
+                    <Apple class="w-5 h-5 text-red-500" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Fruits') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('fruitsCat') }}</span>
                   </div>
                   <div 
                     @click="toggleCategory('Vegetables')"
                     :class="[
-                      'border rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer transition select-none',
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
                       selectedCategories.includes('Vegetables') 
                         ? 'border-green-500 bg-green-50' 
                         : 'border-gray-200 hover:border-[#1E4B35]'
                     ]"
                   >
-                    <Carrot class="w-6 h-6 text-orange-500" />
-                    <span :class="['text-sm font-semibold', selectedCategories.includes('Vegetables') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('vegetablesCat') }}</span>
+                    <Carrot class="w-5 h-5 text-orange-500" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Vegetables') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('vegetablesCat') }}</span>
+                  </div>
+                  <div 
+                    @click="toggleCategory('Seafood')"
+                    :class="[
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
+                      selectedCategories.includes('Seafood') 
+                        ? 'border-green-500 bg-green-50' 
+                        : 'border-gray-200 hover:border-[#1E4B35]'
+                    ]"
+                  >
+                    <Fish class="w-5 h-5 text-blue-500" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Seafood') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('seafoodCat') }}</span>
+                  </div>
+                  <div 
+                    @click="toggleCategory('Tea & Herbs')"
+                    :class="[
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
+                      selectedCategories.includes('Tea & Herbs') 
+                        ? 'border-green-500 bg-green-50' 
+                        : 'border-gray-200 hover:border-[#1E4B35]'
+                    ]"
+                  >
+                    <Leaf class="w-5 h-5 text-teal-600" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Tea & Herbs') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('teaHerbsCat') }}</span>
+                  </div>
+                  <div 
+                    @click="toggleCategory('Other')"
+                    :class="[
+                      'border rounded-xl p-3 flex flex-col items-center gap-1.5 cursor-pointer transition select-none',
+                      selectedCategories.includes('Other') 
+                        ? 'border-green-500 bg-green-50' 
+                        : 'border-gray-200 hover:border-[#1E4B35]'
+                    ]"
+                  >
+                    <MoreHorizontal class="w-5 h-5 text-gray-400" />
+                    <span :class="['text-xs font-semibold text-center', selectedCategories.includes('Other') ? 'text-[#1E4B35]' : 'text-gray-900']">{{ appStore.t('other') }}</span>
                   </div>
                 </div>
               </div>
@@ -393,7 +429,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAppStore } from '@/stores/appStore'
-import { Leaf, ShieldCheck, Eye, TrendingUp, FileText, Users, Sprout, Building, User, Package, UploadCloud, Upload, CheckCircle2, Apple, Carrot, Wheat, Hexagon, FileBox, Send, Egg, ChevronDown, Mail, Phone, MessageSquare, MapPin } from 'lucide-vue-next'
+import { Leaf, ShieldCheck, Eye, TrendingUp, FileText, Users, Sprout, Building, User, Package, UploadCloud, Upload, CheckCircle2, Apple, Carrot, Wheat, Hexagon, FileBox, Send, Egg, ChevronDown, Mail, Phone, MessageSquare, MapPin, Fish, MoreHorizontal } from 'lucide-vue-next'
 
 const router = useRouter()
 const appStore = useAppStore()
