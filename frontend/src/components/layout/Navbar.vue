@@ -28,27 +28,58 @@
 
       <!-- Desktop Menu -->
       <nav class="hidden lg:flex items-center gap-8 font-medium text-gray-700 text-sm">
-        <router-link to="/" class="hover:text-[#1E4B35] transition">{{ appStore.t('home') }}</router-link>
-        <router-link to="/about" class="hover:text-[#1E4B35] transition">{{ appStore.t('about') }}</router-link>
-        <router-link to="/products" class="hover:text-[#1E4B35] transition">{{ appStore.t('shop') }}</router-link>
+        <router-link
+          to="/"
+          :class="route.path === '/' ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35] pb-0.5' : 'hover:text-[#1E4B35] transition'"
+        >{{ appStore.t('home') }}</router-link>
+        <router-link
+          to="/about"
+          :class="route.path === '/about' ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35] pb-0.5' : 'hover:text-[#1E4B35] transition'"
+        >{{ appStore.t('about') }}</router-link>
+        <router-link
+          to="/products"
+          :class="route.path === '/products' ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35] pb-0.5' : 'hover:text-[#1E4B35] transition'"
+        >{{ appStore.t('shop') }}</router-link>
         <!-- Traceability Dropdown -->
         <div class="relative group">
-          <button class="hover:text-[#1E4B35] transition flex items-center gap-1 py-2 text-gray-700">
+          <button
+            :class="[
+              'flex items-center gap-1 py-2 transition',
+              (route.path === '/traceability' || route.path === '/certificates')
+                ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35]'
+                : 'text-gray-700 hover:text-[#1E4B35]'
+            ]"
+          >
             <span>{{ appStore.t('traceability') }}</span>
             <ChevronDown class="w-3.5 h-3.5 text-gray-400 group-hover:text-[#1E4B35] transition-colors" />
           </button>
           <div class="absolute left-0 top-full w-56 bg-white border border-gray-150 rounded-xl shadow-xl py-2 hidden group-hover:block z-50">
-            <router-link to="/traceability" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50 hover:text-[#1E4B35] font-bold">
+            <router-link
+              to="/traceability"
+              :class="route.path === '/traceability' ? 'block px-4 py-2.5 text-xs font-bold bg-green-50 text-[#1E4B35]' : 'block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50 hover:text-[#1E4B35] font-bold'"
+            >
               {{ appStore.t('batchTraceability') }}
             </router-link>
-            <router-link to="/certificates" class="block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50 hover:text-[#1E4B35] font-bold">
+            <router-link
+              to="/certificates"
+              :class="route.path === '/certificates' ? 'block px-4 py-2.5 text-xs font-bold bg-green-50 text-[#1E4B35]' : 'block px-4 py-2.5 text-xs text-gray-700 hover:bg-green-50 hover:text-[#1E4B35] font-bold'"
+            >
               {{ appStore.t('certificates') }}
             </router-link>
           </div>
         </div>
-        <router-link to="/producers" class="hover:text-[#1E4B35] transition">{{ appStore.t('producers') }}</router-link>
-        <router-link to="/support" class="hover:text-[#1E4B35] transition">{{ appStore.t('support') }}</router-link>
-        <router-link to="/partner" class="hover:text-[#1E4B35] transition">{{ appStore.t('partnerWithUs') }}</router-link>
+        <router-link
+          to="/producers"
+          :class="route.path === '/producers' ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35] pb-0.5' : 'hover:text-[#1E4B35] transition'"
+        >{{ appStore.t('producers') }}</router-link>
+        <router-link
+          to="/support"
+          :class="route.path === '/support' ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35] pb-0.5' : 'hover:text-[#1E4B35] transition'"
+        >{{ appStore.t('support') }}</router-link>
+        <router-link
+          to="/partner"
+          :class="route.path === '/partner' ? 'text-[#1E4B35] font-semibold border-b-2 border-[#1E4B35] pb-0.5' : 'hover:text-[#1E4B35] transition'"
+        >{{ appStore.t('partnerWithUs') }}</router-link>
       </nav>
 
       <!-- Icons -->

@@ -323,14 +323,14 @@
       <!-- Testimonial Community Quote -->
       <div class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
         <div class="w-20 h-20 rounded-full overflow-hidden flex-shrink-0 border-4 border-white shadow">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150" alt="Nguyen Van An" class="w-full h-full object-cover" />
+          <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783097251/228b9e5c-dd57-4d45-9af9-930c8b4505be.png" alt="Nguyen Van An" class="w-full h-full object-cover" />
         </div>
         <div>
           <Quote class="w-8 h-8 text-green-300 mb-1 opacity-50" />
           <p class="text-base text-[#1E4B35] font-medium italic mb-2 leading-relaxed">
             {{ appStore.lang === 'en' ? 'We believe openness builds trust. Thank you for supporting real producers.' : 'Chúng tôi tin tưởng sự cởi mở xây dựng lòng tin. Cảm ơn bạn đã hỗ trợ những nhà sản xuất chân chính.' }}
           </p>
-          <div class="font-bold text-gray-900 text-xs">Nguyen Van An</div>
+          <div class="font-bold text-gray-900 text-xs">Trương Nữ Thuỳ Duyên</div>
           <div class="text-[10px] text-gray-500">{{ appStore.lang === 'en' ? 'Green Trace Community' : 'Cộng đồng Green Trace' }}</div>
         </div>
       </div>

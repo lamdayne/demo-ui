@@ -22,32 +22,23 @@
           </div>
           
           <!-- Stats Bar -->
-          <div class="bg-white/80 backdrop-blur border border-white rounded-xl shadow-lg shadow-gray-200/50 p-4 inline-flex flex-wrap divide-x divide-gray-200">
-            <div class="px-6 flex items-center gap-4">
+          <div class="bg-white/80 backdrop-blur border border-white rounded-xl shadow-lg shadow-gray-200/50 p-4 inline-flex flex-nowrap divide-x divide-gray-200">
+            <div class="pr-6 flex items-center gap-3 flex-shrink-0">
               <div class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-gray-50">
                 <Package class="w-5 h-5 text-green-700"/>
               </div>
               <div>
-                <div class="font-bold text-gray-900 text-lg leading-none">6</div>
-                <div class="text-xs text-gray-500 font-medium mt-1">{{ appStore.t('sampleProducts') }}</div>
+                <div class="font-bold text-gray-900 text-lg leading-none">50+</div>
+                <div class="text-xs text-gray-500 font-medium mt-1 whitespace-nowrap">{{ appStore.t('sampleProducts') }}</div>
               </div>
             </div>
-            <div class="px-6 flex items-center gap-4">
+            <div class="px-6 flex items-center gap-3 flex-shrink-0">
               <div class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-gray-50">
                 <Users class="w-5 h-5 text-green-700"/>
               </div>
               <div>
-                <div class="font-bold text-gray-900 text-lg leading-none">6</div>
-                <div class="text-xs text-gray-500 font-medium mt-1">{{ appStore.t('sampleProducers') }}</div>
-              </div>
-            </div>
-            <div class="px-6 flex items-center gap-4">
-              <div class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-gray-50">
-                <ClipboardList class="w-5 h-5 text-green-700"/>
-              </div>
-              <div>
-                <div class="font-bold text-gray-900 text-lg leading-none">12</div>
-                <div class="text-xs text-gray-500 font-medium mt-1">{{ appStore.t('simulatedBatches') }}</div>
+                <div class="font-bold text-gray-900 text-lg leading-none">5+</div>
+                <div class="text-xs text-gray-500 font-medium mt-1 whitespace-nowrap">{{ appStore.t('sampleProducers') }}</div>
               </div>
             </div>
           </div>
@@ -297,7 +288,7 @@
       <!-- Testimonial -->
       <div class="bg-[#F0FDF4] rounded-3xl p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
          <div class="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 relative border-4 border-white shadow">
-           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150" alt="Nguyen Van An" class="w-full h-full object-cover" />
+           <img src="https://res.cloudinary.com/dmzsletu0/image/upload/v1783097218/735636467_1715231579735941_123656640436903292_n_qgwinh.png" alt="Nguyen Van An" class="w-full h-full object-cover" />
          </div>
          <div>
            <Quote class="w-10 h-10 text-green-300 mb-2 opacity-50" />
@@ -314,7 +305,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { Image, Package, Users, ClipboardList, ArrowRight, Leaf, Search, QrCode, ShoppingBag, MapPin, Hexagon, Droplet, CheckCircle2, Truck, Quote, Wheat, Apple, Carrot } from 'lucide-vue-next'
+import { Image, Package, Users, ArrowRight, Leaf, Search, QrCode, ShoppingBag, MapPin, Hexagon, Droplet, CheckCircle2, Truck, Quote, Wheat, Apple, Carrot } from 'lucide-vue-next'
 import ProductCard from '@/components/product/ProductCard.vue'
 import { useAppStore } from '@/stores/appStore'
 

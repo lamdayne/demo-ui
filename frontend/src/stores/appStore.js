@@ -192,7 +192,13 @@ export const useAppStore = defineStore('app', () => {
       url += '?' + params.join('&');
     }
     const data = await apiCall(url, 'GET', null, false);
-    return data.products;
+    const products = data.products || [];
+    // Shuffle so newest-added products don't always appear first
+    for (let i = products.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [products[i], products[j]] = [products[j], products[i]];
+    }
+    return products;
   }
 
   async function fetchProduct(id) {

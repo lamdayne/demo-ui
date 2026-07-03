@@ -863,7 +863,7 @@ const profileData = computed(() => {
     dob: appStore.user?.dob || '15/08/1988',
     city: appStore.user?.city || 'Ho Chi Minh City',
     country: appStore.user?.country || 'Vietnam',
-    photo: appStore.user?.image_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150'
+    photo: appStore.user?.photo || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150'
   }
 })
 
@@ -1037,8 +1037,12 @@ async function handleAvatarUpload(e) {
   try {
     const url = await appStore.uploadImage(file)
     await appStore.updateProfile({
-      image_url: url
+      photo: url
     })
+    // Immediately update the local user object so profileData computed re-renders
+    if (appStore.user) {
+      appStore.user.photo = url
+    }
     appStore.triggerToast(appStore.lang === 'vi' ? 'Đã cập nhật ảnh đại diện!' : 'Photo updated!')
   } catch (err) {
     appStore.triggerToast(appStore.lang === 'vi' ? 'Không thể cập nhật ảnh!' : 'Failed to update photo')

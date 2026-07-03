@@ -32,7 +32,7 @@ export const getProducts = async (req, res) => {
       queryText += ' WHERE ' + conditions.join(' AND ');
     }
 
-    queryText += ' ORDER BY p.id DESC';
+    queryText += ' ORDER BY RANDOM()';
 
     const result = await pool.query(queryText, queryParams);
     res.json({ success: true, products: result.rows });

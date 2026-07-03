@@ -387,7 +387,7 @@ export const translations = {
     readyToShip: 'Ready to Ship',
     viewFullBatch: 'View full batch record',
     testimonialQuote: 'I like being able to check the batch journey before I buy. It helps me feel more confident that I\'m supporting real producers and choosing good food for my family.',
-    testimonialAuthor: 'Nguyen Van An',
+    testimonialAuthor: 'Nguyen Ngoc Yen Trinh',
     testimonialSub: 'Green Trace Community',
 
     // Footer
@@ -932,7 +932,7 @@ export const translations = {
     readyToShip: 'Sẵn sàng giao',
     viewFullBatch: 'Xem chi tiết lô hàng',
     testimonialQuote: 'Tôi thích việc có thể kiểm tra hành trình của lô hàng trước khi mua. Điều đó giúp tôi an tâm rằng mình đang hỗ trợ đúng người sản xuất thật và chọn thực phẩm tốt cho gia đình.',
-    testimonialAuthor: 'Nguyễn Văn An',
+    testimonialAuthor: 'Nguyễn Ngọc Yến Trinh',
     testimonialSub: 'Cộng đồng Green Trace',
 
     // Footer
