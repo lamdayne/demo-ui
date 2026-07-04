@@ -32,6 +32,8 @@ export const useAppStore = defineStore('app', () => {
   const wishlist = ref([]);
   const notifications = ref([]);
   const orders = ref([]);
+  const paymentMethods = ref([]);
+  const traceabilityHistory = ref([]);
 
   // Toast Notification state
   const toastMessage = ref('');
@@ -123,6 +125,8 @@ export const useAppStore = defineStore('app', () => {
     user.value = data.user;
     await fetchWishlist();
     await fetchNotifications();
+    fetchPaymentMethods();
+    fetchTraceabilityHistory();
     return data;
   }
 
@@ -130,6 +134,8 @@ export const useAppStore = defineStore('app', () => {
     const data = await apiCall('/auth/register', 'POST', { name, email, password, phone, role }, false);
     token.value = data.token;
     user.value = data.user;
+    fetchPaymentMethods();
+    fetchTraceabilityHistory();
     return data;
   }
 
@@ -139,6 +145,8 @@ export const useAppStore = defineStore('app', () => {
     wishlist.value = [];
     notifications.value = [];
     orders.value = [];
+    paymentMethods.value = [];
+    traceabilityHistory.value = [];
   }
 
   async function fetchProfile() {
@@ -306,6 +314,7 @@ export const useAppStore = defineStore('app', () => {
     } else {
       cart.value.push({ ...product, quantity });
     }
+    localStorage.setItem('gt_cart', JSON.stringify(cart.value));
     triggerToast(`Added "${product.name}" to cart successfully!`);
   }
 
@@ -375,6 +384,102 @@ export const useAppStore = defineStore('app', () => {
 
   async function updateOrderStatus(id, status) {
     return await apiCall(`/orders/${id}/status`, 'PUT', { status });
+  }
+
+  // Payment Methods simulation & localStorage storage
+  function fetchPaymentMethods() {
+    if (!user.value) {
+      paymentMethods.value = [];
+      return;
+    }
+    const stored = localStorage.getItem(`gt_payment_methods_${user.value.id}`);
+    if (stored) {
+      paymentMethods.value = JSON.parse(stored);
+    } else {
+      paymentMethods.value = [];
+    }
+  }
+
+  function savePaymentMethods() {
+    if (!user.value) return;
+    localStorage.setItem(`gt_payment_methods_${user.value.id}`, JSON.stringify(paymentMethods.value));
+  }
+
+  function addPaymentMethod(method) {
+    if (method.is_default || paymentMethods.value.length === 0) {
+      paymentMethods.value.forEach(m => m.is_default = false);
+      method.is_default = true;
+    } else {
+      method.is_default = false;
+    }
+    const newMethod = {
+      id: Date.now().toString(),
+      ...method
+    };
+    paymentMethods.value.push(newMethod);
+    savePaymentMethods();
+    triggerToast(lang.value === 'vi' ? 'Đã thêm phương thức thanh toán!' : 'Payment method added!');
+    return newMethod;
+  }
+
+  function deletePaymentMethod(id) {
+    const wasDefault = paymentMethods.value.find(m => m.id === id)?.is_default;
+    paymentMethods.value = paymentMethods.value.filter(m => m.id !== id);
+    if (wasDefault && paymentMethods.value.length > 0) {
+      paymentMethods.value[0].is_default = true;
+    }
+    savePaymentMethods();
+    triggerToast(lang.value === 'vi' ? 'Đã xóa phương thức thanh toán!' : 'Payment method removed!');
+  }
+
+  function setDefaultPaymentMethod(id) {
+    paymentMethods.value.forEach(m => {
+      m.is_default = (m.id === id);
+    });
+    savePaymentMethods();
+    triggerToast(lang.value === 'vi' ? 'Đã đặt làm phương thức mặc định!' : 'Default payment method set!');
+  }
+
+  // Traceability History Simulation
+  function fetchTraceabilityHistory() {
+    const userId = user.value ? user.value.id : 'guest';
+    const stored = localStorage.getItem(`gt_trace_history_${userId}`);
+    if (stored) {
+      try {
+        traceabilityHistory.value = JSON.parse(stored);
+      } catch (e) {
+        traceabilityHistory.value = [];
+      }
+    } else {
+      traceabilityHistory.value = [];
+    }
+  }
+
+  function addTraceabilityLog(batch) {
+    if (!batch || !batch.id) return;
+    
+    const userId = user.value ? user.value.id : 'guest';
+    
+    // Prevent duplicate entries of the same batch in recent history: remove existing one
+    const filtered = traceabilityHistory.value.filter(item => item.id !== batch.id);
+    
+    const formattedDate = new Date().toLocaleDateString(lang.value === 'vi' ? 'vi-VN' : 'en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+
+    const newLog = {
+      id: batch.id,
+      product: batch.product_name,
+      producer: batch.producer_name,
+      date: formattedDate,
+      image: batch.product_image
+    };
+
+    // Keep the latest 10 searches in history
+    traceabilityHistory.value = [newLog, ...filtered].slice(0, 10);
+    localStorage.setItem(`gt_trace_history_${userId}`, JSON.stringify(traceabilityHistory.value));
   }
 
   // Notifications inbox endpoints
@@ -519,6 +624,8 @@ export const useAppStore = defineStore('app', () => {
     fetchProfile().catch(() => logout());
     fetchWishlist().catch(() => {});
     fetchNotifications().catch(() => {});
+    fetchPaymentMethods();
+    fetchTraceabilityHistory();
   }
 
   return {
@@ -589,6 +696,14 @@ export const useAppStore = defineStore('app', () => {
     createAdminCoupon,
     deleteAdminCoupon,
     validateCouponCode,
-    localizeAddress
+    localizeAddress,
+    paymentMethods,
+    fetchPaymentMethods,
+    addPaymentMethod,
+    deletePaymentMethod,
+    setDefaultPaymentMethod,
+    traceabilityHistory,
+    fetchTraceabilityHistory,
+    addTraceabilityLog
   };
 });

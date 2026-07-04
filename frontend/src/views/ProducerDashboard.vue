@@ -486,10 +486,12 @@
                         @change="changeOrderStatus(ord.order_id, $event.target.value)"
                         class="bg-green-50 text-[#1E4B35] text-xs px-2.5 py-1 rounded-lg font-bold border border-green-200 focus:outline-none focus:ring-1 focus:ring-[#1E4B35] cursor-pointer"
                       >
-                        <option value="Pending">Pending</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
+                        <option value="Pending">{{ appStore.lang === 'vi' ? 'Chờ xử lý (Pending)' : 'Pending' }}</option>
+                        <option value="In Review">{{ appStore.lang === 'vi' ? 'Đang xem xét (In Review)' : 'In Review' }}</option>
+                        <option value="Preparing">{{ appStore.lang === 'vi' ? 'Đang chuẩn bị (Preparing)' : 'Preparing' }}</option>
+                        <option value="Shipped">{{ appStore.lang === 'vi' ? 'Đang giao (Shipped)' : 'Shipped' }}</option>
+                        <option value="Delivered">{{ appStore.lang === 'vi' ? 'Đã giao (Delivered)' : 'Delivered' }}</option>
+                        <option value="Cancelled">{{ appStore.lang === 'vi' ? 'Đã hủy (Cancelled)' : 'Cancelled' }}</option>
                       </select>
                     </div>
                   </div>

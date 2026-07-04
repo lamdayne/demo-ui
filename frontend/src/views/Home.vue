@@ -312,7 +312,7 @@ import { useAppStore } from '@/stores/appStore'
 const appStore = useAppStore()
 
 const categories = [
-  { name: 'Honey', icon: Hexagon, color: 'text-yellow-500', image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=200' },
+  { name: 'Honey', icon: Hexagon, color: 'text-yellow-500', image: 'https://files.catbox.moe/w1dfpe.png' },
   { name: 'Rice', icon: Wheat, color: 'text-green-700', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=200' },
   { name: 'Fruit', icon: Apple, color: 'text-green-500', image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&q=80&w=200' },
   { name: 'Vegetables', icon: Carrot, color: 'text-orange-500', image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=200' },

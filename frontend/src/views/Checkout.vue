@@ -60,20 +60,41 @@
                 <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">1</span>
                 {{ appStore.t('contactInfoLabel') }}
               </h2>
-              <button class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit</button>
+              <button 
+                @click="isEditingContact = !isEditingContact" 
+                class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"
+              >
+                <span v-if="isEditingContact" class="flex items-center gap-1"><Check class="w-4 h-4"/> Done</span>
+                <span v-else class="flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit</span>
+              </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('fullName') }}</label>
-                <input type="text" v-model="name" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input 
+                  type="text" 
+                  v-model="name" 
+                  :disabled="!isEditingContact" 
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35] disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-250 transition duration-200" 
+                />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('emailAddress') }}</label>
-                <input type="text" v-model="email" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input 
+                  type="email" 
+                  v-model="email" 
+                  :disabled="!isEditingContact" 
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35] disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-250 transition duration-200" 
+                />
               </div>
               <div>
                 <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('phoneNumber') }}</label>
-                <input type="text" v-model="phone" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                <input 
+                  type="text" 
+                  v-model="phone" 
+                  :disabled="!isEditingContact" 
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35] disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-250 transition duration-200" 
+                />
               </div>
             </div>
           </div>
@@ -85,37 +106,117 @@
                 <span class="w-6 h-6 rounded-full bg-[#1E4B35] text-white text-sm flex items-center justify-center">2</span>
                 {{ appStore.t('shippingAddress') }}
               </h2>
-              <button class="text-sm font-semibold text-[#1E4B35] flex items-center gap-1"><Edit2 class="w-4 h-4"/> Edit</button>
+              <router-link to="/account" class="text-xs font-semibold text-[#1E4B35] flex items-center gap-1">
+                <MapPin class="w-3.5 h-3.5"/> Manage in My Account
+              </router-link>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('streetAddress') }}</label>
-                <input type="text" v-model="address" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
-              </div>
-              <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Apartment, suite, etc. (optional)</label>
-                <input type="text" placeholder="Apartment 5B" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+
+            <!-- Saved Addresses list -->
+            <div v-if="savedAddresses.length > 0" class="mb-6">
+              <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                {{ appStore.lang === 'vi' ? 'Chọn Địa Chỉ Đã Lưu' : 'Select a Saved Address' }}
+              </label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div 
+                  v-for="addr in savedAddresses" 
+                  :key="addr.id"
+                  @click="selectSavedAddress(addr)"
+                  class="border rounded-xl p-4 cursor-pointer transition-all duration-205 text-left relative"
+                  :class="selectedAddressId === addr.id ? 'border-[#1E4B35] bg-[#F0FDF4] ring-1 ring-[#1E4B35]/25' : 'border-gray-200 hover:border-gray-300'"
+                >
+                  <div class="flex items-start gap-3">
+                    <input 
+                      type="radio" 
+                      :value="addr.id" 
+                      :checked="selectedAddressId === addr.id"
+                      class="text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4 mt-0.5 cursor-pointer" 
+                    />
+                    <div>
+                      <div class="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                        {{ addr.recipient }}
+                        <span v-if="addr.is_default" class="bg-green-150 text-green-800 text-[8px] px-1.5 py-0.5 rounded font-bold">Default</span>
+                      </div>
+                      <div class="text-[11px] text-gray-650 mt-1 leading-relaxed">
+                        {{ addr.street }}
+                        <br/>
+                        {{ addr.city }}, {{ addr.country }}
+                      </div>
+                      <div class="text-[10px] text-gray-500 mt-1 font-medium">
+                        {{ addr.phone }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Custom Address option -->
+                <div 
+                  @click="selectCustomAddress"
+                  class="border rounded-xl p-4 cursor-pointer transition-all duration-205 text-left flex items-start gap-3"
+                  :class="selectedAddressId === 'new' ? 'border-[#1E4B35] bg-[#F0FDF4] ring-1 ring-[#1E4B35]/25' : 'border-gray-200 hover:border-gray-300'"
+                >
+                  <input 
+                    type="radio" 
+                    value="new" 
+                    :checked="selectedAddressId === 'new'"
+                    class="text-[#1E4B35] focus:ring-[#1E4B35] w-4 h-4 mt-0.5 cursor-pointer" 
+                  />
+                  <div>
+                    <div class="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+                      <span class="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-500 text-xs">+</span>
+                      {{ appStore.lang === 'vi' ? 'Địa chỉ khác' : 'New Address' }}
+                    </div>
+                    <div class="text-[11px] text-gray-550 mt-1 leading-relaxed">
+                      {{ appStore.lang === 'vi' ? 'Nhập thủ công địa chỉ giao hàng mới' : 'Manually input a new shipping address below' }}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+            <!-- Manual Fields -->
+            <div class="mt-4 pt-4 border-t border-gray-100" v-if="selectedAddressId === 'new' || savedAddresses.length === 0">
+              <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+                {{ appStore.lang === 'vi' ? 'Chi Tiết Địa Chỉ Giao Hàng' : 'Shipping Address Details' }}
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('streetAddress') }}</label>
+                  <input type="text" v-model="address" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1.5">Apartment, suite, etc. (optional)</label>
+                  <input type="text" placeholder="Apartment 5B" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                 <div>
+                  <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('provinceCity') }}</label>
+                  <input type="text" v-model="city" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('district') }}</label>
+                  <input type="text" v-model="province" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                </div>
+                <div>
+                  <label class="block text-sm text-gray-600 mb-1.5">Postal Code</label>
+                  <input type="text" v-model="postalCode" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                </div>
+              </div>
                <div>
-                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('provinceCity') }}</label>
-                <input type="text" v-model="city" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
-              </div>
-              <div>
-                <label class="block text-sm text-gray-600 mb-1.5">{{ appStore.t('district') }}</label>
-                <input type="text" v-model="province" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
-              </div>
-              <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Postal Code</label>
-                <input type="text" v-model="postalCode" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]" />
+                  <label class="block text-sm text-gray-600 mb-1.5">Country</label>
+                  <select class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]">
+                    <option>Vietnam</option>
+                  </select>
               </div>
             </div>
-             <div>
-                <label class="block text-sm text-gray-600 mb-1.5">Country</label>
-                <select class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-900 focus:outline-[#1E4B35]">
-                  <option>Vietnam</option>
-                </select>
+            
+            <div class="bg-gray-50 rounded-xl p-4 mt-2 text-left" v-else>
+              <p class="text-xs text-gray-500 flex items-start gap-2">
+                <Info class="w-4 h-4 text-[#1E4B35] flex-shrink-0 mt-0.5" />
+                <span>
+                  {{ appStore.lang === 'vi' ? 'Bạn đang chọn địa chỉ đã lưu. Để thay đổi, vui lòng chọn "Địa chỉ khác" hoặc cập nhật trong trang tài khoản.' : 'You are using a saved address. Select "New Address" to input a different shipping destination.' }}
+                </span>
+              </p>
             </div>
           </div>
 
@@ -177,6 +278,42 @@
             <p class="text-xs text-gray-500 flex items-center gap-1.5">
               <ShieldCheck class="w-4 h-4" /> All payments are simulated. No real payment is processed in this academic prototype.
             </p>
+
+            <!-- VNPay Details or Link Prompt -->
+            <div v-if="paymentMethod === 'VNPay'" class="mt-4 p-4 rounded-xl border border-dashed text-left bg-white" :class="defaultOnlinePaymentMethod ? 'border-[#1E4B35] bg-[#F8FAF9]' : 'border-amber-300 bg-amber-50'">
+              <!-- If default payment method exists -->
+              <div v-if="defaultOnlinePaymentMethod" class="flex justify-between items-center text-xs">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs" :class="defaultOnlinePaymentMethod.type === 'wallet' ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-700 border border-gray-100'">
+                    <span v-if="defaultOnlinePaymentMethod.type === 'wallet'">VNP</span>
+                    <CreditCard v-else class="w-4 h-4"/>
+                  </div>
+                  <div>
+                    <div class="font-bold text-gray-900">
+                      {{ defaultOnlinePaymentMethod.type === 'wallet' ? (appStore.lang === 'vi' ? 'Ví VNPay' : 'VNPay Wallet') : (appStore.lang === 'vi' ? 'Thẻ Visa đuôi ' : 'Visa ending in ') + defaultOnlinePaymentMethod.card_number.slice(-4) }}
+                    </div>
+                    <div class="text-[10px] text-gray-500 mt-0.5">
+                      <span v-if="defaultOnlinePaymentMethod.type === 'wallet'">{{ appStore.lang === 'vi' ? 'Liên kết qua SĐT: ' : 'Linked phone: ' }} {{ maskPhoneNumber(defaultOnlinePaymentMethod.phone) }}</span>
+                      <span v-else>{{ appStore.lang === 'vi' ? 'Hết hạn: ' : 'Expires: ' }} {{ defaultOnlinePaymentMethod.expiry }}</span>
+                    </div>
+                  </div>
+                </div>
+                <button @click="openAddPaymentModal" class="text-[10px] font-bold text-[#1E4B35] hover:underline">
+                  {{ appStore.lang === 'vi' ? '+ Thêm phương thức khác' : '+ Add another' }}
+                </button>
+              </div>
+
+              <!-- If no payment method exists -->
+              <div v-else class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
+                <div>
+                  <div class="font-bold text-amber-800">{{ appStore.lang === 'vi' ? 'Chưa có phương thức thanh toán online' : 'No online payment method linked' }}</div>
+                  <p class="text-[10px] text-amber-700 mt-0.5">{{ appStore.lang === 'vi' ? 'Vui lòng liên kết ví VNPay hoặc thẻ tín dụng để tiếp tục.' : 'Please link a VNPay wallet or credit card to proceed.' }}</p>
+                </div>
+                <button @click="openAddPaymentModal" class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-3 py-1.5 rounded-lg font-bold transition flex-shrink-0">
+                  {{ appStore.lang === 'vi' ? 'Thêm phương thức' : 'Link Method' }}
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- 5. Promo Code -->
@@ -401,6 +538,59 @@
       </div>
     </div>
   </div>
+
+  <!-- ADD PAYMENT METHOD MODAL -->
+  <div v-if="isPaymentModalOpen" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-gray-100 text-left">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+        <h3 class="font-bold text-gray-900 text-base">{{ appStore.lang === 'vi' ? 'Liên kết phương thức thanh toán' : 'Link Payment Method' }}</h3>
+        <button @click="isPaymentModalOpen = false" class="text-gray-400 hover:text-gray-600 font-bold text-lg">&times;</button>
+      </div>
+
+      <form @submit.prevent="saveNewPaymentMethod" class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Loại thanh toán' : 'Payment Type' }}</label>
+          <select v-model="newPaymentForm.type" class="w-full border border-gray-300 rounded-lg p-2.5">
+            <option value="wallet">{{ appStore.lang === 'vi' ? 'Ví VNPay' : 'VNPay Wallet' }}</option>
+            <option value="card">{{ appStore.lang === 'vi' ? 'Thẻ tín dụng (Credit Card)' : 'Credit Card' }}</option>
+          </select>
+        </div>
+
+        <!-- If Wallet (VNPay) -->
+        <div v-if="newPaymentForm.type === 'wallet'">
+          <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Số điện thoại liên kết VNPay' : 'VNPay Linked Phone Number' }}</label>
+          <input type="text" v-model="newPaymentForm.phone" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. +84 912 345 678" required />
+        </div>
+
+        <!-- If Card -->
+        <div v-else-if="newPaymentForm.type === 'card'" class="space-y-3">
+          <div>
+            <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Tên trên thẻ' : 'Cardholder Name' }}</label>
+            <input type="text" v-model="newPaymentForm.cardholder_name" class="w-full border border-gray-300 rounded-lg p-2.5 uppercase" placeholder="e.g. NGUYEN VAN AN" required />
+          </div>
+          <div>
+            <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Số thẻ' : 'Card Number' }}</label>
+            <input type="text" v-model="newPaymentForm.card_number" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. 4111 2222 3333 4444" required />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Ngày hết hạn' : 'Expiration Date' }}</label>
+              <input type="text" v-model="newPaymentForm.expiry" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="MM/YYYY" required />
+            </div>
+            <div>
+              <label class="font-bold text-gray-500 block mb-1">CVV / CVC</label>
+              <input type="password" maxlength="3" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="***" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
+          <button type="button" @click="isPaymentModalOpen = false" class="px-4 py-2 border border-gray-300 rounded-lg font-bold text-gray-700">{{ appStore.lang === 'vi' ? 'Hủy' : 'Cancel' }}</button>
+          <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg font-bold transition">{{ appStore.lang === 'vi' ? 'Liên kết' : 'Link' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -413,16 +603,67 @@ const router = useRouter()
 const appStore = useAppStore()
 
 // Billing / Shipping Form inputs
-const name = ref(appStore.user?.full_name || 'Nguyen Van An')
-const email = ref(appStore.user?.email || 'an.nguyen@example.demo')
-const phone = ref(appStore.user?.phone || '+84 912 345 678')
+const name = ref('Nguyen Van An')
+const email = ref('an.nguyen@example.demo')
+const phone = ref('+84 912 345 678')
+
+const isEditingContact = ref(false)
 
 const address = ref('')
 const city = ref('')
 const province = ref('')
 const postalCode = ref('')
 const notes = ref('')
-const paymentMethod = ref('VNPay')
+const paymentMethod = ref('COD')
+
+const isPaymentModalOpen = ref(false)
+const newPaymentForm = ref({ type: 'wallet', phone: '', cardholder_name: '', card_number: '', expiry: '' })
+
+const defaultOnlinePaymentMethod = computed(() => {
+  return appStore.paymentMethods.find(m => m.is_default) || appStore.paymentMethods[0] || null
+})
+
+const openAddPaymentModal = () => {
+  newPaymentForm.value = {
+    type: 'wallet',
+    phone: phone.value || appStore.user?.phone || '',
+    cardholder_name: name.value || appStore.user?.name || '',
+    card_number: '',
+    expiry: ''
+  }
+  isPaymentModalOpen.value = true
+}
+
+const saveNewPaymentMethod = () => {
+  appStore.addPaymentMethod(newPaymentForm.value)
+  isPaymentModalOpen.value = false
+  paymentMethod.value = 'VNPay'
+}
+
+const maskPhoneNumber = (num) => {
+  if (!num) return ''
+  if (num.length <= 6) return num
+  return num.slice(0, 4) + ' *** *** ' + num.slice(-3)
+}
+
+const savedAddresses = ref([])
+const selectedAddressId = ref('new')
+
+const selectSavedAddress = (addr) => {
+  selectedAddressId.value = addr.id
+  address.value = addr.street || ''
+  city.value = addr.city || ''
+  province.value = addr.province || addr.city || ''
+  postalCode.value = addr.postal_code || addr.postalCode || '700000'
+}
+
+const selectCustomAddress = () => {
+  selectedAddressId.value = 'new'
+  address.value = ''
+  city.value = ''
+  province.value = ''
+  postalCode.value = ''
+}
 
 const selectedDelivery = ref('standard')
 const deliveryMethods = ref([
@@ -474,21 +715,48 @@ const deliveryMethods = ref([
 ])
 
 onMounted(async () => {
-  try {
-    const list = await appStore.fetchAddresses()
-    if (list.length > 0) {
-      const addr = list[0]
-      address.value = addr.street
-      city.value = addr.city
-      province.value = addr.province
-      postalCode.value = addr.postal_code
+  if (appStore.token) {
+    appStore.fetchPaymentMethods()
+    if (appStore.paymentMethods.length > 0) {
+      paymentMethod.value = 'VNPay'
     } else {
+      paymentMethod.value = 'COD'
+    }
+
+    try {
+      await appStore.fetchProfile()
+      if (appStore.user) {
+        name.value = appStore.user.name || appStore.user.full_name || name.value
+        email.value = appStore.user.email || email.value
+        phone.value = appStore.user.phone || phone.value
+      }
+    } catch (err) {
+      console.error('Failed to fetch profile:', err)
+    }
+
+    try {
+      const list = await appStore.fetchAddresses()
+      savedAddresses.value = list
+      if (list && list.length > 0) {
+        const defaultAddr = list.find(a => a.is_default) || list[0]
+        selectSavedAddress(defaultAddr)
+      } else {
+        selectedAddressId.value = 'new'
+        address.value = '123 Green Street, District 1'
+        city.value = 'Ho Chi Minh City'
+        province.value = 'Ho Chi Minh City'
+        postalCode.value = '700000'
+      }
+    } catch (e) {
+      console.error('Failed to load addresses:', e)
+      selectedAddressId.value = 'new'
       address.value = '123 Green Street, District 1'
       city.value = 'Ho Chi Minh City'
       province.value = 'Ho Chi Minh City'
       postalCode.value = '700000'
     }
-  } catch (e) {
+  } else {
+    selectedAddressId.value = 'new'
     address.value = '123 Green Street, District 1'
     city.value = 'Ho Chi Minh City'
     province.value = 'Ho Chi Minh City'
@@ -550,9 +818,20 @@ const placeOrder = async () => {
     return
   }
   
+  if (paymentMethod.value === 'VNPay' && !defaultOnlinePaymentMethod.value) {
+    appStore.triggerToast(appStore.lang === 'vi' 
+      ? 'Vui lòng liên kết phương thức thanh toán online trước khi đặt hàng!' 
+      : 'Please link an online payment method before placing your order!'
+    )
+    openAddPaymentModal()
+    return
+  }
+  
   try {
+    const addressString = `${name.value} (${phone.value}) - ${address.value}, ${city.value}, ${province.value}, ${postalCode.value}`
+    
     const orderData = {
-      address: `${address.value}, ${city.value}, ${province.value}, ${postalCode.value}`,
+      address: addressString,
       payment_method: paymentMethod.value,
       notes: notes.value,
       total_price: totalPrice.value

@@ -163,7 +163,7 @@
           <div class="space-y-3">
             <h4 class="font-bold text-gray-400 uppercase tracking-widest text-[9px] flex items-center gap-1.5"><Truck class="w-4 h-4 text-gray-400" /> Delivery Information</h4>
             <div class="text-gray-900 leading-relaxed font-semibold">
-              <span v-if="activeOrder.status === 'Delivered'">Delivered on {{ activeOrder.dateStr }}</span>
+              <span v-if="activeOrder.status === 'Delivered' || activeOrder.status === 'Completed'">Delivered on {{ activeOrder.dateStr }}</span>
               <span v-else-if="activeOrder.status === 'Cancelled'">Order Cancelled</span>
               <span v-else>Estimated delivery within 2-4 business days</span><br/>
               <span class="text-gray-500 font-normal">Delivered by: Green Trace Express<br/>Tracking ID: GTE-{{ activeOrder.id }}</span>
@@ -380,10 +380,13 @@ const getStatusLabel = (status) => {
       return appStore.t('inReviewStatus')
     case 'Preparing':
     case 'Preparing Order':
+    case 'Processing':
       return appStore.t('preparingStatus')
     case 'Shipped':
+    case 'Shipping':
       return appStore.t('shippedStatus')
     case 'Delivered':
+    case 'Completed':
       return appStore.t('deliveredStatus')
     case 'Cancelled':
       return appStore.t('cancelledStatus')
@@ -412,7 +415,7 @@ const orders = computed(() => {
     // Determine status dot
     let statusDot = 'bg-orange-500'
     let statusColor = 'text-orange-600'
-    if (order.status === 'Delivered') {
+    if (order.status === 'Delivered' || order.status === 'Completed') {
       statusDot = 'bg-green-500'
       statusColor = 'text-green-600'
     } else if (order.status === 'Cancelled') {
@@ -451,8 +454,18 @@ const orders = computed(() => {
 
 const filteredOrders = computed(() => {
   if (activeStatusFilter.value === 'all') return orders.value
-  if (activeStatusFilter.value === 'review') return orders.value.filter(o => o.status === 'Pending' || o.status === 'In Review')
-  if (activeStatusFilter.value === 'delivered') return orders.value.filter(o => o.status === 'Delivered')
+  if (activeStatusFilter.value === 'review') {
+    return orders.value.filter(o => 
+      o.status === 'Pending' || 
+      o.status === 'In Review' || 
+      o.status === 'Preparing' || 
+      o.status === 'Preparing Order' || 
+      o.status === 'Processing' || 
+      o.status === 'Shipped' || 
+      o.status === 'Shipping'
+    )
+  }
+  if (activeStatusFilter.value === 'delivered') return orders.value.filter(o => o.status === 'Delivered' || o.status === 'Completed')
   if (activeStatusFilter.value === 'cancelled') return orders.value.filter(o => o.status === 'Cancelled')
   return orders.value
 })
@@ -485,11 +498,13 @@ const activeOrderStepIndex = computed(() => {
       return 2
     case 'Preparing':
     case 'Preparing Order':
+    case 'Processing':
       return 3
     case 'Shipped':
     case 'Shipping':
       return 4
     case 'Delivered':
+    case 'Completed':
       return 5
     case 'Cancelled':
       return 0

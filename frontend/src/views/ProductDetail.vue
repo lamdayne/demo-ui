@@ -116,9 +116,9 @@
                   <ShoppingCart class="w-5 h-5" /> {{ appStore.t('addToCart') }}
                 </button>
               </div>
-              <router-link to="/checkout" class="w-full h-12 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-xl font-bold flex items-center justify-center transition shadow shadow-[#1E4B35]/25 text-sm">
+              <button @click="buyNow" class="w-full h-12 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-xl font-bold flex items-center justify-center transition shadow shadow-[#1E4B35]/25 text-sm">
                 {{ appStore.t('buyNow') }}
-              </router-link>
+              </button>
             </div>
 
           </div>
@@ -969,11 +969,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ChevronRight, ChevronLeft, Star, Check, User, MapPin, Package, Sparkles, Heart, ShoppingCart, Scan, ShieldCheck, PackageCheck, CreditCard, Trees, Droplet, Globe, FileText, FlaskConical, Award, ArrowRight } from 'lucide-vue-next'
 import { useAppStore } from '@/stores/appStore'
 
 const route = useRoute()
+const router = useRouter()
 const appStore = useAppStore()
 
 const qty = ref(1)
@@ -1064,8 +1065,31 @@ const recommendations = ref([
 
 const addToCart = () => {
   if (product.value) {
-    appStore.addToCart(product.value, qty.value)
+    const item = {
+      id: product.value.id,
+      name: product.value.name,
+      price: parseFloat(product.value.price),
+      image_url: product.value.image_url || 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800',
+      producer_name: product.value.producer_name || 'Verified Cooperative',
+      producer_location: product.value.producer_location || 'Vietnam'
+    }
+    appStore.addToCart(item, qty.value)
     isCartModalOpen.value = true
+  }
+}
+
+const buyNow = () => {
+  if (product.value) {
+    const item = {
+      id: product.value.id,
+      name: product.value.name,
+      price: parseFloat(product.value.price),
+      image_url: product.value.image_url || 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=800',
+      producer_name: product.value.producer_name || 'Verified Cooperative',
+      producer_location: product.value.producer_location || 'Vietnam'
+    }
+    appStore.addToCart(item, qty.value)
+    router.push('/checkout')
   }
 }
 

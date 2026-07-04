@@ -364,6 +364,7 @@ async function loadBatch(id) {
   try {
     const data = await appStore.fetchBatch(id)
     batchData.value = data
+    appStore.addTraceabilityLog(data)
   } catch (err) {
     batchData.value = null
     errorMsg.value = err.message || (appStore.lang === 'en' ? 'Batch not found. Please verify the Batch ID.' : 'Không tìm thấy lô hàng. Vui lòng kiểm tra lại mã lô.')

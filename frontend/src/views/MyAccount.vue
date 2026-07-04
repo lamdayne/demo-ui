@@ -225,7 +225,7 @@
                       <td class="py-4 px-2 font-bold text-gray-900">{{ parseFloat(order.total_price).toLocaleString() }} VND</td>
                       <td class="py-4 px-2">
                         <span class="bg-green-50 text-green-700 px-2 py-0.5 rounded font-semibold text-[10px] border border-green-200">
-                          {{ order.status === 'Completed' && appStore.lang === 'vi' ? 'Đã hoàn thành' : order.status }}
+                          {{ getStatusLabel(order.status) }}
                         </span>
                       </td>
                       <td class="py-4 px-2 text-right">
@@ -321,49 +321,49 @@
                 <h3 class="font-bold text-gray-900 text-sm">{{ t.savedPaymentMethods }}</h3>
                 <p class="text-xs text-gray-500 mt-0.5">{{ t.paymentDesc }}</p>
               </div>
-              <button @click="simulatedAction('add_payment')" class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-4 py-2 rounded-lg text-xs font-bold transition">
+              <button @click="openAddPaymentModal" class="bg-[#1E4B35] hover:bg-[#163a29] text-white px-4 py-2 rounded-lg text-xs font-bold transition">
                 {{ t.addPaymentBtn }}
               </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <!-- Method 1: VNPay -->
-              <div class="bg-white border border-[#1E4B35] rounded-2xl p-5 shadow-sm flex flex-col justify-between">
-                <div class="space-y-3">
-                  <div class="flex justify-between items-center">
-                    <span class="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded border border-green-200">{{ t.defaultMethod }}</span>
-                    <span class="text-[9px] text-green-600 font-bold uppercase bg-green-100 px-2 py-0.5 rounded">{{ t.linked }}</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center font-bold text-xs">VNP</div>
-                    <div>
-                      <h4 class="font-bold text-gray-900 text-sm">{{ t.vnpayWallet }}</h4>
-                      <p class="text-xs text-gray-500">{{ t.connectedVia.replace('{phone}', '+84 *** *** 678') }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="pt-4 mt-4 border-t border-gray-100 flex justify-end">
-                  <button @click="simulatedAction('unlink')" class="text-[10px] font-bold text-red-500 hover:underline">{{ t.disconnectWallet }}</button>
-                </div>
+            <!-- Empty State -->
+            <div v-if="appStore.paymentMethods.length === 0" class="bg-white border border-gray-200 rounded-2xl p-12 text-center shadow-sm space-y-3">
+              <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto text-gray-400">
+                <CreditCard class="w-6 h-6" />
               </div>
+              <h4 class="font-bold text-gray-900 text-sm">{{ appStore.lang === 'vi' ? 'Chưa có phương thức thanh toán' : 'No saved payment methods' }}</h4>
+              <p class="text-xs text-gray-500 max-w-sm mx-auto">{{ appStore.lang === 'vi' ? 'Liên kết ví VNPay hoặc thêm thẻ tín dụng để thanh toán nhanh chóng và tiện lợi hơn.' : 'Link a VNPay wallet or add a credit card to checkout faster.' }}</p>
+              <button @click="openAddPaymentModal" class="mt-2 text-xs font-bold text-[#1E4B35] hover:underline">{{ appStore.lang === 'vi' ? '+ Thêm phương thức thanh toán mới' : '+ Add new payment method' }}</button>
+            </div>
 
-              <!-- Method 2: Visa -->
-              <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+            <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div v-for="method in appStore.paymentMethods" :key="method.id" class="bg-white border rounded-2xl p-5 shadow-sm flex flex-col justify-between" :class="method.is_default ? 'border-[#1E4B35] ring-1 ring-[#1E4B35]/25' : 'border-gray-200'">
                 <div class="space-y-3">
                   <div class="flex justify-between items-center">
-                    <span class="text-[9px] text-gray-400 font-bold uppercase">{{ t.creditCard }}</span>
+                    <span v-if="method.is_default" class="bg-green-50 text-green-700 text-[9px] font-bold px-2 py-0.5 rounded border border-green-200">{{ t.defaultMethod }}</span>
+                    <span v-else class="text-[9px] text-gray-400 font-bold uppercase">{{ method.type === 'wallet' ? (appStore.lang === 'vi' ? 'Ví điện tử' : 'E-Wallet') : (appStore.lang === 'vi' ? 'Thẻ tín dụng' : 'Credit Card') }}</span>
+                    <button @click="deletePaymentMethod(method.id)" class="text-gray-400 hover:text-red-500 text-xs font-bold">{{ t.remove }}</button>
                   </div>
+                  
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gray-50 text-gray-700 rounded-lg flex items-center justify-center border border-gray-100"><CreditCard class="w-5 h-5"/></div>
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xs" :class="method.type === 'wallet' ? 'bg-blue-50 text-blue-600' : 'bg-gray-50 text-gray-700 border border-gray-100'">
+                      <span v-if="method.type === 'wallet'">VNP</span>
+                      <CreditCard v-else class="w-5 h-5"/>
+                    </div>
                     <div>
-                      <h4 class="font-bold text-gray-900 text-sm">{{ t.visaEnding.replace('{digits}', '4321') }}</h4>
-                      <p class="text-xs text-gray-500">{{ t.expires.replace('{date}', '12 / 2029') }}</p>
+                      <h4 class="font-bold text-gray-900 text-sm">
+                        {{ method.type === 'wallet' ? t.vnpayWallet : t.visaEnding.replace('{digits}', method.card_number.slice(-4)) }}
+                      </h4>
+                      <p class="text-xs text-gray-550">
+                        <span v-if="method.type === 'wallet'">{{ t.connectedVia.replace('{phone}', maskPhoneNumber(method.phone)) }}</span>
+                        <span v-else>{{ t.expires.replace('{date}', method.expiry) }}</span>
+                      </p>
                     </div>
                   </div>
                 </div>
-                <div class="pt-4 mt-4 border-t border-gray-100 flex justify-between items-center">
-                  <button @click="simulatedAction('make_default')" class="text-[10px] font-bold text-[#1E4B35] hover:underline">{{ t.setAsDefault }}</button>
-                  <button @click="simulatedAction('remove_card')" class="text-[10px] font-bold text-red-500 hover:underline">{{ t.delete }}</button>
+
+                <div v-if="!method.is_default" class="pt-4 mt-4 border-t border-gray-100 flex justify-end">
+                  <button @click="setDefaultPaymentMethod(method.id)" class="text-[10px] font-bold text-[#1E4B35] hover:underline">{{ t.setAsDefault }}</button>
                 </div>
               </div>
             </div>
@@ -407,7 +407,15 @@
               <p class="text-xs text-gray-500 mt-0.5">{{ t.traceHistoryDesc }}</p>
             </div>
 
-            <div class="overflow-x-auto">
+            <div v-if="traceHistory.length === 0" class="text-center py-10 border border-dashed border-gray-200 rounded-xl space-y-3">
+              <ShieldCheck class="w-10 h-10 mx-auto text-gray-300" />
+              <p class="text-xs text-gray-500">{{ appStore.lang === 'vi' ? 'Bạn chưa thực hiện truy xuất nguồn gốc lô hàng nào.' : 'You have not traced any batch yet.' }}</p>
+              <router-link to="/traceability" class="px-4 py-2 bg-[#1E4B35] text-white rounded-lg text-xs font-bold hover:bg-[#163a29] transition inline-block">
+                {{ appStore.lang === 'vi' ? 'Truy xuất lô hàng ngay' : 'Trace a batch now' }}
+              </router-link>
+            </div>
+
+            <div v-else class="overflow-x-auto">
               <table class="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr class="border-b border-gray-100 text-gray-400 font-bold uppercase text-[9px]">
@@ -430,7 +438,7 @@
                     <td class="py-4 px-2 text-gray-600">{{ trace.producer }}</td>
                     <td class="py-4 px-2 text-gray-500">{{ trace.date }}</td>
                     <td class="py-4 px-2 text-right">
-                      <router-link to="/traceability" class="px-3 py-1 bg-green-50 text-[#1E4B35] rounded text-[10px] font-bold hover:bg-[#1E4B35] hover:text-white transition inline-block">
+                      <router-link :to="'/traceability?batch=' + trace.id" class="px-3 py-1 bg-green-50 text-[#1E4B35] rounded text-[10px] font-bold hover:bg-[#1E4B35] hover:text-white transition inline-block">
                         {{ t.viewTraceability }}
                       </router-link>
                     </td>
@@ -598,6 +606,64 @@
         </form>
       </div>
     </div>
+
+    <!-- ADD PAYMENT METHOD MODAL -->
+    <div v-if="isPaymentModalOpen" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-gray-100 text-left">
+        <div class="flex justify-between items-center border-b border-gray-100 pb-3">
+          <h3 class="font-bold text-gray-900 text-base">{{ appStore.lang === 'vi' ? 'Thêm phương thức thanh toán' : 'Add Payment Method' }}</h3>
+          <button @click="isPaymentModalOpen = false" class="text-gray-400 hover:text-gray-600 font-bold text-lg">&times;</button>
+        </div>
+
+        <form @submit.prevent="saveNewPaymentMethod" class="space-y-3 text-xs">
+          <div>
+            <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Loại thanh toán' : 'Payment Type' }}</label>
+            <select v-model="newPaymentForm.type" class="w-full border border-gray-300 rounded-lg p-2.5">
+              <option value="wallet">{{ appStore.lang === 'vi' ? 'Ví VNPay' : 'VNPay Wallet' }}</option>
+              <option value="card">{{ appStore.lang === 'vi' ? 'Thẻ tín dụng (Credit Card)' : 'Credit Card' }}</option>
+            </select>
+          </div>
+
+          <!-- If Wallet (VNPay) -->
+          <div v-if="newPaymentForm.type === 'wallet'">
+            <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Số điện thoại liên kết VNPay' : 'VNPay Linked Phone Number' }}</label>
+            <input type="text" v-model="newPaymentForm.phone" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. +84 912 345 678" required />
+          </div>
+
+          <!-- If Card -->
+          <div v-else-if="newPaymentForm.type === 'card'" class="space-y-3">
+            <div>
+              <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Tên trên thẻ' : 'Cardholder Name' }}</label>
+              <input type="text" v-model="newPaymentForm.cardholder_name" class="w-full border border-gray-300 rounded-lg p-2.5 uppercase" placeholder="e.g. NGUYEN VAN AN" required />
+            </div>
+            <div>
+              <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Số thẻ' : 'Card Number' }}</label>
+              <input type="text" v-model="newPaymentForm.card_number" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="e.g. 4111 2222 3333 4444" required />
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="font-bold text-gray-500 block mb-1">{{ appStore.lang === 'vi' ? 'Ngày hết hạn' : 'Expiration Date' }}</label>
+                <input type="text" v-model="newPaymentForm.expiry" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="MM/YYYY" required />
+              </div>
+              <div>
+                <label class="font-bold text-gray-500 block mb-1">CVV / CVC</label>
+                <input type="password" maxlength="3" class="w-full border border-gray-300 rounded-lg p-2.5" placeholder="***" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1">
+            <input type="checkbox" id="is_default_payment" v-model="newPaymentForm.is_default" class="text-[#1E4B35] focus:ring-[#1E4B35]" />
+            <label for="is_default_payment" class="text-gray-600 font-semibold cursor-pointer">{{ appStore.lang === 'vi' ? 'Đặt làm mặc định' : 'Set as default method' }}</label>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
+            <button type="button" @click="isPaymentModalOpen = false" class="px-4 py-2 border border-gray-300 rounded-lg font-bold text-gray-700">{{ t.cancel }}</button>
+            <button type="submit" class="px-5 py-2 bg-[#1E4B35] hover:bg-[#163a29] text-white rounded-lg font-bold transition">{{ appStore.lang === 'vi' ? 'Thêm' : 'Add' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -630,6 +696,7 @@ onMounted(async () => {
     await loadAddresses()
     await appStore.fetchWishlist()
     await appStore.fetchOrders()
+    appStore.fetchTraceabilityHistory()
   } catch (err) {
     console.error('Error loading account data:', err)
   }
@@ -900,23 +967,10 @@ const wishlist = computed(() => {
   }))
 })
 
-// Traceability history (mocked or loaded if desired)
-const traceHistory = ref([
-  {
-    id: 'LOT-UMH-2605-001',
-    product: 'U Minh Forest Wild Honey 500 ml',
-    producer: 'U Minh Bee Farm',
-    date: 'May 20, 2026',
-    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=100'
-  },
-  {
-    id: 'LOT-ST25-2605-002',
-    product: 'ST25 Premium Rice 2 kg',
-    producer: 'Ben Tre Green Co-op',
-    date: 'May 19, 2026',
-    image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&q=80&w=100'
-  }
-])
+// Traceability history
+const traceHistory = computed(() => {
+  return appStore.traceabilityHistory
+})
 
 // Notifications
 const notificationsList = computed(() => {
@@ -933,6 +987,43 @@ const notificationsList = computed(() => {
 const isAddressModalOpen = ref(false)
 const newAddressForm = ref({ recipient: '', street: '', city: '', country: '', phone: '', isDefault: false })
 const changePasswordForm = ref({ current: '', newPass: '', confirm: '' })
+
+const isPaymentModalOpen = ref(false)
+const newPaymentForm = ref({ type: 'wallet', phone: '', cardholder_name: '', card_number: '', expiry: '', is_default: false })
+
+function openAddPaymentModal() {
+  newPaymentForm.value = {
+    type: 'wallet',
+    phone: appStore.user?.phone || '',
+    cardholder_name: appStore.user?.name || '',
+    card_number: '',
+    expiry: '',
+    is_default: false
+  }
+  isPaymentModalOpen.value = true
+}
+
+function saveNewPaymentMethod() {
+  appStore.addPaymentMethod(newPaymentForm.value)
+  isPaymentModalOpen.value = false
+}
+
+async function deletePaymentMethod(id) {
+  const confirmMsg = appStore.lang === 'vi' ? 'Bạn có chắc chắn muốn xóa phương thức thanh toán này?' : 'Are you sure you want to delete this payment method?'
+  if (await appStore.triggerConfirm(confirmMsg)) {
+    appStore.deletePaymentMethod(id)
+  }
+}
+
+function setDefaultPaymentMethod(id) {
+  appStore.setDefaultPaymentMethod(id)
+}
+
+const maskPhoneNumber = (num) => {
+  if (!num) return ''
+  if (num.length <= 6) return num
+  return num.slice(0, 4) + ' *** *** ' + num.slice(-3)
+}
 
 async function saveProfile() {
   try {
@@ -1046,6 +1137,29 @@ async function handleAvatarUpload(e) {
     appStore.triggerToast(appStore.lang === 'vi' ? 'Đã cập nhật ảnh đại diện!' : 'Photo updated!')
   } catch (err) {
     appStore.triggerToast(appStore.lang === 'vi' ? 'Không thể cập nhật ảnh!' : 'Failed to update photo')
+  }
+}
+
+const getStatusLabel = (status) => {
+  switch (status) {
+    case 'Pending':
+      return appStore.t('pendingStatus')
+    case 'In Review':
+      return appStore.t('inReviewStatus')
+    case 'Preparing':
+    case 'Preparing Order':
+    case 'Processing':
+      return appStore.t('preparingStatus')
+    case 'Shipped':
+    case 'Shipping':
+      return appStore.t('shippedStatus')
+    case 'Delivered':
+    case 'Completed':
+      return appStore.t('deliveredStatus')
+    case 'Cancelled':
+      return appStore.t('cancelledStatus')
+    default:
+      return status
   }
 }
 

@@ -461,33 +461,6 @@
       </div>
     </div>
 
-    <!-- Farm Moments Gallery -->
-    <div class="container mx-auto px-4 max-w-6xl mb-16 text-left">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">{{ t.farmMoments }}</h2>
-        <a href="#" class="text-sm font-semibold text-green-700 hover:text-green-800 flex items-center gap-1">
-          {{ t.viewGallery }} <ArrowRight class="w-4 h-4" />
-        </a>
-      </div>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        <div class="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm group">
-          <img src="https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=400" alt="Moment 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        </div>
-        <div class="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm group">
-          <img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&q=80&w=400" alt="Moment 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        </div>
-        <div class="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm group">
-          <img src="https://images.unsplash.com/photo-1473081556163-2a17de81fc97?auto=format&fit=crop&q=80&w=400" alt="Moment 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        </div>
-        <div class="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm group">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400" alt="Moment 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        </div>
-        <div class="aspect-square rounded-2xl overflow-hidden bg-gray-100 shadow-sm group">
-          <img src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=400" alt="Moment 5" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-        </div>
-      </div>
-    </div>
-
     <!-- Testimonial Section -->
     <div class="container mx-auto px-4 max-w-6xl mb-16 text-left">
       <div class="bg-green-50/50 rounded-3xl p-8 lg:p-12 flex flex-col md:flex-row items-center gap-8 relative">
@@ -686,7 +659,7 @@ const t = computed(() => {
     thirdParty: 'Bên thứ ba',
     farmMoments: 'Khoảnh khắc trang trại',
     viewGallery: 'Xem thư viện ảnh',
-    testimonialQuote: 'Chúng tôi đã làm việc với Trang trại Ong U Minh hơn một năm. Mật ong của họ luôn giữ được độ tinh khiết và hương vị thơm ngon, chúng tôi đánh giá cao cam kết của họ đối với rừng tràm và các đàn ong.',
+    testimonialQuote: 'Chúng tôi đã làm việc với Trang trại Thuy Hanh hơn một năm. Mật ong của họ luôn giữ được độ tinh khiết và hương vị thơm ngon, chúng tôi đánh giá cao cam kết của họ đối với rừng tràm và các đàn ong.',
     testimonialAuthor: '– Linh Trần, Người mua',
     testimonialOrg: 'Hợp tác xã Thực phẩm Tự nhiên, Hà Nội',
     traceable: 'Truy xuất nguồn gốc',
@@ -763,7 +736,7 @@ const t = computed(() => {
     thirdParty: 'Third-party',
     farmMoments: 'Farm Moments',
     viewGallery: 'View gallery',
-    testimonialQuote: 'We\'ve worked with U Minh Bee Farm for over a year. Their honey is consistently pure and delicious, and we love their commitment to the forest and the bees.',
+    testimonialQuote: 'We\'ve worked with Thuy Hanh Farm for over a year. Their honey is consistently pure and delicious, and we love their commitment to the forest and the bees.',
     testimonialAuthor: '– Linh Tran, Buyer',
     testimonialOrg: 'Natural Foods Co-op, Ha Noi',
     traceable: 'Traceable',
